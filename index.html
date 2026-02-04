@@ -16,25 +16,26 @@
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Global variables provided by environment
-        const firebaseConfig = JSON.parse(__firebase_config);
+        // Konfigurasi Firebase dari persekitaran (Provided by environment)
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'msw-kuantan-2026';
 
-        // Initialize Firebase
+        // Inisialisasi Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        let userAuthenticated = false;
-
-        // RULE 3: Auth Before Queries
+        // RULE 3: Auth Sebelum Query
         async function initAuth() {
             try {
-                await signInAnonymously(auth);
-                userAuthenticated = true;
-                console.log("Auth Berjaya");
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                console.log("Sistem Sedia");
             } catch (error) {
-                console.error("Auth Gagal:", error);
+                console.error("Gagal Masuk Sistem:", error);
             }
         }
 
@@ -44,10 +45,13 @@
             }
         });
 
-        // Simpan Data Pendaftaran
+        // Simpan Data Pendaftaran dengan Field Baru
         window.handleRegistration = async (e) => {
             e.preventDefault();
-            if (!auth.currentUser) return;
+            if (!auth.currentUser) {
+                alert("Sila tunggu sistem sedia sekejap.");
+                return;
+            }
 
             const btn = e.target.querySelector('button');
             const originalText = btn.innerText;
@@ -56,13 +60,15 @@
 
             const formData = {
                 nama: e.target.nama.value,
-                institusi: e.target.institusi.value,
+                ic: e.target.ic.value,
+                tempat_bertugas: e.target.tempat_bertugas.value,
+                negeri: e.target.negeri.value,
                 timestamp: serverTimestamp(),
                 userId: auth.currentUser.uid
             };
 
             try {
-                // RULE 1: Strict Paths
+                // RULE 1: Path Firestore
                 const collRef = collection(db, 'artifacts', appId, 'public', 'data', 'pendaftaran');
                 await addDoc(collRef, formData);
                 
@@ -70,14 +76,14 @@
                 document.getElementById('success-message').classList.remove('hidden');
             } catch (error) {
                 console.error("Gagal simpan:", error);
-                alert("Ralat sistem. Sila cuba sebentar lagi.");
+                alert("Ralat sistem. Cuba lagi nanti.");
             } finally {
                 btn.disabled = false;
                 btn.innerText = originalText;
             }
         };
 
-        // RULE 2: No Complex Queries (Fetch all and display)
+        // RULE 2: No Complex Queries - Papar maklumat ddalang jadual
         function listenToParticipants() {
             const collRef = collection(db, 'artifacts', appId, 'public', 'data', 'pendaftaran');
             
@@ -85,7 +91,7 @@
                 const list = [];
                 snapshot.forEach(doc => list.push(doc.data()));
                 
-                // Sort in memory
+                // Susun ddalang memori mengikut masa pendaftaran terbaru
                 list.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
 
                 const container = document.getElementById('admin-list');
@@ -94,14 +100,18 @@
                 if (container) {
                     countEl.innerText = list.length;
                     container.innerHTML = list.map((p, i) => `
-                        <tr class="border-b border-slate-100 hover:bg-slate-50">
+                        <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
                             <td class="p-4 font-bold text-brand-blue">${list.length - i}</td>
-                            <td class="p-4 font-black uppercase text-[10px]">${p.nama}</td>
-                            <td class="p-4 text-slate-500 text-[10px]">${p.institusi}</td>
+                            <td class="p-4">
+                                <div class="font-black uppercase text-[10px] text-slate-900">${p.nama}</div>
+                                <div class="text-[9px] text-slate-400 mt-1">IC: ${p.ic}</div>
+                            </td>
+                            <td class="p-4 text-slate-500 text-[10px] uppercase font-bold">${p.tempat_bertugas}</td>
+                            <td class="p-4 text-brand-gold text-[10px] font-black uppercase">${p.negeri}</td>
                         </tr>
                     `).join('');
                 }
-            }, (err) => console.error("Snapshot error:", err));
+            }, (err) => console.error("Ralat Snapshot:", err));
         }
 
         initAuth();
@@ -169,7 +179,7 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="pt-60 pb-32 px-6 bg-gradient-to-br from-slate-50 to-blue-50/30 text-center relative overflow-hidden">
+    <section id="home" class="pt-60 pb-32 px-6 bg-gradient-to-br from-slate-50 to-blue-50/30 text-center relative overflow-hidden">
         <div class="max-w-7xl mx-auto relative z-10">
             <div class="inline-block px-6 py-2 mb-10 text-[10px] font-black tracking-[0.4em] text-brand-gold uppercase bg-white border border-slate-200 rounded-full">Edisi Kebangsaan 2026</div>
             <h1 class="text-4xl md:text-7xl font-black text-slate-900 mb-10 leading-[1.1] tracking-tighter uppercase">
@@ -188,7 +198,7 @@
     </section>
 
     <!-- Ucapan Pengerusi -->
-    <section class="py-40 bg-white border-y border-slate-100 px-6 overflow-hidden">
+    <section class="py-40 bg-white border-y border-slate-100 px-6 overflow-hidden text-center md:text-left">
         <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-20">
             <div class="flex-shrink-0 relative">
                 <div class="absolute -inset-12 bg-brand-gold/10 rounded-full blur-[80px]"></div>
@@ -265,21 +275,21 @@
                 <div class="flex flex-col md:flex-row md:items-center p-8 bg-brand-soft rounded-[3rem] border border-slate-100 shadow-sm text-center md:text-left">
                     <div class="flex items-center space-x-6 md:w-64 shrink-0 mb-4 md:mb-0">
                         <div class="bg-white p-4 rounded-2xl text-brand-blue shadow-md"><i data-lucide="clock"></i></div>
-                        <span class="font-black text-brand-blue text-2xl">3:00 PM</span>
+                        <span class="font-black text-brand-blue text-2xl uppercase">3:00 PM</span>
                     </div>
                     <div class="text-slate-700 font-black text-xl uppercase tracking-tight">Pendaftaran Peserta & Check-in</div>
                 </div>
                 <div class="flex flex-col md:flex-row md:items-center p-8 bg-brand-soft rounded-[3rem] border border-slate-100 shadow-sm text-center md:text-left">
                     <div class="flex items-center space-x-6 md:w-64 shrink-0 mb-4 md:mb-0">
                         <div class="bg-white p-4 rounded-2xl text-brand-blue shadow-md"><i data-lucide="clock"></i></div>
-                        <span class="font-black text-brand-blue text-2xl">4:00 PM</span>
+                        <span class="font-black text-brand-blue text-2xl uppercase">4:00 PM</span>
                     </div>
                     <div class="text-slate-700 font-black text-xl uppercase tracking-tight">Dialog Perkhidmatan Kerja Sosial Perubatan</div>
                 </div>
                 <div class="flex flex-col md:flex-row md:items-center p-8 bg-brand-soft rounded-[3rem] border border-slate-100 shadow-sm text-center md:text-left">
                     <div class="flex items-center space-x-6 md:w-64 shrink-0 mb-4 md:mb-0">
                         <div class="bg-white p-4 rounded-2xl text-brand-blue shadow-md"><i data-lucide="clock"></i></div>
-                        <span class="font-black text-brand-blue text-2xl">8:00 PM</span>
+                        <span class="font-black text-brand-blue text-2xl uppercase">8:00 PM</span>
                     </div>
                     <div class="text-slate-700 font-black text-xl uppercase tracking-tight font-bold">Mesyuarat Agung Tahunan Persatuan (AGM)</div>
                 </div>
@@ -289,14 +299,14 @@
                 <div class="flex flex-col md:flex-row md:items-center p-8 bg-brand-soft rounded-[3rem] border border-slate-100 shadow-sm text-center md:text-left">
                     <div class="flex items-center space-x-6 md:w-64 shrink-0 mb-4 md:mb-0">
                         <div class="bg-white p-4 rounded-2xl text-brand-blue shadow-md"><i data-lucide="clock"></i></div>
-                        <span class="font-black text-brand-blue text-2xl">8:30 AM</span>
+                        <span class="font-black text-brand-blue text-2xl uppercase">8:30 AM</span>
                     </div>
                     <div class="text-slate-700 font-black text-xl uppercase tracking-tight">Psychological First Aid (PFA) - Hospital Kemaman</div>
                 </div>
                 <div class="flex flex-col md:flex-row md:items-center p-8 bg-brand-soft rounded-[3rem] border border-slate-100 shadow-sm text-center md:text-left">
                     <div class="flex items-center space-x-6 md:w-64 shrink-0 mb-4 md:mb-0">
                         <div class="bg-white p-4 rounded-2xl text-brand-blue shadow-md"><i data-lucide="clock"></i></div>
-                        <span class="font-black text-brand-blue text-2xl">8:00 PM</span>
+                        <span class="font-black text-brand-blue text-2xl uppercase">8:00 PM</span>
                     </div>
                     <div class="text-slate-700 font-black text-xl uppercase tracking-tight font-bold">Malam Mesra & Jamuan Makan Malam Rasmi</div>
                 </div>
@@ -306,7 +316,7 @@
                 <div class="flex flex-col md:flex-row md:items-center p-8 bg-brand-soft rounded-[3rem] border border-slate-100 shadow-sm">
                     <div class="flex items-center space-x-6 md:w-64 shrink-0 mb-4 md:mb-0">
                         <div class="bg-white p-4 rounded-2xl text-brand-blue shadow-md"><i data-lucide="clock"></i></div>
-                        <span class="font-black text-brand-blue text-2xl">10:30 AM</span>
+                        <span class="font-black text-brand-blue text-2xl uppercase">10:30 AM</span>
                     </div>
                     <div class="text-slate-700 font-black text-xl uppercase tracking-tight font-bold text-brand-blue">Majlis Perasmian Penutup</div>
                 </div>
@@ -317,7 +327,7 @@
     <!-- Muat Turun Borang -->
     <section id="borang" class="py-32 bg-brand-soft px-6">
         <div class="max-w-7xl mx-auto text-center">
-            <h2 class="text-4xl font-black text-slate-900 mb-16 uppercase tracking-tighter">Zon Muat Turun Borang</h2>
+            <h2 class="text-4xl font-black text-slate-900 mb-16 uppercase tracking-tighter text-center">Zon Muat Turun Borang</h2>
             <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                 <a href="borang_pendaftaran.pdf" download class="flex items-center justify-between p-8 bg-white rounded-[3rem] border border-slate-100 hover:border-brand-blue transition-all group shadow-sm">
                     <div class="flex items-center space-x-6">
@@ -337,19 +347,47 @@
         </div>
     </section>
 
-    <!-- Pendaftaran & Admin Table -->
+    <!-- Pendaftaran Peserta (Field Baru) -->
     <section id="daftar" class="py-40 bg-brand-dark px-6 relative overflow-hidden text-center">
         <div class="max-w-4xl mx-auto bg-white rounded-[5rem] p-12 md:p-20 shadow-2xl relative z-10">
             <div id="reg-form-container">
-                <h2 class="text-5xl font-black mb-12 text-center uppercase tracking-tighter">Pendaftaran Live</h2>
+                <h2 class="text-5xl font-black mb-12 text-center uppercase tracking-tighter">Borang Pendaftaran</h2>
                 <form onsubmit="handleRegistration(event)" class="space-y-10 text-left">
-                    <div class="space-y-4">
-                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-5">Nama Penuh</label>
-                        <input name="nama" required type="text" class="w-full px-10 py-7 bg-brand-soft border border-slate-100 rounded-[3rem] focus:border-brand-blue outline-none font-black text-lg shadow-inner" placeholder="Masukkan Nama">
-                    </div>
-                    <div class="space-y-4">
-                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-5">Jabatan / Hospital</label>
-                        <input name="institusi" required type="text" class="w-full px-10 py-7 bg-brand-soft border border-slate-100 rounded-[3rem] focus:border-brand-blue outline-none font-black text-lg shadow-inner" placeholder="Contoh: HSNZ">
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="space-y-4">
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-5">Nama Penuh</label>
+                            <input name="nama" required type="text" class="w-full px-10 py-7 bg-brand-soft border border-slate-100 rounded-[3rem] focus:border-brand-blue outline-none font-black text-lg shadow-inner" placeholder="Masukkan Nama">
+                        </div>
+                        <div class="space-y-4">
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-5">No. Kad Pengenalan</label>
+                            <input name="ic" required type="text" class="w-full px-10 py-7 bg-brand-soft border border-slate-100 rounded-[3rem] focus:border-brand-blue outline-none font-black text-lg shadow-inner" placeholder="Contoh: 850101-11-5555">
+                        </div>
+                        <div class="space-y-4">
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-5">Tempat Bertugas</label>
+                            <input name="tempat_bertugas" required type="text" class="w-full px-10 py-7 bg-brand-soft border border-slate-100 rounded-[3rem] focus:border-brand-blue outline-none font-black text-lg shadow-inner" placeholder="Hospital / Klinik / Pejabat">
+                        </div>
+                        <div class="space-y-4">
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-5">Negeri</label>
+                            <select name="negeri" required class="w-full px-10 py-7 bg-brand-soft border border-slate-100 rounded-[3rem] focus:border-brand-blue outline-none font-black text-lg shadow-inner appearance-none cursor-pointer">
+                                <option value="" disabled selected>Pilih Negeri</option>
+                                <option value="Johor">Johor</option>
+                                <option value="Kedah">Kedah</option>
+                                <option value="Kelantan">Kelantan</option>
+                                <option value="Melaka">Melaka</option>
+                                <option value="Negeri Sembilan">Negeri Sembilan</option>
+                                <option value="Pahang">Pahang</option>
+                                <option value="Perak">Perak</option>
+                                <option value="Perlis">Perlis</option>
+                                <option value="Pulau Pinang">Pulau Pinang</option>
+                                <option value="Sabah">Sabah</option>
+                                <option value="Sarawak">Sarawak</option>
+                                <option value="Selangor">Selangor</option>
+                                <option value="Terengganu">Terengganu</option>
+                                <option value="W.P. Kuala Lumpur">W.P. Kuala Lumpur</option>
+                                <option value="W.P. Labuan">W.P. Labuan</option>
+                                <option value="W.P. Putrajaya">W.P. Putrajaya</option>
+                            </select>
+                        </div>
                     </div>
                     <button type="submit" class="w-full py-8 bg-brand-blue text-white font-black rounded-[3rem] text-xl uppercase tracking-widest shadow-2xl hover:bg-slate-800 transition-all">Daftar Sekarang</button>
                 </form>
@@ -357,27 +395,29 @@
             <div id="success-message" class="hidden text-center py-20">
                 <i data-lucide="check-circle" class="w-20 h-20 text-green-500 mx-auto mb-8"></i>
                 <h2 class="text-4xl font-black text-brand-blue mb-6 uppercase tracking-tighter">Pendaftaran Berjaya!</h2>
+                <p class="text-slate-500 mb-10 font-medium">Data anda telah selamat disimpan ddalang sistem pangkalan data awan kami.</p>
                 <button onclick="window.location.reload()" class="px-10 py-4 bg-brand-blue text-white rounded-full font-black uppercase text-xs tracking-widest">Kembali</button>
             </div>
         </div>
 
         <!-- Admin Participant List (Live) -->
-        <div class="max-w-4xl mx-auto mt-24 text-left">
-            <div class="flex items-center justify-between mb-10 text-white">
+        <div class="max-w-7xl mx-auto mt-24 text-left text-white px-6">
+            <div class="flex items-center justify-between mb-10">
                 <h3 class="text-2xl font-black uppercase tracking-tighter">Senarai Peserta (<span id="participant-count">0</span>)</h3>
                 <span class="bg-brand-gold px-4 py-1 rounded-full text-[10px] font-black uppercase shadow-lg shadow-brand-gold/20">Live Database</span>
             </div>
-            <div class="bg-white rounded-[3rem] overflow-hidden shadow-2xl">
-                <table class="w-full text-left border-collapse">
+            <div class="bg-white rounded-[3rem] overflow-hidden shadow-2xl overflow-x-auto">
+                <table class="w-full text-left border-collapse min-w-[700px]">
                     <thead>
-                        <tr class="bg-slate-50 border-b border-slate-100">
-                            <th class="p-6 text-[10px] font-black uppercase tracking-widest text-slate-400">No.</th>
-                            <th class="p-6 text-[10px] font-black uppercase tracking-widest text-slate-400">Nama Peserta</th>
-                            <th class="p-6 text-[10px] font-black uppercase tracking-widest text-slate-400">Institusi / Jabatan</th>
+                        <tr class="bg-slate-50 border-b border-slate-100 text-slate-400">
+                            <th class="p-6 text-[10px] font-black uppercase tracking-widest">No.</th>
+                            <th class="p-6 text-[10px] font-black uppercase tracking-widest">Maklumat Peserta</th>
+                            <th class="p-6 text-[10px] font-black uppercase tracking-widest">Tempat Bertugas</th>
+                            <th class="p-6 text-[10px] font-black uppercase tracking-widest">Negeri</th>
                         </tr>
                     </thead>
                     <tbody id="admin-list" class="text-brand-dark">
-                        <!-- Data Masuk Sini -->
+                        <!-- Data Masuk Sini Secara Dinamik -->
                     </tbody>
                 </table>
             </div>
@@ -392,13 +432,13 @@
                 <div class="h-[600px] rounded-[4rem] overflow-hidden border-[15px] border-brand-soft shadow-2xl">
                     <iframe class="w-full h-full border-0 grayscale-[20%] hover:grayscale-0 transition-all duration-700"
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63688.4682337728!2d103.2924376510967!3d3.811808468725832!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31c8eb917056001f%3A0x6b825e368735f604!2sKuantan%2C%20Pahang!5e0!3m2!1sen!2smy!4v1700000000000!5m2!1sen!2smy" 
-                        allowfullscreen="" loading="lazy"></iframe>
+                        allowfullscreen="" loading="lazy" title="Peta Lokasi"></iframe>
                 </div>
             </div>
             <div class="p-10 bg-brand-soft rounded-[4rem] shadow-inner text-left">
                 <i data-lucide="map-pin" class="w-12 h-12 text-brand-gold mb-6"></i>
                 <p class="font-black text-brand-blue text-3xl mb-4 tracking-tighter uppercase leading-tight">Pusat Bandar Kuantan</p>
-                <p class="text-slate-500 font-medium leading-relaxed font-bold">Ibu Negeri Pahang Darul Makmur</p>
+                <p class="text-slate-500 font-medium leading-relaxed font-bold italic">Ibu Negeri Pahang Darul Makmur</p>
                 <p class="text-slate-400 mt-4 leading-relaxed">Menyediakan segala kemudahan untuk kelancaran persidangan Pegawai Kerja Sosial Perubatan Malaysia kali ini.</p>
             </div>
         </div>
