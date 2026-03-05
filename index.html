@@ -269,12 +269,11 @@
         <div class="max-w-5xl mx-auto">
             <div class="text-center mb-24 text-center">
                 <h2 class="text-5xl font-black text-slate-900 uppercase tracking-tighter">Aturcara Program</h2>
-                <div class="flex flex-wrap justify-center p-3 bg-brand-soft rounded-[3rem] inline-flex gap-3 border border-slate-200 mt-10 shadow-inner">
-                    <button onclick="switchTab(1)" class="tab-btn active px-16 py-5 rounded-[2.2rem] font-black text-sm uppercase tracking-widest transition-all">Hari 01</button>
-                    <button onclick="switchTab(2)" class="tab-btn px-16 py-5 rounded-[2.2rem] font-black text-sm uppercase tracking-widest transition-all text-slate-400">Hari 02</button>
-                    <button onclick="switchTab(3)" class="tab-btn px-16 py-5 rounded-[2.2rem] font-black text-sm uppercase tracking-widest transition-all text-slate-400">Hari 03</button>
+               <div class="flex flex-wrap justify-center p-3 bg-brand-soft rounded-[3rem] inline-flex gap-3 border border-slate-200 mt-10 shadow-inner">
+                    <button onclick="switchTab(1)" class="tab-btn active bg-brand-blue text-white px-16 py-5 rounded-[2.2rem] font-black text-sm uppercase tracking-widest transition-all duration-300">Hari 01</button>
+                    <button onclick="switchTab(2)" class="tab-btn px-16 py-5 rounded-[2.2rem] font-black text-sm uppercase tracking-widest transition-all duration-300 text-slate-400">Hari 02</button>
+                    <button onclick="switchTab(3)" class="tab-btn px-16 py-5 rounded-[2.2rem] font-black text-sm uppercase tracking-widest transition-all duration-300 text-slate-400">Hari 03</button>
                 </div>
-            </div>
 
             <div id="day-1" class="schedule-day active space-y-6">
                 <div class="flex flex-col md:flex-row md:items-center p-8 bg-brand-soft rounded-[3rem] border border-slate-100 shadow-sm text-center md:text-left">
@@ -337,14 +336,14 @@
                 <a href="borang_pendaftaran.pdf" download class="flex items-center justify-between p-8 bg-white rounded-[3rem] border border-slate-100 hover:border-brand-blue transition-all group shadow-sm">
                     <div class="flex items-center space-x-6">
                         <div class="bg-brand-soft p-4 rounded-2xl text-brand-blue shadow-inner"><i data-lucide="file-text"></i></div>
-                        <span class="font-black uppercase text-xs tracking-widest text-left">Borang Pendaftaran (PDF)</span>
+                        <span class="font-black uppercase text-xs tracking-widest text-left">Borang Pendaftaran</span>
                     </div>
                     <i data-lucide="download" class="text-slate-300 group-hover:text-brand-blue"></i>
                 </a>
                 <a href="borang_pelepasan.docx" download class="flex items-center justify-between p-8 bg-white rounded-[3rem] border border-slate-100 hover:border-brand-blue transition-all group shadow-sm">
                     <div class="flex items-center space-x-6">
                         <div class="bg-brand-soft p-4 rounded-2xl text-brand-blue shadow-inner"><i data-lucide="file-check"></i></div>
-                        <span class="font-black uppercase text-xs tracking-widest text-left">Borang Pelepasan (Word)</span>
+                        <span class="font-black uppercase text-xs tracking-widest text-left">Borang Pelepasan</span>
                     </div>
                     <i data-lucide="download" class="text-slate-300 group-hover:text-brand-blue"></i>
                 </a>
@@ -486,22 +485,38 @@
         updateTimer();
 
        function switchTab(day) {
-    // Sembunyikan semua hari
-    document.querySelectorAll('.schedule-day').forEach(el => el.classList.remove('active'));
-    // Tunjukkan hari yang diklik
-    document.getElementById('day-' + day).classList.add('active');
-    
-    // Kemaskini gaya butang
+    // 1. Sembunyikan semua content hari (Day 1, 2, 3)
+    document.querySelectorAll('.schedule-day').forEach(el => {
+        el.classList.remove('active');
+        el.style.display = 'none'; // Pastikan dia betul-betul hilang
+    });
+
+    // 2. Paparkan content hari yang dipilih
+    const selectedDay = document.getElementById('day-' + day);
+    if (selectedDay) {
+        selectedDay.classList.add('active');
+        selectedDay.style.display = 'block'; // Tunjukkan balik
+    }
+
+    // 3. Tukar gaya (styling) butang supaya kita tahu butang mana tengah aktif
     document.querySelectorAll('.tab-btn').forEach((btn, index) => {
         if ((index + 1) === day) {
-            btn.classList.add('active', 'bg-brand-blue', 'text-white');
+            // Butang yang diklik jadi Biru & Tulisan Putih
+            btn.classList.add('bg-brand-blue', 'text-white');
             btn.classList.remove('text-slate-400');
         } else {
-            btn.classList.remove('active', 'bg-brand-blue', 'text-white');
+            // Butang lain jadi Kelabu & Tulisan Pudar
+            btn.classList.remove('bg-brand-blue', 'text-white');
             btn.classList.add('text-slate-400');
         }
     });
 }
+
+// Panggil sekali masa mula-mula load supaya Hari 1 terpapar elok
+document.addEventListener('DOMContentLoaded', () => {
+    switchTab(1);
+});
+
 
 
 
