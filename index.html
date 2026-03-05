@@ -267,15 +267,14 @@
     <!-- Aturcara Program -->
     <section id="aturcara" class="py-40 bg-white px-6">
         <div class="max-w-5xl mx-auto">
-            <div class="text-center mb-24 text-center">
+            <div class="text-center mb-24">
                 <h2 class="text-5xl font-black text-slate-900 uppercase tracking-tighter">Aturcara Program</h2>
-               <div class="flex flex-wrap justify-center p-3 bg-brand-soft rounded-[3rem] inline-flex gap-3 border border-slate-200 mt-10 shadow-inner">
+                <div class="flex flex-wrap justify-center p-3 bg-brand-soft rounded-[3rem] inline-flex gap-3 border border-slate-200 mt-10 shadow-inner">
                     <button onclick="switchTab(1)" class="tab-btn active bg-brand-blue text-white px-16 py-5 rounded-[2.2rem] font-black text-sm uppercase tracking-widest transition-all duration-300">Hari 01</button>
                     <button onclick="switchTab(2)" class="tab-btn px-16 py-5 rounded-[2.2rem] font-black text-sm uppercase tracking-widest transition-all duration-300 text-slate-400">Hari 02</button>
                     <button onclick="switchTab(3)" class="tab-btn px-16 py-5 rounded-[2.2rem] font-black text-sm uppercase tracking-widest transition-all duration-300 text-slate-400">Hari 03</button>
                 </div>
-
-            <div id="day-1" class="schedule-day active space-y-6">
+            </div> <div id="day-1" class="schedule-day space-y-6">
                 <div class="flex flex-col md:flex-row md:items-center p-8 bg-brand-soft rounded-[3rem] border border-slate-100 shadow-sm text-center md:text-left">
                     <div class="flex items-center space-x-6 md:w-64 shrink-0 mb-4 md:mb-0">
                         <div class="bg-white p-4 rounded-2xl text-brand-blue shadow-md"><i data-lucide="clock"></i></div>
@@ -316,8 +315,8 @@
                 </div>
             </div>
 
-            <div id="day-3" class="schedule-day space-y-6 text-center md:text-left">
-                <div class="flex flex-col md:flex-row md:items-center p-8 bg-brand-soft rounded-[3rem] border border-slate-100 shadow-sm">
+            <div id="day-3" class="schedule-day space-y-6">
+                <div class="flex flex-col md:flex-row md:items-center p-8 bg-brand-soft rounded-[3rem] border border-slate-100 shadow-sm text-center md:text-left">
                     <div class="flex items-center space-x-6 md:w-64 shrink-0 mb-4 md:mb-0">
                         <div class="bg-white p-4 rounded-2xl text-brand-blue shadow-md"><i data-lucide="clock"></i></div>
                         <span class="font-black text-brand-blue text-2xl uppercase">10:30 AM</span>
@@ -516,6 +515,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     switchTab(1);
 });
+
 
 
 
