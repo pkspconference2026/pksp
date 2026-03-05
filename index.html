@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Persatuan Pegawai Pembangunan Masyarakat (Perubatan) Malaysia 2026</title>
+    <title>Persidangan Pegawai KSP Malaysia 2026</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+        // NOTA: Sila masukkan firebaseConfig deme di sini supaya database berfungsi
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'msw-kuantan-2026';
 
@@ -22,34 +24,20 @@
 
         async function initAuth() {
             try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
+                await signInAnonymously(auth);
                 console.log("Sistem Sedia");
             } catch (error) {
-                console.error("Gagal Masuk Sistem:", error);
+                console.error("Ralat Auth:", error);
             }
         }
 
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                listenToParticipants();
-            }
-        });
+        onAuthStateChanged(auth, (user) => { if (user) listenToParticipants(); });
 
         window.handleRegistration = async (e) => {
             e.preventDefault();
-            if (!auth.currentUser) {
-                alert("Sila tunggu sistem sedia sekejap.");
-                return;
-            }
-
             const btn = e.target.querySelector('button');
-            const originalText = btn.innerText;
             btn.disabled = true;
-            btn.innerText = "Sila Tunggu...";
+            btn.innerText = "Memproses...";
 
             const formData = {
                 nama: e.target.nama.value,
@@ -57,53 +45,42 @@
                 tempat_bertugas: e.target.tempat_bertugas.value,
                 negeri: e.target.negeri.value,
                 tel: e.target.tel.value,
-                timestamp: serverTimestamp(),
-                userId: auth.currentUser.uid
+                timestamp: serverTimestamp()
             };
 
             try {
                 const collRef = collection(db, 'artifacts', appId, 'public', 'data', 'pendaftaran');
                 await addDoc(collRef, formData);
-                
                 document.getElementById('reg-form-container').classList.add('hidden');
                 document.getElementById('success-message').classList.remove('hidden');
             } catch (error) {
-                console.error("Gagal simpan:", error);
-                alert("Ralat sistem. Cuba lagi nanti.");
+                alert("Ralat! Sila cuba lagi.");
             } finally {
                 btn.disabled = false;
-                btn.innerText = originalText;
+                btn.innerText = "Daftar Sekarang";
             }
         };
 
         function listenToParticipants() {
             const collRef = collection(db, 'artifacts', appId, 'public', 'data', 'pendaftaran');
-            
             onSnapshot(collRef, (snapshot) => {
                 const list = [];
                 snapshot.forEach(doc => list.push(doc.data()));
                 list.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
-
                 const container = document.getElementById('admin-list');
                 const countEl = document.getElementById('participant-count');
-                
                 if (container) {
                     countEl.innerText = list.length;
                     container.innerHTML = list.map((p, i) => `
                         <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
                             <td class="p-4 font-bold text-brand-blue">${list.length - i}</td>
-                            <td class="p-4">
-                                <div class="font-black uppercase text-[10px] text-slate-900">${p.nama}</div>
-                                <div class="text-[9px] text-slate-400 mt-1">IC: ${p.ic}</div>
-                            </td>
-                            <td class="p-4 text-slate-500 text-[10px] uppercase font-bold">${p.tempat_bertugas}</td>
-                            <td class="p-4 text-brand-gold text-[10px] font-black uppercase">${p.negeri}</td>
-                        </tr>
-                    `).join('');
+                            <td class="p-4 text-[10px] font-black uppercase text-slate-900">${p.nama}</td>
+                            <td class="p-4 text-[10px] uppercase text-slate-500">${p.tempat_bertugas}</td>
+                            <td class="p-4 text-[10px] font-black text-brand-gold uppercase">${p.negeri}</td>
+                        </tr>`).join('');
                 }
-            }, (err) => console.error("Ralat Snapshot:", err));
+            });
         }
-
         initAuth();
     </script>
 
@@ -127,44 +104,28 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
         .schedule-day { display: none; }
         .schedule-day.active { display: block; animation: fadeIn 0.5s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        .prof-zoom { transform: scale(1.6); object-position: center 18%; }
-        .side-tab { writing-mode: vertical-rl; text-orientation: mixed; transition: all 0.3s ease; }
-        .side-tab:hover { padding-right: 2rem; transform: translateX(-5px); }
-        .tab-btn.active {
-            background-color: #1e3a8a;
-            color: white;
-            box-shadow: 0 10px 15px -3px rgba(30, 58, 138, 0.3);
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .tab-btn.active { background-color: #1e3a8a; color: white; box-shadow: 0 10px 15px -3px rgba(30, 58, 138, 0.3); }
+        .faq-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+        .faq-item.active .faq-content { max-height: 200px; }
+        .faq-item.active .faq-icon { transform: rotate(180deg); }
     </style>
 </head>
 <body class="bg-brand-soft text-brand-dark">
 
-    <div class="fixed right-0 top-1/2 -translate-y-1/2 z-[100] flex flex-col gap-1 items-end">
-        <a href="#aturcara" class="side-tab bg-brand-blue text-white px-3 py-7 rounded-l-2xl shadow-xl flex flex-col items-center gap-2 border-l border-white/20 active:scale-95 group">
-            <i data-lucide="calendar-days" class="w-5 h-5 mb-1 group-hover:scale-110"></i>
-            <span class="text-[10px] font-black uppercase tracking-widest">Aturcara</span>
-        </a>
-        <a href="#borang" class="side-tab bg-brand-gold text-white px-3 py-7 rounded-l-2xl shadow-xl flex flex-col items-center gap-2 border-l border-white/20 active:scale-95 group">
-            <i data-lucide="download" class="w-5 h-5 mb-1 group-hover:scale-110"></i>
-            <span class="text-[10px] font-black uppercase tracking-widest">Borang</span>
-        </a>
-    </div>
-
     <nav class="fixed w-full bg-white/95 backdrop-blur-md z-50 border-b border-slate-200 shadow-sm">
         <div class="max-w-7xl mx-auto px-6 h-24 flex items-center justify-between">
             <div class="flex items-center space-x-4 cursor-pointer" onclick="window.scrollTo({top:0, behavior:'smooth'})">
-                <img src="Logo TKPM.png" alt="Logo" class="w-20 h-19">
-                <div class="text-left font-black text-brand-blue uppercase leading-tight text-[10px] md:text-xs">
+                <img src="Logo TKPM.png" alt="Logo" class="w-16 h-16">
+                <div class="text-left font-black text-brand-blue uppercase leading-tight text-[10px]">
                     <span>Persatuan Pegawai</span><br/>
                     <span>Pembangunan Masyarakat</span><br/>
                     <span class="text-brand-gold">(Perubatan) Malaysia</span>
                 </div>
             </div>
             <div class="hidden lg:flex items-center space-x-8 text-[11px] font-black uppercase tracking-widest text-slate-500">
-                <a href="#penceramah" class="hover:text-brand-blue transition-colors">Penceramah</a>
                 <a href="#aturcara" class="hover:text-brand-blue transition-colors">Aturcara</a>
-                <a href="#borang" class="hover:text-brand-blue transition-colors">Borang</a>
+                <a href="#faq" class="hover:text-brand-blue transition-colors">FAQ</a>
                 <a href="#lokasi" class="hover:text-brand-blue transition-colors">Lokasi</a>
                 <a href="#daftar" class="bg-brand-blue text-white px-8 py-3 rounded-full hover:bg-slate-800 transition-all">Daftar</a>
             </div>
@@ -172,227 +133,153 @@
     </nav>
 
     <section id="home" class="pt-60 pb-32 px-6 bg-gradient-to-br from-slate-50 to-blue-50/30 text-center relative overflow-hidden">
-        <div class="max-w-7xl mx-auto relative z-10">
+        <div class="max-w-7xl mx-auto relative z-10" data-aos="zoom-in">
             <div class="inline-block px-6 py-2 mb-10 text-[10px] font-black tracking-[0.4em] text-brand-gold uppercase bg-white border border-slate-200 rounded-full">Edisi Kebangsaan 2026</div>
             <h1 class="text-4xl md:text-7xl font-black text-slate-900 mb-10 leading-[1.1] tracking-tighter uppercase">
-                Persidangan Pegawai<br/>
-                Kerja Sosial Perubatan Malaysia<br/>
+                Persidangan Pegawai<br/>Kerja Sosial Perubatan Malaysia<br/>
                 <span class="text-red-600">Kota Bharu, Kelantan</span>
             </h1>
             <div class="flex justify-center gap-6 md:gap-12 mb-16" id="countdown"></div>
             <div class="flex flex-wrap justify-center gap-4">
-                <a href="#daftar" class="bg-brand-blue text-white px-10 py-5 rounded-3xl font-black uppercase text-xs tracking-widest shadow-xl">Pendaftaran Peserta</a>
-                <a href="https://wa.me/60123456789" target="_blank" class="bg-green-600 text-white px-10 py-5 rounded-3xl font-black uppercase text-xs tracking-widest shadow-xl flex items-center gap-3">
-                    <i data-lucide="message-circle"></i> Group WhatsApp
+                <a href="#daftar" class="bg-brand-blue text-white px-10 py-5 rounded-3xl font-black uppercase text-xs tracking-widest shadow-xl">Daftar Sekarang</a>
+                <a href="https://wa.me/60123456789" class="bg-green-600 text-white px-10 py-5 rounded-3xl font-black uppercase text-xs tracking-widest shadow-xl flex items-center gap-3">
+                    <i data-lucide="message-circle"></i> WhatsApp Group
                 </a>
-            </div>
-        </div>
-    </section>
-
-    <section class="py-40 bg-white border-y border-slate-100 px-6 text-center md:text-left overflow-hidden">
-        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-20">
-            <div class="flex-shrink-0 relative">
-                <div class="absolute -inset-12 bg-brand-gold/10 rounded-full blur-[80px]"></div>
-                <div class="relative group">
-                    <img src="Pengerusi.jpg" alt="Pengerusi" class="relative w-64 h-64 md:w-96 md:h-96 rounded-full object-cover border-[12px] border-white shadow-2xl transition-transform duration-700 group-hover:scale-105">
-                    <div class="absolute -bottom-6 -right-6 bg-brand-blue p-6 rounded-[2rem] text-white shadow-2xl">
-                        <i data-lucide="quote" class="w-10 h-10 fill-current"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="flex-1">
-                <h2 class="text-4xl md:text-5xl font-black text-slate-900 mb-10 tracking-tighter uppercase leading-tight">Kata Aluan Pengerusi</h2>
-                <p class="text-2xl md:text-3xl text-slate-600 italic leading-relaxed mb-16 font-medium">
-                    "Assalamualaikum rakan sejawat semua. Persidangan kali ini adalah platform terbaik untuk kita berkongsi amalan terbaik dalam mendepani isu psikososial pesakit di hospital demi kecemerlangan perkhidmatan."
-                </p>
-                <div class="border-l-[6px] border-brand-gold pl-10 text-left">
-                    <p class="font-black text-brand-blue text-3xl uppercase tracking-tighter mb-2">Tn. Hj. Harolhanam bin Mohamed Wahid</p>
-                    <p class="text-brand-gold font-black uppercase text-xs tracking-[0.5em]">Pengerusi Persidangan 2026</p>
-                </div>
             </div>
         </div>
     </section>
 
     <section id="aturcara" class="py-40 bg-white px-6">
-        <div class="max-w-5xl mx-auto">
+        <div class="max-w-5xl mx-auto" data-aos="fade-up">
             <div class="text-center mb-24">
                 <h2 class="text-5xl font-black text-slate-900 uppercase tracking-tighter">Aturcara Program</h2>
                 <div class="flex flex-wrap justify-center p-3 bg-brand-soft rounded-[3rem] inline-flex gap-3 border border-slate-200 mt-10 shadow-inner">
-                    <button onclick="switchTab(1)" class="tab-btn active px-16 py-5 rounded-[2.2rem] font-black text-sm uppercase tracking-widest transition-all duration-300">Hari 01</button>
-                    <button onclick="switchTab(2)" class="tab-btn px-16 py-5 rounded-[2.2rem] font-black text-sm uppercase tracking-widest transition-all duration-300 text-slate-400">Hari 02</button>
-                    <button onclick="switchTab(3)" class="tab-btn px-16 py-5 rounded-[2.2rem] font-black text-sm uppercase tracking-widest transition-all duration-300 text-slate-400">Hari 03</button>
+                    <button onclick="switchTab(1)" class="tab-btn active px-12 py-4 rounded-[2rem] font-black text-xs uppercase tracking-widest transition-all">Hari 01</button>
+                    <button onclick="switchTab(2)" class="tab-btn px-12 py-4 rounded-[2rem] font-black text-xs uppercase tracking-widest transition-all text-slate-400">Hari 02</button>
+                    <button onclick="switchTab(3)" class="tab-btn px-12 py-4 rounded-[2rem] font-black text-xs uppercase tracking-widest transition-all text-slate-400">Hari 03</button>
                 </div>
             </div>
 
-            <div class="relative">
-                <div id="day-1" class="schedule-day space-y-6 active">
-                    <div class="flex flex-col md:flex-row md:items-center p-8 bg-brand-soft rounded-[3rem] border border-slate-100 shadow-sm text-center md:text-left">
-                        <div class="flex items-center space-x-6 md:w-64 shrink-0 mb-4 md:mb-0">
-                            <div class="bg-white p-4 rounded-2xl text-brand-blue shadow-md"><i data-lucide="clock"></i></div>
-                            <span class="font-black text-brand-blue text-2xl uppercase">3:00 PM</span>
-                        </div>
-                        <div class="text-slate-700 font-black text-xl uppercase tracking-tight">Pendaftaran Peserta & Check-in</div>
+            <div id="day-1" class="schedule-day active space-y-4">
+                <div class="p-8 bg-brand-soft rounded-[2.5rem] border border-slate-100 flex items-center gap-8">
+                    <span class="font-black text-brand-blue text-xl">03:00 PM</span>
+                    <span class="font-bold text-slate-700 uppercase">Pendaftaran & Check-in Hotel</span>
+                </div>
+                <div class="p-8 bg-brand-soft rounded-[2.5rem] border border-slate-100 flex items-center gap-8">
+                    <span class="font-black text-brand-blue text-xl">08:00 PM</span>
+                    <span class="font-bold text-slate-700 uppercase">Mesyuarat Agung Tahunan (AGM)</span>
+                </div>
+            </div>
+
+            <div id="day-2" class="schedule-day space-y-4">
+                <div class="p-8 bg-brand-soft rounded-[2.5rem] border border-slate-100 flex items-center gap-8">
+                    <span class="font-black text-brand-blue text-xl">08:30 AM</span>
+                    <span class="font-bold text-slate-700 uppercase">Ceramah: Psychological First Aid (PFA)</span>
+                </div>
+                <div class="p-8 bg-brand-soft rounded-[2.5rem] border border-slate-100 flex items-center gap-8">
+                    <span class="font-black text-brand-blue text-xl">08:00 PM</span>
+                    <span class="font-bold text-slate-700 uppercase">Malam Mesra & Jamuan Makan Malam</span>
+                </div>
+            </div>
+
+            <div id="day-3" class="schedule-day space-y-4">
+                <div class="p-8 bg-brand-soft rounded-[2.5rem] border border-slate-100 flex items-center gap-8">
+                    <span class="font-black text-brand-blue text-xl">10:30 AM</span>
+                    <span class="font-bold text-brand-blue uppercase font-black">Majlis Perasmian Penutup</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="py-40 bg-brand-soft px-6">
+        <div class="max-w-4xl mx-auto" data-aos="fade-up">
+            <h2 class="text-4xl font-black text-center mb-20 uppercase tracking-tighter">Soalan Lazim (FAQ)</h2>
+            <div class="space-y-4">
+                <div class="faq-item bg-white rounded-3xl border border-slate-100 overflow-hidden cursor-pointer" onclick="toggleFaq(this)">
+                    <div class="p-8 flex justify-between items-center">
+                        <span class="font-bold text-slate-700">Adakah sijil penyertaan disediakan?</span>
+                        <i data-lucide="chevron-down" class="faq-icon transition-transform"></i>
                     </div>
-                    <div class="flex flex-col md:flex-row md:items-center p-8 bg-brand-soft rounded-[3rem] border border-slate-100 shadow-sm text-center md:text-left">
-                        <div class="flex items-center space-x-6 md:w-64 shrink-0 mb-4 md:mb-0">
-                            <div class="bg-white p-4 rounded-2xl text-brand-blue shadow-md"><i data-lucide="clock"></i></div>
-                            <span class="font-black text-brand-blue text-2xl uppercase">8:00 PM</span>
-                        </div>
-                        <div class="text-slate-700 font-black text-xl uppercase tracking-tight font-bold text-brand-blue">Mesyuarat Agung Tahunan Persatuan (AGM)</div>
+                    <div class="faq-content px-8 pb-8 text-slate-500 text-sm">
+                        Ya, sijil penyertaan digital akan diberikan kepada semua peserta selepas tamat persidangan melalui emel yang didaftarkan.
                     </div>
                 </div>
-
-                <div id="day-2" class="schedule-day space-y-6">
-                    <div class="flex flex-col md:flex-row md:items-center p-8 bg-brand-soft rounded-[3rem] border border-slate-100 shadow-sm text-center md:text-left">
-                        <div class="flex items-center space-x-6 md:w-64 shrink-0 mb-4 md:mb-0">
-                            <div class="bg-white p-4 rounded-2xl text-brand-blue shadow-md"><i data-lucide="clock"></i></div>
-                            <span class="font-black text-brand-blue text-2xl uppercase">8:30 AM</span>
-                        </div>
-                        <div class="text-slate-700 font-black text-xl uppercase tracking-tight">Psychological First Aid (PFA) - Hospital Kemaman</div>
+                <div class="faq-item bg-white rounded-3xl border border-slate-100 overflow-hidden cursor-pointer" onclick="toggleFaq(this)">
+                    <div class="p-8 flex justify-between items-center">
+                        <span class="font-bold text-slate-700">Bagaimanakah dengan tuntutan perjalanan (LO)?</span>
+                        <i data-lucide="chevron-down" class="faq-icon transition-transform"></i>
                     </div>
-                    <div class="flex flex-col md:flex-row md:items-center p-8 bg-brand-soft rounded-[3rem] border border-slate-100 shadow-sm text-center md:text-left">
-                        <div class="flex items-center space-x-6 md:w-64 shrink-0 mb-4 md:mb-0">
-                            <div class="bg-white p-4 rounded-2xl text-brand-blue shadow-md"><i data-lucide="clock"></i></div>
-                            <span class="font-black text-brand-blue text-2xl uppercase">8:00 PM</span>
-                        </div>
-                        <div class="text-slate-700 font-black text-xl uppercase tracking-tight font-bold">Malam Mesra & Jamuan Makan Malam Rasmi</div>
-                    </div>
-                </div>
-
-                <div id="day-3" class="schedule-day space-y-6">
-                    <div class="flex flex-col md:flex-row md:items-center p-8 bg-brand-soft rounded-[3rem] border border-slate-100 shadow-sm text-center md:text-left">
-                        <div class="flex items-center space-x-6 md:w-64 shrink-0 mb-4 md:mb-0">
-                            <div class="bg-white p-4 rounded-2xl text-brand-blue shadow-md"><i data-lucide="clock"></i></div>
-                            <span class="font-black text-brand-blue text-2xl uppercase">10:30 AM</span>
-                        </div>
-                        <div class="text-slate-700 font-black text-xl uppercase tracking-tight font-bold text-brand-blue">Majlis Perasmian Penutup</div>
+                    <div class="faq-content px-8 pb-8 text-slate-500 text-sm">
+                        Peserta boleh memuat turun borang pelepasan dan surat jemputan rasmi di bahagian "Borang" untuk urusan tuntutan di jabatan masing-masing.
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="penceramah" class="py-40 bg-brand-soft px-6">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-28">
-                <h2 class="text-5xl font-black text-slate-900 uppercase tracking-tighter">Barisan Penceramah</h2>
-                <div class="w-20 h-1.5 bg-brand-gold mx-auto mt-6 rounded-full"></div>
+    <section id="lokasi" class="py-40 bg-white px-6">
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-center">
+            <div data-aos="fade-right">
+                <h2 class="text-5xl font-black mb-10 text-slate-900 uppercase tracking-tighter">Hotel Perdana, Kota Bharu</h2>
+                <div class="h-[400px] rounded-[3rem] overflow-hidden border-[10px] border-brand-soft shadow-xl mb-8">
+                    <iframe class="w-full h-full border-0" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3967.043685954939!2d102.2467319757343!3d6.124844327421118!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31b6af9210799479%3A0x6e9a05837941328b!2sHotel%20Perdana%20Kota%20Bharu!5e0!3m2!1sen!2smy!4v1709600000000!5m2!1sen!2smy" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+                <div class="flex gap-4">
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=Hotel+Perdana+Kota+Bharu" target="_blank" class="flex-1 bg-brand-blue text-white py-4 rounded-2xl font-black text-center text-xs uppercase flex items-center justify-center gap-2">
+                        <i data-lucide="map"></i> Google Maps
+                    </a>
+                    <a href="https://waze.com/ul?ll=6.124844,102.246732&navigate=yes" target="_blank" class="flex-1 bg-blue-400 text-white py-4 rounded-2xl font-black text-center text-xs uppercase flex items-center justify-center gap-2">
+                        <i data-lucide="navigation"></i> Waze
+                    </a>
+                </div>
             </div>
-            <div class="grid md:grid-cols-3 gap-16 text-center">
-                <div class="bg-white p-10 rounded-[4rem] border border-slate-100 shadow-xl group">
-                    <div class="relative overflow-hidden rounded-full aspect-square w-56 h-56 mx-auto mb-10 border-[8px] border-white group-hover:border-brand-gold transition-all">
-                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=600" alt="Prof" class="w-full h-full object-cover prof-zoom">
-                    </div>
-                    <h3 class="text-2xl font-black text-slate-900 leading-tight">Prof. Madya<br/>Dr. Ahmad Fauzi</h3>
-                    <p class="text-brand-gold font-black uppercase text-[10px] tracking-[0.2em] mt-3">Pakar Kerja Sosial Klinik</p>
-                </div>
-                <div class="bg-white p-10 rounded-[4rem] border border-slate-100 shadow-xl group">
-                    <div class="relative overflow-hidden rounded-full aspect-square w-56 h-56 mx-auto mb-10 border-[8px] border-white group-hover:border-brand-gold transition-all">
-                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=600" alt="Speaker" class="w-full h-full object-cover">
-                    </div>
-                    <h3 class="text-2xl font-black text-slate-900 leading-tight">Puan Siti Aminah</h3>
-                    <p class="text-brand-gold font-black uppercase text-[10px] tracking-[0.2em] mt-3">Ketua Pegawai KSP HKL</p>
-                </div>
-                <div class="bg-white p-10 rounded-[4rem] border border-slate-100 shadow-xl group">
-                    <div class="relative overflow-hidden rounded-full aspect-square w-56 h-56 mx-auto mb-10 border-[8px] border-white group-hover:border-brand-gold transition-all">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=600" alt="Speaker" class="w-full h-full object-cover">
-                    </div>
-                    <h3 class="text-2xl font-black text-slate-900 leading-tight">Encik Zulkifli Hassan</h3>
-                    <p class="text-brand-gold font-black uppercase text-[10px] tracking-[0.2em] mt-3">Pakar Dasar Sosial</p>
-                </div>
+            <div class="p-10 bg-brand-soft rounded-[4rem] text-left" data-aos="fade-left">
+                <i data-lucide="info" class="w-12 h-12 text-brand-gold mb-6"></i>
+                <p class="font-black text-brand-blue text-3xl mb-4 tracking-tighter uppercase leading-tight">Kota Bharu, Kelantan</p>
+                <p class="text-slate-500 font-bold italic mb-6">Ibu Negeri Kelantan Darul Naim</p>
+                <p class="text-slate-400 text-sm leading-relaxed">Nikmati keindahan budaya dan makanan di bandar tertua pantai timur. Persidangan ini dijalankan di lokasi strategik berhampiran pusat bandar dan tarikan pelancongan.</p>
             </div>
         </div>
     </section>
 
-    <section id="borang" class="py-32 bg-brand-soft px-6">
-        <div class="max-w-7xl mx-auto text-center">
-            <h2 class="text-4xl font-black text-slate-900 mb-16 uppercase tracking-tighter">Zon Muat Turun Borang</h2>
-            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                <a href="borang_pendaftaran.pdf" download class="flex items-center justify-between p-8 bg-white rounded-[3rem] border border-slate-100 hover:border-brand-blue transition-all group shadow-sm">
-                    <div class="flex items-center space-x-6">
-                        <div class="bg-brand-soft p-4 rounded-2xl text-brand-blue shadow-inner"><i data-lucide="file-text"></i></div>
-                        <span class="font-black uppercase text-xs tracking-widest text-left">Borang Pendaftaran</span>
-                    </div>
-                    <i data-lucide="download" class="text-slate-300 group-hover:text-brand-blue"></i>
-                </a>
-                <a href="borang_pelepasan.docx" download class="flex items-center justify-between p-8 bg-white rounded-[3rem] border border-slate-100 hover:border-brand-blue transition-all group shadow-sm">
-                    <div class="flex items-center space-x-6">
-                        <div class="bg-brand-soft p-4 rounded-2xl text-brand-blue shadow-inner"><i data-lucide="file-check"></i></div>
-                        <span class="font-black uppercase text-xs tracking-widest text-left">Borang Pelepasan</span>
-                    </div>
-                    <i data-lucide="download" class="text-slate-300 group-hover:text-brand-blue"></i>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <section id="daftar" class="py-40 bg-brand-dark px-6 relative overflow-hidden">
-        <div class="max-w-4xl mx-auto bg-white rounded-[5rem] p-12 md:p-20 shadow-2xl relative z-10">
+    <section id="daftar" class="py-40 bg-brand-dark px-6">
+        <div class="max-w-4xl mx-auto bg-white rounded-[5rem] p-12 md:p-20 shadow-2xl" data-aos="flip-up">
             <div id="reg-form-container">
-                <h2 class="text-5xl font-black mb-12 text-center uppercase tracking-tighter">Borang Pendaftaran</h2>
-                <form onsubmit="handleRegistration(event)" class="space-y-10">
-                    <div class="grid md:grid-cols-2 gap-8 text-left">
-                        <div class="space-y-4">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-5">Nama Penuh</label>
-                            <input name="nama" required type="text" class="w-full px-10 py-7 bg-brand-soft border border-slate-100 rounded-[3rem] focus:border-brand-blue outline-none font-black text-lg shadow-inner" placeholder="Masukkan Nama">
-                        </div>
-                        <div class="space-y-4">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-5">No. Kad Pengenalan</label>
-                            <input name="ic" required type="text" class="w-full px-10 py-7 bg-brand-soft border border-slate-100 rounded-[3rem] focus:border-brand-blue outline-none font-black text-lg shadow-inner" placeholder="850101-11-5555">
-                        </div>
-                        <div class="space-y-4">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-5">Tempat Bertugas</label>
-                            <input name="tempat_bertugas" required type="text" class="w-full px-10 py-7 bg-brand-soft border border-slate-100 rounded-[3rem] focus:border-brand-blue outline-none font-black text-lg shadow-inner" placeholder="Hospital / Klinik / Pejabat">
-                        </div>
-                        <div class="space-y-4">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-5">Negeri</label>
-                            <select name="negeri" required class="w-full px-10 py-7 bg-brand-soft border border-slate-100 rounded-[3rem] focus:border-brand-blue outline-none font-black text-lg shadow-inner appearance-none cursor-pointer">
-                                <option value="" disabled selected>Pilih Negeri</option>
-                                <option value="Johor">Johor</option>
-                                <option value="Kedah">Kedah</option>
-                                <option value="Kelantan">Kelantan</option>
-                                <option value="Melaka">Melaka</option>
-                                <option value="Negeri Sembilan">Negeri Sembilan</option>
-                                <option value="Pahang">Pahang</option>
-                                <option value="Perak">Perak</option>
-                                <option value="Perlis">Perlis</option>
-                                <option value="Pulau Pinang">Pulau Pinang</option>
-                                <option value="Sabah">Sabah</option>
-                                <option value="Sarawak">Sarawak</option>
-                                <option value="Selangor">Selangor</option>
-                                <option value="Terengganu">Terengganu</option>
-                                <option value="W.P. Kuala Lumpur">W.P. Kuala Lumpur</option>
-                            </select>
-                        </div>
-                        <div class="md:col-span-2 space-y-4">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 px-5">No. Telefon (WhatsApp)</label>
-                            <input name="tel" required type="tel" class="w-full px-10 py-7 bg-brand-soft border border-slate-100 rounded-[3rem] focus:border-brand-blue outline-none font-black text-lg shadow-inner" placeholder="012-3456789">
-                        </div>
+                <h2 class="text-4xl font-black mb-12 text-center uppercase tracking-tighter">Borang Pendaftaran</h2>
+                <form onsubmit="handleRegistration(event)" class="space-y-8">
+                    <div class="grid md:grid-cols-2 gap-6 text-left">
+                        <input name="nama" required type="text" class="w-full px-8 py-5 bg-brand-soft border border-slate-100 rounded-3xl outline-none font-bold" placeholder="Nama Penuh">
+                        <input name="ic" required type="text" class="w-full px-8 py-5 bg-brand-soft border border-slate-100 rounded-3xl outline-none font-bold" placeholder="No. K/P (850101-11-5555)">
+                        <input name="tempat_bertugas" required type="text" class="w-full px-8 py-5 bg-brand-soft border border-slate-100 rounded-3xl outline-none font-bold" placeholder="Hospital / Klinik">
+                        <select name="negeri" required class="w-full px-8 py-5 bg-brand-soft border border-slate-100 rounded-3xl outline-none font-bold">
+                            <option value="" disabled selected>Pilih Negeri</option>
+                            <option>Kelantan</option><option>Terengganu</option><option>Pahang</option><option>Lain-lain</option>
+                        </select>
+                        <input name="tel" required type="tel" class="md:col-span-2 w-full px-8 py-5 bg-brand-soft border border-slate-100 rounded-3xl outline-none font-bold" placeholder="No. Telefon (WhatsApp)">
                     </div>
-                    <button type="submit" class="w-full py-8 bg-brand-blue text-white font-black rounded-[3rem] text-xl uppercase tracking-widest shadow-2xl hover:bg-slate-800 transition-all">Daftar Sekarang</button>
+                    <button type="submit" class="w-full py-6 bg-brand-blue text-white font-black rounded-3xl text-lg uppercase shadow-xl hover:bg-slate-800 transition-all">Daftar Sekarang</button>
                 </form>
             </div>
             <div id="success-message" class="hidden text-center py-20">
                 <i data-lucide="check-circle" class="w-20 h-20 text-green-500 mx-auto mb-8"></i>
-                <h2 class="text-4xl font-black text-brand-blue mb-6 uppercase tracking-tighter">Pendaftaran Berjaya!</h2>
-                <p class="text-slate-500 mb-10 font-medium">Data anda telah selamat disimpan dalam sistem kami.</p>
-                <button onclick="window.location.reload()" class="px-10 py-4 bg-brand-blue text-white rounded-full font-black uppercase text-xs tracking-widest">Kembali</button>
+                <h2 class="text-3xl font-black text-brand-blue mb-4 uppercase">Pendaftaran Berjaya!</h2>
+                <button onclick="window.location.reload()" class="bg-brand-blue text-white px-8 py-3 rounded-full font-black uppercase text-xs">Kembali</button>
             </div>
         </div>
 
-        <div class="max-w-7xl mx-auto mt-24 text-left text-white px-6">
-            <div class="flex items-center justify-between mb-10">
-                <h3 class="text-2xl font-black uppercase tracking-tighter">Senarai Peserta (<span id="participant-count">0</span>)</h3>
-                <span class="bg-brand-gold px-4 py-1 rounded-full text-[10px] font-black uppercase">Live Database</span>
+        <div class="max-w-6xl mx-auto mt-24">
+            <div class="flex justify-between items-center mb-10 text-white">
+                <h3 class="text-xl font-black uppercase tracking-tighter">Senarai Peserta (<span id="participant-count">0</span>)</h3>
+                <span class="bg-brand-gold px-4 py-1 rounded-full text-[10px] font-black uppercase shadow-lg shadow-brand-gold/20">Live Database</span>
             </div>
             <div class="bg-white rounded-[3rem] overflow-hidden shadow-2xl overflow-x-auto">
-                <table class="w-full text-left border-collapse min-w-[700px]">
+                <table class="w-full text-left border-collapse min-w-[600px]">
                     <thead>
                         <tr class="bg-slate-50 border-b border-slate-100 text-slate-400">
-                            <th class="p-6 text-[10px] font-black uppercase tracking-widest">No.</th>
-                            <th class="p-6 text-[10px] font-black uppercase tracking-widest">Maklumat Peserta</th>
-                            <th class="p-6 text-[10px] font-black uppercase tracking-widest">Tempat Bertugas</th>
-                            <th class="p-6 text-[10px] font-black uppercase tracking-widest">Negeri</th>
+                            <th class="p-6 text-[10px] font-black uppercase">No.</th>
+                            <th class="p-6 text-[10px] font-black uppercase">Maklumat</th>
+                            <th class="p-6 text-[10px] font-black uppercase">Tempat Bertugas</th>
+                            <th class="p-6 text-[10px] font-black uppercase">Negeri</th>
                         </tr>
                     </thead>
                     <tbody id="admin-list" class="text-brand-dark"></tbody>
@@ -401,33 +288,17 @@
         </div>
     </section>
 
-    <section id="lokasi" class="py-40 bg-white px-6">
-        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-center">
-            <div class="text-left">
-                <h2 class="text-5xl font-black mb-10 text-slate-900 uppercase tracking-tighter">Hotel Perdana, Kota Bharu</h2>
-                <div class="h-[500px] rounded-[4rem] overflow-hidden border-[15px] border-brand-soft shadow-2xl">
-                    <iframe class="w-full h-full border-0 grayscale-[20%]" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3967.043516629983!2d102.24151787585093!3d6.12487402736173!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31b6af9215011709%3A0xc3b57357771e89b3!2sHotel%20Perdana%20Kota%20Bharu!5e0!3m2!1sen!2smy!4v1715000000000" allowfullscreen="" loading="lazy"></iframe>
-                </div>
-            </div>
-            <div class="p-10 bg-brand-soft rounded-[4rem] text-left">
-                <i data-lucide="map-pin" class="w-12 h-12 text-brand-gold mb-6"></i>
-                <p class="font-black text-brand-blue text-3xl mb-4 tracking-tighter uppercase">Kota Bharu, Kelantan</p>
-                <p class="text-slate-500 font-bold italic mb-4">Ibu Negeri Kelantan Darul Naim</p>
-                <p class="text-slate-400 leading-relaxed text-sm">Kota Bharu merupakan bandar tertua di pantai timur Semenanjung Malaysia, dibuka sejak zaman Sultan Muhammad II pada tahun 1844.</p>
-            </div>
-        </div>
-    </section>
-
-    <footer class="bg-brand-dark text-white py-24 px-6 border-t-[10px] border-brand-gold text-center">
-        <div class="flex flex-col items-center gap-6">
-            <img src="Logo TKPM.png" alt="Logo" class="w-16 h-16 p-2 bg-white rounded-xl">
-            <p class="text-brand-gold font-black uppercase tracking-[0.4em] text-[10px]">Persatuan Pegawai Pembangunan Masyarakat (Perubatan) Malaysia</p>
-            <p class="text-slate-600 text-[10px] font-black uppercase tracking-[0.3em]">© 2026 Hak Cipta Terpelihara Jawatankuasa PKSP</p>
-        </div>
+    <footer class="bg-brand-dark text-white py-20 px-6 border-t-[10px] border-brand-gold text-center">
+        <img src="Logo TKPM.png" alt="Logo" class="w-16 h-16 mx-auto mb-6 bg-white rounded-xl p-2">
+        <p class="text-brand-gold font-black uppercase tracking-[0.4em] text-[10px] mb-4">Persatuan Pegawai Pembangunan Masyarakat (Perubatan) Malaysia</p>
+        <p class="text-slate-600 text-[10px] font-black uppercase tracking-[0.3em]">© 2026 Hak Cipta Terpelihara Jawatankuasa PKSP</p>
     </footer>
 
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         lucide.createIcons();
+        AOS.init({ duration: 800, once: true });
 
         function updateTimer() {
             const target = new Date("August 04, 2026 08:00:00").getTime();
@@ -440,10 +311,10 @@
             
             const timerBox = (val, label) => `
                 <div class="flex flex-col items-center">
-                    <div class="w-20 h-20 md:w-32 md:h-32 bg-white border border-slate-200 rounded-[2.5rem] flex items-center justify-center font-black text-brand-blue text-2xl md:text-5xl mb-6 shadow-2xl">
+                    <div class="w-20 h-20 md:w-28 md:h-28 bg-white border border-slate-200 rounded-[2rem] flex items-center justify-center font-black text-brand-blue text-xl md:text-4xl mb-4 shadow-xl">
                         ${String(val).padStart(2, '0')}
                     </div>
-                    <span class="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400">${label}</span>
+                    <span class="text-[9px] font-black uppercase tracking-widest text-slate-400">${label}</span>
                 </div>`;
             document.getElementById('countdown').innerHTML = timerBox(days, 'Hari') + timerBox(hours, 'Jam') + timerBox(mins, 'Minit') + timerBox(secs, 'Saat');
         }
@@ -451,24 +322,22 @@
         updateTimer();
 
         function switchTab(day) {
-            document.querySelectorAll('.schedule-day').forEach(el => {
-                el.classList.remove('active');
-            });
-            const selectedDay = document.getElementById('day-' + day);
-            if (selectedDay) {
-                selectedDay.classList.add('active');
-            }
+            document.querySelectorAll('.schedule-day').forEach(el => el.classList.remove('active'));
+            document.getElementById('day-' + day).classList.add('active');
             document.querySelectorAll('.tab-btn').forEach((btn, index) => {
                 if ((index + 1) === day) {
-                    btn.classList.add('active', 'bg-brand-blue', 'text-white');
+                    btn.classList.add('active');
                     btn.classList.remove('text-slate-400');
                 } else {
-                    btn.classList.remove('active', 'bg-brand-blue', 'text-white');
+                    btn.classList.remove('active');
                     btn.classList.add('text-slate-400');
                 }
             });
         }
+
+        function toggleFaq(el) {
+            el.classList.toggle('active');
+        }
     </script>
 </body>
 </html>
-
