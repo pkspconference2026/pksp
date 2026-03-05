@@ -14,7 +14,6 @@
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Gantikan dengan config Firebase deme di sini
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'msw-kuantan-2026';
 
@@ -94,6 +93,12 @@
         .faq-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
         .faq-item.active .faq-content { max-height: 200px; }
         .faq-item.active .faq-icon { transform: rotate(180deg); }
+        
+        /* Hover Animations */
+        .hover-zoom { transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .hover-zoom:hover { transform: scale(1.05); }
+        .speaker-card { transition: all 0.4s ease; }
+        .speaker-card:hover { transform: translateY(-10px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
     </style>
 </head>
 <body class="bg-brand-soft text-brand-dark">
@@ -123,6 +128,7 @@
                 <a href="#penceramah" class="hover:text-brand-blue transition-colors">Penceramah</a>
                 <a href="#aturcara" class="hover:text-brand-blue transition-colors">Aturcara</a>
                 <a href="#faq" class="hover:text-brand-blue transition-colors">FAQ</a>
+                <a href="#borang" class="hover:text-brand-blue transition-colors">Muat Turun</a>
                 <a href="#lokasi" class="hover:text-brand-blue transition-colors">Lokasi</a>
                 <a href="#daftar" class="bg-brand-blue text-white px-8 py-3 rounded-full hover:bg-slate-800 transition-all">Daftar</a>
             </div>
@@ -149,7 +155,10 @@
     <section class="py-40 bg-white border-y border-slate-100 px-6">
         <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-20" data-aos="fade-up">
             <div class="flex-shrink-0 relative">
-                <img src="Pengerusi.jpg" alt="Pengerusi" class="w-64 h-64 md:w-96 md:h-96 rounded-full object-cover border-[12px] border-white shadow-2xl">
+                <img src="Pengerusi.jpg" alt="Pengerusi" class="w-64 h-64 md:w-96 md:h-96 rounded-full object-cover border-[12px] border-white shadow-2xl hover-zoom cursor-pointer">
+                <div class="absolute -bottom-6 -right-6 bg-brand-blue p-6 rounded-[2rem] text-white shadow-2xl">
+                    <i data-lucide="quote" class="w-10 h-10 fill-current"></i>
+                </div>
             </div>
             <div class="flex-1">
                 <h2 class="text-4xl font-black text-brand-blue uppercase mb-6">Kata Aluan Pengerusi</h2>
@@ -167,18 +176,18 @@
                 <div class="w-20 h-1.5 bg-brand-gold mx-auto mt-6 rounded-full"></div>
             </div>
             <div class="grid md:grid-cols-3 gap-16 text-center">
-                <div class="bg-white p-10 rounded-[4rem] shadow-xl">
-                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400" class="w-48 h-48 rounded-full mx-auto mb-8 object-cover border-4 border-brand-gold">
+                <div class="bg-white p-10 rounded-[4rem] shadow-xl speaker-card cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400" class="w-48 h-48 rounded-full mx-auto mb-8 object-cover border-4 border-brand-gold hover-zoom">
                     <h3 class="font-black text-xl">Dr. Ahmad Fauzi</h3>
                     <p class="text-brand-gold text-[10px] font-black uppercase">Pakar Kerja Sosial</p>
                 </div>
-                <div class="bg-white p-10 rounded-[4rem] shadow-xl">
-                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400" class="w-48 h-48 rounded-full mx-auto mb-8 object-cover border-4 border-brand-gold">
+                <div class="bg-white p-10 rounded-[4rem] shadow-xl speaker-card cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400" class="w-48 h-48 rounded-full mx-auto mb-8 object-cover border-4 border-brand-gold hover-zoom">
                     <h3 class="font-black text-xl">Puan Siti Aminah</h3>
                     <p class="text-brand-gold text-[10px] font-black uppercase">Ketua Pegawai KSP HKL</p>
                 </div>
-                <div class="bg-white p-10 rounded-[4rem] shadow-xl">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400" class="w-48 h-48 rounded-full mx-auto mb-8 object-cover border-4 border-brand-gold">
+                <div class="bg-white p-10 rounded-[4rem] shadow-xl speaker-card cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400" class="w-48 h-48 rounded-full mx-auto mb-8 object-cover border-4 border-brand-gold hover-zoom">
                     <h3 class="font-black text-xl">Encik Zulkifli Hassan</h3>
                     <p class="text-brand-gold text-[10px] font-black uppercase">Pakar Dasar Sosial</p>
                 </div>
@@ -201,10 +210,10 @@
                 <div class="p-8 bg-brand-soft rounded-3xl flex items-center gap-6"><span class="font-black text-brand-blue">08:00 PM</span><span class="font-bold">Mesyuarat AGM</span></div>
             </div>
             <div id="day-2" class="schedule-day space-y-4">
-                <div class="p-8 bg-brand-soft rounded-3xl flex items-center gap-6"><span class="font-black text-brand-blue">08:30 AM</span><span class="font-bold">Sesi PFA (Hospital Kemaman)</span></div>
+                <div class="p-8 bg-brand-soft rounded-3xl flex items-center gap-6"><span class="font-black text-brand-blue">08:30 AM</span><span class="font-bold uppercase text-xs">Psychological First Aid (PFA)</span></div>
             </div>
             <div id="day-3" class="schedule-day space-y-4">
-                <div class="p-8 bg-brand-soft rounded-3xl flex items-center gap-6"><span class="font-black text-brand-blue">10:30 AM</span><span class="font-bold">Majlis Penutup</span></div>
+                <div class="p-8 bg-brand-soft rounded-3xl flex items-center gap-6"><span class="font-black text-brand-blue">10:30 AM</span><span class="font-bold uppercase">Majlis Penutup</span></div>
             </div>
         </div>
     </section>
@@ -214,22 +223,38 @@
             <h2 class="text-4xl font-black text-center mb-16 uppercase">Soalan Lazim</h2>
             <div class="faq-item bg-white rounded-3xl border border-slate-100 cursor-pointer mb-4" onclick="toggleFaq(this)">
                 <div class="p-8 flex justify-between font-bold text-sm uppercase">Sijil disediakan?<i data-lucide="chevron-down" class="faq-icon"></i></div>
-                <div class="faq-content px-8 pb-8 text-slate-500 text-sm">Ya, sijil digital akan diberikan.</div>
+                <div class="faq-content px-8 pb-8 text-slate-500 text-sm">Ya, sijil digital akan diberikan selepas majlis penutup.</div>
             </div>
         </div>
     </section>
 
-    <section id="lokasi" class="py-40 bg-white px-6">
+    <section id="borang" class="py-40 bg-white px-6">
+        <div class="max-w-5xl mx-auto text-center" data-aos="fade-up">
+            <h2 class="text-4xl font-black uppercase mb-16">Muat Turun Dokumen</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <a href="#" class="p-8 bg-brand-soft rounded-3xl border border-slate-100 flex items-center justify-between hover:border-brand-blue transition-all group">
+                    <span class="font-bold uppercase text-xs">Borang Pendaftaran (PDF)</span>
+                    <i data-lucide="download" class="group-hover:text-brand-blue"></i>
+                </a>
+                <a href="#" class="p-8 bg-brand-soft rounded-3xl border border-slate-100 flex items-center justify-between hover:border-brand-blue transition-all group">
+                    <span class="font-bold uppercase text-xs">Surat Jemputan Rasmi</span>
+                    <i data-lucide="download" class="group-hover:text-brand-blue"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="lokasi" class="py-40 bg-brand-soft px-6">
         <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-center">
             <div data-aos="fade-right">
                 <h2 class="text-4xl font-black mb-8 uppercase">Hotel Perdana, Kota Bharu</h2>
-                <div class="h-[450px] rounded-[3rem] overflow-hidden border-[10px] border-brand-soft shadow-2xl">
-                    <iframe class="w-full h-full border-0" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3967.1171780820935!2d102.24454347585698!3d6.114885827453472!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31b6af031575836d%3A0x6a1c5187e5849591!2sHotel%20Perdana%20Kota%20Bharu!5e0!3m2!1sen!2smy!4v1709605000000!5m2!1sen!2smy" allowfullscreen="" loading="lazy"></iframe>
+                <div class="h-[450px] rounded-[3rem] overflow-hidden border-[10px] border-white shadow-2xl">
+                    <iframe class="w-full h-full border-0" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m12!1m3!1d3967.042780654162!2d102.24414347585098!3d6.12501069386154!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31b6af070e6c10b7%3A0xc66511a0a520f8c8!2sHotel%20Perdana%20Kota%20Bharu!5e0!3m2!1sen!2smy!4v1709600000000!5m2!1sen!2smy" allowfullscreen="" loading="lazy"></iframe>
                 </div>
             </div>
-            <div class="p-10 bg-brand-soft rounded-[4rem]" data-aos="fade-left">
+            <div class="p-10 bg-white rounded-[4rem]" data-aos="fade-left">
                 <p class="font-black text-brand-blue text-3xl mb-4 uppercase">Kota Bharu, Kelantan</p>
-                <p class="text-slate-400 text-sm">Lokasi bersejarah di tengah-tengah bandar Kota Bharu. Dekat dengan Pasar Siti Khadijah dan tarikan utama.</p>
+                <p class="text-slate-400 text-sm leading-relaxed italic">"Tempat perjumpaan ilmu dan ukhwah."</p>
             </div>
         </div>
     </section>
@@ -237,15 +262,36 @@
     <section id="daftar" class="py-40 bg-brand-dark px-6">
         <div class="max-w-4xl mx-auto bg-white rounded-[5rem] p-12 md:p-20 shadow-2xl" data-aos="flip-up">
             <div id="reg-form-container">
-                <h2 class="text-4xl font-black mb-12 text-center uppercase">Pendaftaran</h2>
+                <h2 class="text-4xl font-black mb-12 text-center uppercase">Pendaftaran Peserta</h2>
                 <form onsubmit="handleRegistration(event)" class="space-y-6">
                     <input name="nama" required type="text" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="Nama Penuh">
                     <div class="grid md:grid-cols-2 gap-6">
                         <input name="ic" required type="text" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="No. K/P">
-                        <input name="tel" required type="tel" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="No. Tel">
+                        <input name="tel" required type="tel" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="No. Tel (WhatsApp)">
                     </div>
-                    <input name="tempat_bertugas" required type="text" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="Tempat Bertugas">
-                    <button type="submit" class="w-full py-6 bg-brand-blue text-white font-black rounded-3xl uppercase shadow-xl">Daftar Sekarang</button>
+                    <input name="tempat_bertugas" required type="text" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="Hospital / Jabatan">
+                    
+                    <select name="negeri" required class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold outline-none border-none">
+                        <option value="" disabled selected>Pilih Negeri</option>
+                        <option value="Johor">Johor</option>
+                        <option value="Kedah">Kedah</option>
+                        <option value="Kelantan">Kelantan</option>
+                        <option value="Melaka">Melaka</option>
+                        <option value="Negeri Sembilan">Negeri Sembilan</option>
+                        <option value="Pahang">Pahang</option>
+                        <option value="Perak">Perak</option>
+                        <option value="Perlis">Perlis</option>
+                        <option value="Pulau Pinang">Pulau Pinang</option>
+                        <option value="Sabah">Sabah</option>
+                        <option value="Sarawak">Sarawak</option>
+                        <option value="Selangor">Selangor</option>
+                        <option value="Terengganu">Terengganu</option>
+                        <option value="W.P. Kuala Lumpur">W.P. Kuala Lumpur</option>
+                        <option value="W.P. Labuan">W.P. Labuan</option>
+                        <option value="W.P. Putrajaya">W.P. Putrajaya</option>
+                    </select>
+
+                    <button type="submit" class="w-full py-6 bg-brand-blue text-white font-black rounded-3xl uppercase shadow-xl hover:bg-slate-800 transition-all">Sahkan Pendaftaran</button>
                 </form>
             </div>
             <div id="success-message" class="hidden text-center py-20">
@@ -256,7 +302,7 @@
         </div>
 
         <div class="max-w-6xl mx-auto mt-24">
-            <h3 class="text-white font-black uppercase mb-10">Senarai Peserta (<span id="participant-count">0</span>)</h3>
+            <h3 class="text-white font-black uppercase mb-10">Senarai Peserta Terkini (<span id="participant-count">0</span>)</h3>
             <div class="bg-white rounded-[3rem] overflow-hidden shadow-2xl overflow-x-auto">
                 <table class="w-full text-left border-collapse min-w-[600px]">
                     <thead>
@@ -271,7 +317,7 @@
     </section>
 
     <footer class="bg-brand-dark text-white py-16 px-6 border-t-[10px] border-brand-gold text-center">
-        <p class="text-brand-gold font-black uppercase tracking-[0.4em] text-[10px]">Persatuan Pegawai KSP Malaysia</p>
+        <p class="text-brand-gold font-black uppercase tracking-[0.4em] text-[10px]">PKSP Malaysia 2026</p>
     </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
