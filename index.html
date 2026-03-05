@@ -14,7 +14,7 @@
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // NOTA: Sila masukkan firebaseConfig deme di sini supaya database berfungsi
+        // Gantikan dengan config Firebase deme di sini
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'msw-kuantan-2026';
 
@@ -22,23 +22,14 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        async function initAuth() {
-            try {
-                await signInAnonymously(auth);
-                console.log("Sistem Sedia");
-            } catch (error) {
-                console.error("Ralat Auth:", error);
-            }
-        }
-
         onAuthStateChanged(auth, (user) => { if (user) listenToParticipants(); });
+        async function initAuth() { try { await signInAnonymously(auth); } catch (e) { console.error(e); } }
 
         window.handleRegistration = async (e) => {
             e.preventDefault();
             const btn = e.target.querySelector('button');
             btn.disabled = true;
             btn.innerText = "Memproses...";
-
             const formData = {
                 nama: e.target.nama.value,
                 ic: e.target.ic.value,
@@ -47,18 +38,12 @@
                 tel: e.target.tel.value,
                 timestamp: serverTimestamp()
             };
-
             try {
                 const collRef = collection(db, 'artifacts', appId, 'public', 'data', 'pendaftaran');
                 await addDoc(collRef, formData);
                 document.getElementById('reg-form-container').classList.add('hidden');
                 document.getElementById('success-message').classList.remove('hidden');
-            } catch (error) {
-                alert("Ralat! Sila cuba lagi.");
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "Daftar Sekarang";
-            }
+            } catch (err) { alert("Ralat!"); } finally { btn.disabled = false; btn.innerText = "Daftar Sekarang"; }
         };
 
         function listenToParticipants() {
@@ -72,10 +57,10 @@
                 if (container) {
                     countEl.innerText = list.length;
                     container.innerHTML = list.map((p, i) => `
-                        <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                            <td class="p-4 font-bold text-brand-blue">${list.length - i}</td>
-                            <td class="p-4 text-[10px] font-black uppercase text-slate-900">${p.nama}</td>
-                            <td class="p-4 text-[10px] uppercase text-slate-500">${p.tempat_bertugas}</td>
+                        <tr class="border-b border-slate-100 text-brand-dark">
+                            <td class="p-4 font-bold">${list.length - i}</td>
+                            <td class="p-4 text-[10px] font-black uppercase">${p.nama}</td>
+                            <td class="p-4 text-[10px] uppercase">${p.tempat_bertugas}</td>
                             <td class="p-4 text-[10px] font-black text-brand-gold uppercase">${p.negeri}</td>
                         </tr>`).join('');
                 }
@@ -105,7 +90,7 @@
         .schedule-day { display: none; }
         .schedule-day.active { display: block; animation: fadeIn 0.5s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .tab-btn.active { background-color: #1e3a8a; color: white; box-shadow: 0 10px 15px -3px rgba(30, 58, 138, 0.3); }
+        .tab-btn.active { background-color: #1e3a8a; color: white; }
         .faq-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
         .faq-item.active .faq-content { max-height: 200px; }
         .faq-item.active .faq-icon { transform: rotate(180deg); }
@@ -113,18 +98,18 @@
 </head>
 <body class="bg-brand-soft text-brand-dark">
 
-    
-    <nav class="fixed w-full bg-white/95 backdrop-blur-md z-50 border-b border-slate-200 shadow-sm">
-        <div class="fixed right-0 top-1/2 -translate-y-1/2 z-[100] flex flex-col gap-1 items-end">
-        <a href="#aturcara" class="bg-brand-blue text-white px-3 py-7 rounded-l-2xl shadow-xl flex flex-col items-center gap-2 border-l border-white/20 active:scale-95 group transition-all hover:pr-8">
-            <i data-lucide="calendar-days" class="w-5 h-5 mb-1 group-hover:scale-110"></i>
+    <div class="fixed right-0 top-1/2 -translate-y-1/2 z-[100] flex flex-col gap-1 items-end">
+        <a href="#aturcara" class="bg-brand-blue text-white px-3 py-7 rounded-l-2xl shadow-xl flex flex-col items-center gap-2 border-l border-white/20 hover:pr-8 transition-all group">
+            <i data-lucide="calendar-days" class="w-5 h-5 group-hover:scale-110"></i>
             <span style="writing-mode: vertical-rl; text-orientation: mixed;" class="text-[10px] font-black uppercase tracking-widest">Aturcara</span>
         </a>
-        <a href="#borang" class="bg-brand-gold text-white px-3 py-7 rounded-l-2xl shadow-xl flex flex-col items-center gap-2 border-l border-white/20 active:scale-95 group transition-all hover:pr-8">
-            <i data-lucide="download" class="w-5 h-5 mb-1 group-hover:scale-110"></i>
-            <span style="writing-mode: vertical-rl; text-orientation: mixed;" class="text-[10px] font-black uppercase tracking-widest">Borang</span>
+        <a href="#daftar" class="bg-brand-gold text-white px-3 py-7 rounded-l-2xl shadow-xl flex flex-col items-center gap-2 border-l border-white/20 hover:pr-8 transition-all group">
+            <i data-lucide="edit-3" class="w-5 h-5 group-hover:scale-110"></i>
+            <span style="writing-mode: vertical-rl; text-orientation: mixed;" class="text-[10px] font-black uppercase tracking-widest">Daftar</span>
         </a>
     </div>
+
+    <nav class="fixed w-full bg-white/95 backdrop-blur-md z-50 border-b border-slate-200 shadow-sm">
         <div class="max-w-7xl mx-auto px-6 h-24 flex items-center justify-between">
             <div class="flex items-center space-x-4 cursor-pointer" onclick="window.scrollTo({top:0, behavior:'smooth'})">
                 <img src="Logo TKPM.png" alt="Logo" class="w-16 h-16">
@@ -147,7 +132,7 @@
         <div class="max-w-7xl mx-auto relative z-10" data-aos="zoom-in">
             <div class="inline-block px-6 py-2 mb-10 text-[10px] font-black tracking-[0.4em] text-brand-gold uppercase bg-white border border-slate-200 rounded-full">Edisi Kebangsaan 2026</div>
             <h1 class="text-4xl md:text-7xl font-black text-slate-900 mb-10 leading-[1.1] tracking-tighter uppercase">
-                Persidangan Pegawai<br/>Kerja Sosial Perubatan Malaysia<br/>
+                Persidangan Pegawai<br/>KSP Malaysia 2026<br/>
                 <span class="text-red-600">Kota Bharu, Kelantan</span>
             </h1>
             <div class="flex justify-center gap-6 md:gap-12 mb-16" id="countdown"></div>
@@ -160,95 +145,91 @@
         </div>
     </section>
 
-    <section id="aturcara" class="py-40 bg-white px-6">
+    <section class="py-40 bg-white border-y border-slate-100 px-6 text-center md:text-left">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-20" data-aos="fade-up">
+            <div class="flex-shrink-0 relative">
+                <img src="Pengerusi.jpg" alt="Pengerusi" class="relative w-64 h-64 md:w-96 md:h-96 rounded-full object-cover border-[12px] border-white shadow-2xl">
+                <div class="absolute -bottom-6 -right-6 bg-brand-blue p-6 rounded-[2rem] text-white shadow-2xl">
+                    <i data-lucide="quote" class="w-10 h-10 fill-current"></i>
+                </div>
+            </div>
+            <div class="flex-1">
+                <h2 class="text-4xl font-black text-slate-900 mb-10 tracking-tighter uppercase">Kata Aluan Pengerusi</h2>
+                <p class="text-2xl text-slate-600 italic leading-relaxed mb-16">
+                    "Assalamualaikum rakan sejawat semua. Persidangan di Kota Bharu kali ini adalah platform terbaik untuk kita berkongsi amalan terbaik demi kecemerlangan perkhidmatan."
+                </p>
+                <div class="border-l-[6px] border-brand-gold pl-10 text-left">
+                    <p class="font-black text-brand-blue text-2xl uppercase">Tn. Hj. Harolhanam bin Mohamed Wahid</p>
+                    <p class="text-brand-gold font-black uppercase text-[10px] tracking-[0.5em]">Pengerusi Persidangan 2026</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="aturcara" class="py-40 bg-brand-soft px-6">
         <div class="max-w-5xl mx-auto" data-aos="fade-up">
-            <div class="text-center mb-24">
+            <div class="text-center mb-20">
                 <h2 class="text-5xl font-black text-slate-900 uppercase tracking-tighter">Aturcara Program</h2>
-                <div class="flex flex-wrap justify-center p-3 bg-brand-soft rounded-[3rem] inline-flex gap-3 border border-slate-200 mt-10 shadow-inner">
-                    <button onclick="switchTab(1)" class="tab-btn active px-12 py-4 rounded-[2rem] font-black text-xs uppercase tracking-widest transition-all">Hari 01</button>
-                    <button onclick="switchTab(2)" class="tab-btn px-12 py-4 rounded-[2rem] font-black text-xs uppercase tracking-widest transition-all text-slate-400">Hari 02</button>
-                    <button onclick="switchTab(3)" class="tab-btn px-12 py-4 rounded-[2rem] font-black text-xs uppercase tracking-widest transition-all text-slate-400">Hari 03</button>
+                <div class="flex flex-wrap justify-center p-3 bg-white rounded-[3rem] inline-flex gap-3 border border-slate-200 mt-10 shadow-inner">
+                    <button onclick="switchTab(1)" class="tab-btn active px-12 py-4 rounded-[2rem] font-black text-xs uppercase transition-all">Hari 01</button>
+                    <button onclick="switchTab(2)" class="tab-btn px-12 py-4 rounded-[2rem] font-black text-xs uppercase transition-all text-slate-400">Hari 02</button>
+                    <button onclick="switchTab(3)" class="tab-btn px-12 py-4 rounded-[2rem] font-black text-xs uppercase transition-all text-slate-400">Hari 03</button>
                 </div>
             </div>
 
             <div id="day-1" class="schedule-day active space-y-4">
-                <div class="p-8 bg-brand-soft rounded-[2.5rem] border border-slate-100 flex items-center gap-8">
+                <div class="p-8 bg-white rounded-[2.5rem] border border-slate-100 flex items-center gap-8">
                     <span class="font-black text-brand-blue text-xl">03:00 PM</span>
-                    <span class="font-bold text-slate-700 uppercase">Pendaftaran & Check-in Hotel</span>
+                    <span class="font-bold text-slate-700">Pendaftaran & Check-in Hotel</span>
                 </div>
-                <div class="p-8 bg-brand-soft rounded-[2.5rem] border border-slate-100 flex items-center gap-8">
+                <div class="p-8 bg-white rounded-[2.5rem] border border-slate-100 flex items-center gap-8">
                     <span class="font-black text-brand-blue text-xl">08:00 PM</span>
-                    <span class="font-bold text-slate-700 uppercase">Mesyuarat Agung Tahunan (AGM)</span>
+                    <span class="font-bold text-slate-700">Mesyuarat Agung Tahunan (AGM)</span>
                 </div>
             </div>
 
             <div id="day-2" class="schedule-day space-y-4">
-                <div class="p-8 bg-brand-soft rounded-[2.5rem] border border-slate-100 flex items-center gap-8">
+                <div class="p-8 bg-white rounded-[2.5rem] border border-slate-100 flex items-center gap-8">
                     <span class="font-black text-brand-blue text-xl">08:30 AM</span>
-                    <span class="font-bold text-slate-700 uppercase">Ceramah: Psychological First Aid (PFA)</span>
-                </div>
-                <div class="p-8 bg-brand-soft rounded-[2.5rem] border border-slate-100 flex items-center gap-8">
-                    <span class="font-black text-brand-blue text-xl">08:00 PM</span>
-                    <span class="font-bold text-slate-700 uppercase">Malam Mesra & Jamuan Makan Malam</span>
+                    <span class="font-bold text-slate-700 uppercase text-xs">Psychological First Aid (PFA)</span>
                 </div>
             </div>
 
             <div id="day-3" class="schedule-day space-y-4">
-                <div class="p-8 bg-brand-soft rounded-[2.5rem] border border-slate-100 flex items-center gap-8">
+                <div class="p-8 bg-white rounded-[2.5rem] border border-slate-100 flex items-center gap-8">
                     <span class="font-black text-brand-blue text-xl">10:30 AM</span>
-                    <span class="font-bold text-brand-blue uppercase font-black">Majlis Perasmian Penutup</span>
+                    <span class="font-bold text-brand-blue uppercase">Majlis Perasmian Penutup</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="faq" class="py-40 bg-brand-soft px-6">
+    <section id="faq" class="py-40 bg-white px-6">
         <div class="max-w-4xl mx-auto" data-aos="fade-up">
-            <h2 class="text-4xl font-black text-center mb-20 uppercase tracking-tighter">Soalan Lazim (FAQ)</h2>
+            <h2 class="text-4xl font-black text-center mb-20 uppercase tracking-tighter">Soalan Lazim</h2>
             <div class="space-y-4">
-                <div class="faq-item bg-white rounded-3xl border border-slate-100 overflow-hidden cursor-pointer" onclick="toggleFaq(this)">
+                <div class="faq-item bg-brand-soft rounded-3xl border border-slate-100 cursor-pointer" onclick="toggleFaq(this)">
                     <div class="p-8 flex justify-between items-center">
-                        <span class="font-bold text-slate-700">Adakah sijil penyertaan disediakan?</span>
-                        <i data-lucide="chevron-down" class="faq-icon transition-transform"></i>
+                        <span class="font-bold text-slate-700 uppercase text-xs">Adakah sijil penyertaan disediakan?</span>
+                        <i data-lucide="chevron-down" class="faq-icon transition-all"></i>
                     </div>
-                    <div class="faq-content px-8 pb-8 text-slate-500 text-sm">
-                        Ya, sijil penyertaan digital akan diberikan kepada semua peserta selepas tamat persidangan melalui emel yang didaftarkan.
-                    </div>
-                </div>
-                <div class="faq-item bg-white rounded-3xl border border-slate-100 overflow-hidden cursor-pointer" onclick="toggleFaq(this)">
-                    <div class="p-8 flex justify-between items-center">
-                        <span class="font-bold text-slate-700">Bagaimanakah dengan tuntutan perjalanan (LO)?</span>
-                        <i data-lucide="chevron-down" class="faq-icon transition-transform"></i>
-                    </div>
-                    <div class="faq-content px-8 pb-8 text-slate-500 text-sm">
-                        Peserta boleh memuat turun borang pelepasan dan surat jemputan rasmi di bahagian "Borang" untuk urusan tuntutan di jabatan masing-masing.
-                    </div>
+                    <div class="faq-content px-8 pb-8 text-slate-500 text-sm">Ya, sijil digital akan diberikan.</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="lokasi" class="py-40 bg-white px-6">
+    <section id="lokasi" class="py-40 bg-brand-soft px-6">
         <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-center">
             <div data-aos="fade-right">
-                <h2 class="text-5xl font-black mb-10 text-slate-900 uppercase tracking-tighter">Hotel Perdana, Kota Bharu</h2>
-                <div class="h-[400px] rounded-[3rem] overflow-hidden border-[10px] border-brand-soft shadow-xl mb-8">
-                    <iframe class="w-full h-full border-0" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3967.043685954939!2d102.2467319757343!3d6.124844327421118!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31b6af9210799479%3A0x6e9a05837941328b!2sHotel%20Perdana%20Kota%20Bharu!5e0!3m2!1sen!2smy!4v1709600000000!5m2!1sen!2smy" allowfullscreen="" loading="lazy"></iframe>
-                </div>
-                <div class="flex gap-4">
-                    <a href="https://www.google.com/maps/dir/?api=1&destination=Hotel+Perdana+Kota+Bharu" target="_blank" class="flex-1 bg-brand-blue text-white py-4 rounded-2xl font-black text-center text-xs uppercase flex items-center justify-center gap-2">
-                        <i data-lucide="map"></i> Google Maps
-                    </a>
-                    <a href="https://waze.com/ul?ll=6.124844,102.246732&navigate=yes" target="_blank" class="flex-1 bg-blue-400 text-white py-4 rounded-2xl font-black text-center text-xs uppercase flex items-center justify-center gap-2">
-                        <i data-lucide="navigation"></i> Waze
-                    </a>
+                <h2 class="text-5xl font-black mb-10 uppercase tracking-tighter">Hotel Perdana, KB</h2>
+                <div class="h-[400px] rounded-[3rem] overflow-hidden border-[10px] border-white shadow-xl mb-8">
+                    <iframe class="w-full h-full border-0" src="http://googleusercontent.com/maps.google.com/6" allowfullscreen="" loading="lazy"></iframe>
                 </div>
             </div>
-            <div class="p-10 bg-brand-soft rounded-[4rem] text-left" data-aos="fade-left">
-                <i data-lucide="info" class="w-12 h-12 text-brand-gold mb-6"></i>
-                <p class="font-black text-brand-blue text-3xl mb-4 tracking-tighter uppercase leading-tight">Kota Bharu, Kelantan</p>
-                <p class="text-slate-500 font-bold italic mb-6">Ibu Negeri Kelantan Darul Naim</p>
-                <p class="text-slate-400 text-sm leading-relaxed">Nikmati keindahan budaya dan makanan di bandar tertua pantai timur. Persidangan ini dijalankan di lokasi strategik berhampiran pusat bandar dan tarikan pelancongan.</p>
+            <div class="p-10 bg-white rounded-[4rem]" data-aos="fade-left">
+                <p class="font-black text-brand-blue text-3xl mb-4 uppercase">Kota Bharu, Kelantan</p>
+                <p class="text-slate-400 text-sm leading-relaxed">Nikmati budaya Pantai Timur di lokasi persidangan yang ikonik.</p>
             </div>
         </div>
     </section>
@@ -256,19 +237,19 @@
     <section id="daftar" class="py-40 bg-brand-dark px-6">
         <div class="max-w-4xl mx-auto bg-white rounded-[5rem] p-12 md:p-20 shadow-2xl" data-aos="flip-up">
             <div id="reg-form-container">
-                <h2 class="text-4xl font-black mb-12 text-center uppercase tracking-tighter">Borang Pendaftaran</h2>
+                <h2 class="text-4xl font-black mb-12 text-center uppercase tracking-tighter">Pendaftaran</h2>
                 <form onsubmit="handleRegistration(event)" class="space-y-8">
-                    <div class="grid md:grid-cols-2 gap-6 text-left">
-                        <input name="nama" required type="text" class="w-full px-8 py-5 bg-brand-soft border border-slate-100 rounded-3xl outline-none font-bold" placeholder="Nama Penuh">
-                        <input name="ic" required type="text" class="w-full px-8 py-5 bg-brand-soft border border-slate-100 rounded-3xl outline-none font-bold" placeholder="No. K/P (850101-11-5555)">
-                        <input name="tempat_bertugas" required type="text" class="w-full px-8 py-5 bg-brand-soft border border-slate-100 rounded-3xl outline-none font-bold" placeholder="Hospital / Klinik">
-                        <select name="negeri" required class="w-full px-8 py-5 bg-brand-soft border border-slate-100 rounded-3xl outline-none font-bold">
-                            <option value="" disabled selected>Pilih Negeri</option>
-                            <option>Kelantan</option><option>Terengganu</option><option>Pahang</option><option>Lain-lain</option>
-                        </select>
-                        <input name="tel" required type="tel" class="md:col-span-2 w-full px-8 py-5 bg-brand-soft border border-slate-100 rounded-3xl outline-none font-bold" placeholder="No. Telefon (WhatsApp)">
+                    <input name="nama" required type="text" class="w-full px-8 py-5 bg-brand-soft rounded-3xl outline-none font-bold" placeholder="Nama Penuh">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <input name="ic" required type="text" class="w-full px-8 py-5 bg-brand-soft rounded-3xl outline-none font-bold" placeholder="No. K/P">
+                        <input name="tel" required type="tel" class="w-full px-8 py-5 bg-brand-soft rounded-3xl outline-none font-bold" placeholder="No. Tel">
                     </div>
-                    <button type="submit" class="w-full py-6 bg-brand-blue text-white font-black rounded-3xl text-lg uppercase shadow-xl hover:bg-slate-800 transition-all">Daftar Sekarang</button>
+                    <input name="tempat_bertugas" required type="text" class="w-full px-8 py-5 bg-brand-soft rounded-3xl outline-none font-bold" placeholder="Tempat Bertugas">
+                    <select name="negeri" required class="w-full px-8 py-5 bg-brand-soft rounded-3xl outline-none font-bold">
+                        <option value="" disabled selected>Pilih Negeri</option>
+                        <option>Kelantan</option><option>Terengganu</option><option>Pahang</option>
+                    </select>
+                    <button type="submit" class="w-full py-6 bg-brand-blue text-white font-black rounded-3xl uppercase shadow-xl hover:bg-slate-800 transition-all">Daftar Sekarang</button>
                 </form>
             </div>
             <div id="success-message" class="hidden text-center py-20">
@@ -279,10 +260,7 @@
         </div>
 
         <div class="max-w-6xl mx-auto mt-24">
-            <div class="flex justify-between items-center mb-10 text-white">
-                <h3 class="text-xl font-black uppercase tracking-tighter">Senarai Peserta (<span id="participant-count">0</span>)</h3>
-                <span class="bg-brand-gold px-4 py-1 rounded-full text-[10px] font-black uppercase shadow-lg shadow-brand-gold/20">Live Database</span>
-            </div>
+            <h3 class="text-xl font-black uppercase text-white mb-10">Senarai Peserta (<span id="participant-count">0</span>)</h3>
             <div class="bg-white rounded-[3rem] overflow-hidden shadow-2xl overflow-x-auto">
                 <table class="w-full text-left border-collapse min-w-[600px]">
                     <thead>
@@ -293,7 +271,7 @@
                             <th class="p-6 text-[10px] font-black uppercase">Negeri</th>
                         </tr>
                     </thead>
-                    <tbody id="admin-list" class="text-brand-dark"></tbody>
+                    <tbody id="admin-list"></tbody>
                 </table>
             </div>
         </div>
@@ -301,11 +279,10 @@
 
     <footer class="bg-brand-dark text-white py-20 px-6 border-t-[10px] border-brand-gold text-center">
         <img src="Logo TKPM.png" alt="Logo" class="w-16 h-16 mx-auto mb-6 bg-white rounded-xl p-2">
-        <p class="text-brand-gold font-black uppercase tracking-[0.4em] text-[10px] mb-4">Persatuan Pegawai Pembangunan Masyarakat (Perubatan) Malaysia</p>
-        <p class="text-slate-600 text-[10px] font-black uppercase tracking-[0.3em]">© 2026 Hak Cipta Terpelihara Jawatankuasa PKSP</p>
+        <p class="text-brand-gold font-black uppercase text-[10px] tracking-[0.4em] mb-4">PKSP Malaysia 2026</p>
+        <p class="text-slate-600 text-[8px] font-black uppercase">© 2026 Hak Cipta Terpelihara</p>
     </footer>
 
-    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         lucide.createIcons();
@@ -319,37 +296,24 @@
             const hours = Math.max(0, Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
             const mins = Math.max(0, Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)));
             const secs = Math.max(0, Math.floor((diff % (1000 * 60)) / 1000));
-            
             const timerBox = (val, label) => `
                 <div class="flex flex-col items-center">
-                    <div class="w-20 h-20 md:w-28 md:h-28 bg-white border border-slate-200 rounded-[2rem] flex items-center justify-center font-black text-brand-blue text-xl md:text-4xl mb-4 shadow-xl">
-                        ${String(val).padStart(2, '0')}
-                    </div>
+                    <div class="w-20 h-20 md:w-28 md:h-28 bg-white border border-slate-200 rounded-[2rem] flex items-center justify-center font-black text-brand-blue text-xl md:text-4xl mb-4 shadow-xl">${String(val).padStart(2, '0')}</div>
                     <span class="text-[9px] font-black uppercase tracking-widest text-slate-400">${label}</span>
                 </div>`;
             document.getElementById('countdown').innerHTML = timerBox(days, 'Hari') + timerBox(hours, 'Jam') + timerBox(mins, 'Minit') + timerBox(secs, 'Saat');
         }
-        setInterval(updateTimer, 1000);
-        updateTimer();
+        setInterval(updateTimer, 1000); updateTimer();
 
         function switchTab(day) {
             document.querySelectorAll('.schedule-day').forEach(el => el.classList.remove('active'));
             document.getElementById('day-' + day).classList.add('active');
             document.querySelectorAll('.tab-btn').forEach((btn, index) => {
-                if ((index + 1) === day) {
-                    btn.classList.add('active');
-                    btn.classList.remove('text-slate-400');
-                } else {
-                    btn.classList.remove('active');
-                    btn.classList.add('text-slate-400');
-                }
+                if ((index + 1) === day) { btn.classList.add('active'); btn.classList.remove('text-slate-400'); } 
+                else { btn.classList.remove('active'); btn.classList.add('text-slate-400'); }
             });
         }
-
-        function toggleFaq(el) {
-            el.classList.toggle('active');
-        }
+        function toggleFaq(el) { el.classList.toggle('active'); }
     </script>
 </body>
 </html>
-
