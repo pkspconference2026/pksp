@@ -265,7 +265,7 @@
     </section>
 
     <!-- Aturcara Program -->
-    <section id="aturcara" class="py-40 bg-white px-6">
+   <section id="aturcara" class="py-40 bg-white px-6">
         <div class="max-w-5xl mx-auto">
             <div class="text-center mb-24">
                 <h2 class="text-5xl font-black text-slate-900 uppercase tracking-tighter">Aturcara Program</h2>
@@ -274,54 +274,37 @@
                     <button onclick="switchTab(2)" class="tab-btn px-16 py-5 rounded-[2.2rem] font-black text-sm uppercase tracking-widest transition-all duration-300 text-slate-400">Hari 02</button>
                     <button onclick="switchTab(3)" class="tab-btn px-16 py-5 rounded-[2.2rem] font-black text-sm uppercase tracking-widest transition-all duration-300 text-slate-400">Hari 03</button>
                 </div>
-            </div> <div id="day-1" class="schedule-day space-y-6">
-                <div class="flex flex-col md:flex-row md:items-center p-8 bg-brand-soft rounded-[3rem] border border-slate-100 shadow-sm text-center md:text-left">
-                    <div class="flex items-center space-x-6 md:w-64 shrink-0 mb-4 md:mb-0">
-                        <div class="bg-white p-4 rounded-2xl text-brand-blue shadow-md"><i data-lucide="clock"></i></div>
-                        <span class="font-black text-brand-blue text-2xl uppercase">3:00 PM</span>
-                    </div>
-                    <div class="text-slate-700 font-black text-xl uppercase tracking-tight">Pendaftaran Peserta & Check-in</div>
-                </div>
-                <div class="flex flex-col md:flex-row md:items-center p-8 bg-brand-soft rounded-[3rem] border border-slate-100 shadow-sm text-center md:text-left">
-                    <div class="flex items-center space-x-6 md:w-64 shrink-0 mb-4 md:mb-0">
-                        <div class="bg-white p-4 rounded-2xl text-brand-blue shadow-md"><i data-lucide="clock"></i></div>
-                        <span class="font-black text-brand-blue text-2xl uppercase">4:00 PM</span>
-                    </div>
-                    <div class="text-slate-700 font-black text-xl uppercase tracking-tight">Dialog Perkhidmatan Kerja Sosial Perubatan</div>
-                </div>
-                <div class="flex flex-col md:flex-row md:items-center p-8 bg-brand-soft rounded-[3rem] border border-slate-100 shadow-sm text-center md:text-left">
-                    <div class="flex items-center space-x-6 md:w-64 shrink-0 mb-4 md:mb-0">
-                        <div class="bg-white p-4 rounded-2xl text-brand-blue shadow-md"><i data-lucide="clock"></i></div>
-                        <span class="font-black text-brand-blue text-2xl uppercase">8:00 PM</span>
-                    </div>
-                    <div class="text-slate-700 font-black text-xl uppercase tracking-tight font-bold">Mesyuarat Agung Tahunan Persatuan (AGM)</div>
-                </div>
             </div>
 
-            <div id="day-2" class="schedule-day space-y-6">
-                <div class="flex flex-col md:flex-row md:items-center p-8 bg-brand-soft rounded-[3rem] border border-slate-100 shadow-sm text-center md:text-left">
-                    <div class="flex items-center space-x-6 md:w-64 shrink-0 mb-4 md:mb-0">
-                        <div class="bg-white p-4 rounded-2xl text-brand-blue shadow-md"><i data-lucide="clock"></i></div>
-                        <span class="font-black text-brand-blue text-2xl uppercase">8:30 AM</span>
+            <div class="relative">
+                <div id="day-1" class="schedule-day space-y-6">
+                    <div class="flex flex-col md:flex-row md:items-center p-8 bg-brand-soft rounded-[3rem] border border-slate-100 shadow-sm text-center md:text-left">
+                        <div class="flex items-center space-x-6 md:w-64 shrink-0 mb-4 md:mb-0">
+                            <div class="bg-white p-4 rounded-2xl text-brand-blue shadow-md"><i data-lucide="clock"></i></div>
+                            <span class="font-black text-brand-blue text-2xl uppercase">3:00 PM</span>
+                        </div>
+                        <div class="text-slate-700 font-black text-xl uppercase tracking-tight">Pendaftaran Peserta & Check-in</div>
                     </div>
-                    <div class="text-slate-700 font-black text-xl uppercase tracking-tight">Psychological First Aid (PFA) - Hospital Kemaman</div>
-                </div>
-                <div class="flex flex-col md:flex-row md:items-center p-8 bg-brand-soft rounded-[3rem] border border-slate-100 shadow-sm text-center md:text-left">
-                    <div class="flex items-center space-x-6 md:w-64 shrink-0 mb-4 md:mb-0">
-                        <div class="bg-white p-4 rounded-2xl text-brand-blue shadow-md"><i data-lucide="clock"></i></div>
-                        <span class="font-black text-brand-blue text-2xl uppercase">8:00 PM</span>
                     </div>
-                    <div class="text-slate-700 font-black text-xl uppercase tracking-tight font-bold">Malam Mesra & Jamuan Makan Malam Rasmi</div>
-                </div>
-            </div>
 
-            <div id="day-3" class="schedule-day space-y-6">
-                <div class="flex flex-col md:flex-row md:items-center p-8 bg-brand-soft rounded-[3rem] border border-slate-100 shadow-sm text-center md:text-left">
-                    <div class="flex items-center space-x-6 md:w-64 shrink-0 mb-4 md:mb-0">
-                        <div class="bg-white p-4 rounded-2xl text-brand-blue shadow-md"><i data-lucide="clock"></i></div>
-                        <span class="font-black text-brand-blue text-2xl uppercase">10:30 AM</span>
+                <div id="day-2" class="schedule-day space-y-6" style="display: none;">
+                    <div class="flex flex-col md:flex-row md:items-center p-8 bg-brand-soft rounded-[3rem] border border-slate-100 shadow-sm text-center md:text-left">
+                        <div class="flex items-center space-x-6 md:w-64 shrink-0 mb-4 md:mb-0">
+                            <div class="bg-white p-4 rounded-2xl text-brand-blue shadow-md"><i data-lucide="clock"></i></div>
+                            <span class="font-black text-brand-blue text-2xl uppercase">8:30 AM</span>
+                        </div>
+                        <div class="text-slate-700 font-black text-xl uppercase tracking-tight">Psychological First Aid (PFA) - Hospital Kemaman</div>
                     </div>
-                    <div class="text-slate-700 font-black text-xl uppercase tracking-tight font-bold text-brand-blue">Majlis Perasmian Penutup</div>
+                </div>
+
+                <div id="day-3" class="schedule-day space-y-6" style="display: none;">
+                    <div class="flex flex-col md:flex-row md:items-center p-8 bg-brand-soft rounded-[3rem] border border-slate-100 shadow-sm text-center md:text-left">
+                        <div class="flex items-center space-x-6 md:w-64 shrink-0 mb-4 md:mb-0">
+                            <div class="bg-white p-4 rounded-2xl text-brand-blue shadow-md"><i data-lucide="clock"></i></div>
+                            <span class="font-black text-brand-blue text-2xl uppercase">10:30 AM</span>
+                        </div>
+                        <div class="text-slate-700 font-black text-xl uppercase tracking-tight font-bold text-brand-blue">Majlis Perasmian Penutup</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -515,6 +498,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     switchTab(1);
 });
+
 
 
 
