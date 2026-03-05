@@ -475,17 +475,24 @@
         setInterval(updateTimer, 1000);
         updateTimer();
 
-        function switchTab(day) {
-            document.querySelectorAll('.schedule-day').forEach(el => el.classList.remove('active'));
-            document.getElementById('day-' + day).classList.add('active');
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if(btn.innerText.includes('0' + day)) btn.classList.add('active');
-            });
+       function switchTab(day) {
+    // Sembunyikan semua hari
+    document.querySelectorAll('.schedule-day').forEach(el => el.classList.remove('active'));
+    // Tunjukkan hari yang diklik
+    document.getElementById('day-' + day).classList.add('active');
+    
+    // Kemaskini gaya butang
+    document.querySelectorAll('.tab-btn').forEach((btn, index) => {
+        if ((index + 1) === day) {
+            btn.classList.add('active', 'bg-brand-blue', 'text-white');
+            btn.classList.remove('text-slate-400');
+        } else {
+            btn.classList.remove('active', 'bg-brand-blue', 'text-white');
+            btn.classList.add('text-slate-400');
         }
-    </script>
-</body>
-</html>
+    });
+}
+
 
 
 
