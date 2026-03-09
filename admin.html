@@ -22,7 +22,9 @@
         #password-container input { padding: 12px; width: 80%; font-size: 1.2em; margin-bottom: 15px; box-sizing: border-box; }
         #password-container button { padding: 12px 40px; background: #1e3a8a; color: white; border: none; cursor: pointer; font-size: 1.1em; }
         #password-container button:hover { background: #0f172a; }
-        #back-btn { margin-top: 20px; padding: 10px 20px; background: #c5a059; color: white; border: none; cursor: pointer; }
+        .download-btn { padding: 10px 20px; margin: 10px; background: #c5a059; color: white; border: none; cursor: pointer; font-size: 1em; }
+        .download-btn.pdf { background: #1e3a8a; }
+        .back-btn { margin-top: 30px; padding: 10px 20px; background: #6b7280; color: white; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -60,24 +62,25 @@
             <tbody id="tableBody"></tbody>
         </table>
 
-        <!-- Button Download -->
-<div style="text-align:center; margin-top:30px;">
-    <button onclick="downloadCSV()" style="padding:12px 24px; background:#c5a059; color:white; border:none; cursor:pointer; margin-right:15px;">Download CSV</button>
-    <button onclick="downloadPDF()" style="padding:12px 24px; background:#1e3a8a; color:white; border:none; cursor:pointer;">Download PDF</button>
-</div>
+        <div style="text-align:center; margin-top:30px;">
+            <button class="download-btn" onclick="downloadCSV()">Download CSV</button>
+            <button class="download-btn pdf" onclick="downloadPDF()">Download PDF (Print)</button>
+        </div>
 
-        <button id="back-btn">Kembali ke Laman Utama</button>
+        <div style="text-align:center; margin-top:20px;">
+            <button class="back-btn" onclick="window.location.href='https://pkspconference2026.netlify.app/'">Kembali ke Laman Utama</button>
+        </div>
     </div>
 </div>
 
 <script type="module">
-    console.log("Skrip admin LOADED – test debug 1");
+    console.log("Skrip admin LOADED – debug 1");
 
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
     import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-    console.log("Import Firebase OK – test debug 2");
+    console.log("Import Firebase OK – debug 2");
 
     const firebaseConfig = {
         apiKey: "AIzaSyBRKVRVCNW5fQxKcGHGH_lQdrpfBpmGmUU",
@@ -94,21 +97,16 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    console.log("Firebase initialized – test debug 3");
+    console.log("Firebase initialized – debug 3");
 
-    // Auto sign in anonymous untuk baca data (penting kalau rules require auth)
+    // Auto sign in anonymous supaya read dibenarkan
     signInAnonymously(auth)
-        .then(() => {
-            console.log("Admin signed in anonymously – read dibenarkan");
-        })
-        .catch((error) => {
-            console.error("Anon auth error:", error);
-            document.getElementById("error-message").innerHTML = "Gagal sign in anonymous: " + error.message;
-        });
+        .then(() => console.log("Admin signed in anonymously – read OK"))
+        .catch(err => console.error("Anon sign-in error:", err));
 
-    // Password button
+    // Password check
     document.getElementById('loginBtn').addEventListener('click', () => {
-        console.log("Button Masuk diklik – test debug 4");
+        console.log("Button Masuk diklik – debug 4");
         const pass = document.getElementById('adminPass').value.trim();
         if (pass === ADMIN_PASSWORD) {
             console.log("Password betul – show content");
@@ -117,13 +115,7 @@
             loadData();
         } else {
             alert('Kata laluan salah!');
-            console.log("Password salah");
         }
-    });
-
-    // Back button
-    document.getElementById('back-btn').addEventListener('click', () => {
-        window.location.href = 'https://pkspconference2026.netlify.app/';
     });
 
     function loadData() {
@@ -149,7 +141,7 @@
             snapshot.forEach((doc) => {
                 const data = doc.data();
                 const ts = data.timestamp ? data.timestamp.seconds * 1000 : null;
-                const tarikh = ts ? new Date(ts).toLocaleString("ms-MY", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "—";
+                const tarikh = ts ? new Date(ts).toLocaleString("ms-MY", {day:"2-digit", month:"short", year:"numeric", hour:"2-digit", minute:"2-digit"}) : "—";
 
                 const row = document.createElement("tr");
                 row.innerHTML = `
@@ -170,50 +162,48 @@
             errorMsg.innerHTML = "";
 
             if (snapshot.size === 0) {
-                errorMsg.innerHTML = "Tiada rekod lagi. Cuba daftar peserta baru dari homepage.";
+                errorMsg.innerHTML = "Tiada rekod lagi.";
             }
         }, (error) => {
             console.error("Ralat Firestore:", error);
             document.getElementById("loading").style.display = "none";
-            document.getElementById("error-message").innerHTML = `Ralat: ${error.message} (kod: ${error.code})<br>Sila semak console (F12)`;
+            document.getElementById("error-message").innerHTML = `Ralat: ${error.message} (kod: ${error.code})`;
         });
     }
-    // Fungsi Download CSV
-function downloadCSV() {
-    const table = document.getElementById('pesertaTable');
-    if (!table) return alert("Table belum load!");
 
-    let csv = [];
-    const rows = table.querySelectorAll('tr');
-    
-    rows.forEach(row => {
-        const cols = row.querySelectorAll('td, th');
-        const rowData = Array.from(cols).map(col => `"${col.innerText.replace(/"/g, '""')}"`);
-        csv.push(rowData.join(','));
-    });
+    // DOWNLOAD CSV
+    function downloadCSV() {
+        console.log("Download CSV ditekan");
 
-    const csvContent = csv.join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'Senarai_Peserta_Pendaftaran.csv';
-    link.click();
-}
+        const table = document.getElementById('pesertaTable');
+        if (!table || table.style.display === 'none') {
+            alert("Table belum load atau tak kelihatan!");
+            return;
+        }
 
-// Fungsi Download PDF (guna window.print untuk simple PDF)
-function downloadPDF() {
-    const mainContent = document.getElementById('main-content');
-    if (!mainContent) return alert("Kandungan belum load!");
+        let csv = [];
+        const rows = table.querySelectorAll('tr');
+        rows.forEach(row => {
+            const cols = row.querySelectorAll('td, th');
+            const rowData = Array.from(cols).map(col => `"${col.innerText.replace(/"/g, '""')}"`);
+            csv.push(rowData.join(','));
+        });
 
-    // Sembunyikan password container kalau masih ada
-    document.getElementById('password-container').style.display = 'none';
+        const csvContent = "\uFEFF" + csv.join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'Senarai_Peserta_Pendaftaran.csv';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
 
-    // Print page (boleh save sebagai PDF dari print dialog)
-    window.print();
-
-    // Optional: Kembalikan visibility kalau perlu
-    // document.getElementById('password-container').style.display = 'block';
-}
+    // DOWNLOAD PDF (simple print)
+    function downloadPDF() {
+        console.log("Download PDF ditekan");
+        window.print();  // Buka dialog print → pilih Save as PDF
+    }
 </script>
 
 </body>
