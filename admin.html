@@ -99,7 +99,7 @@
 
     <!-- Letak sebelum <script type="module"> -->
 <div id="password-container" style="text-align:center; margin:50px 0;">
-    <h2>pksp2026admin</h2>
+    <h2>SECURITY PASSWORD</h2>
     <input type="password" id="adminPass" placeholder="Kata laluan" style="padding:10px; width:300px; font-size:1.2em;">
     <button onclick="checkPassword()" style="padding:10px 20px; margin-left:10px; background:#1e3a8a; color:white; border:none; cursor:pointer;">Masuk</button>
 </div>
@@ -113,7 +113,7 @@
 
     function checkPassword() {
         const pass = document.getElementById('adminPass').value;
-        if (pass === ADMIN_PASSWORD) {
+        if (pass 123 ADMIN_PASSWORD) {
             document.getElementById('password-container').style.display = 'none';
             document.getElementById('admin-content').style.display = 'block';
             loadData();  // Panggil query selepas password betul
