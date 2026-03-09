@@ -424,14 +424,34 @@
                     </div>
                     <input name="tempat_bertugas" required type="text" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="Hospital / Jabatan / Institusi">
                     
-                    <select name="negeri" required class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold outline-none">
-                        <option value="" disabled selected>Pilih Negeri</option>
-                        <option value="Johor">Johor</option>
-                        <option value="Kedah">Kedah</option>
-                        <option value="Kelantan">Kelantan</option>
-                        <!-- ... senarai negeri lain ... -->
-                        <option value="W.P. Putrajaya">W.P. Putrajaya</option>
-                    </select>
+                    <select name="negeri" required class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold outline-none border-none">
+    <option value="" disabled selected>Pilih Negeri / Wilayah</option>
+    
+    <optgroup label="Semenanjung Malaysia">
+        <option value="Johor">Johor</option>
+        <option value="Kedah">Kedah</option>
+        <option value="Kelantan">Kelantan</option>
+        <option value="Melaka">Melaka</option>
+        <option value="Negeri Sembilan">Negeri Sembilan</option>
+        <option value="Pahang">Pahang</option>
+        <option value="Perak">Perak</option>
+        <option value="Perlis">Perlis</option>
+        <option value="Pulau Pinang">Pulau Pinang</option>
+        <option value="Selangor">Selangor</option>
+        <option value="Terengganu">Terengganu</option>
+    </optgroup>
+    
+    <optgroup label="Malaysia Timur">
+        <option value="Sabah">Sabah</option>
+        <option value="Sarawak">Sarawak</option>
+    </optgroup>
+    
+    <optgroup label="Wilayah Persekutuan">
+        <option value="W.P. Kuala Lumpur">W.P. Kuala Lumpur</option>
+        <option value="W.P. Labuan">W.P. Labuan</option>
+        <option value="W.P. Putrajaya">W.P. Putrajaya</option>
+    </optgroup>
+</select>
 
                     <div class="flex items-start gap-3 mt-6">
                         <input type="checkbox" id="setuju" required class="mt-1 w-5 h-5 accent-brand-blue">
@@ -553,5 +573,6 @@
     </script>
 </body>
 </html>
+
 
 
