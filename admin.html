@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Senarai Peserta Persidangan 2026</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js"></script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1e3a8a;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #1e3a8a;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        tr:hover {
+            background: #e9ecef;
+        }
+        .timestamp {
+            font-size: 0.9em;
+            color: #555;
+        }
+        #loading {
+            text-align: center;
+            font-size: 1.1em;
+            color: #666;
+            margin: 40px 0;
+        }
+        #count {
+            font-weight: bold;
+            color: #c5a059;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Senarai Peserta Pendaftaran<br>Persidangan Pegawai Kerja Sosial Perubatan 2026</h1>
+    
+    <p style="text-align:center; font-size:1.1em;">
+        Jumlah peserta terkini: <span id="count">0</span> orang
+    </p>
+
+    <div id="loading">Memuat data peserta...</div>
+
+    <table id="pesertaTable" style="display:none;">
+        <thead>
+            <tr>
+                <th>Bil.</th>
+                <th>Nama Penuh</th>
+                <th>No. K/P</th>
+                <th>Negeri</th>
+                <th>Tempat Bertugas</th>
+                <th>No. Telefon</th>
+                <th>Tarikh Daftar</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
+</div>
+
+<script>
+    // ================= CONFIG FIREBASE ANDA =================
+    const firebaseConfig = {
+        apiKey: "AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",          // GANTI DENGAN API KEY ANDA
+        authDomain: "nama-project-anda.firebaseapp.com",
+        projectId: "nama-project-anda",
+        storageBucket: "nama-project-anda.appspot.com",
+        messagingSenderId: "123456789012",
+        appId: "1:123456789012:web:abcdef1234567890abcdef"
+    };
+
+    // ================= PASSWORD ADMIN (GANTI DENGAN PASSWORD ANDA SENDIRI) =================
+    const ADMIN_PASSWORD = "hafiz2026admin";   // <-- Tukar ini kepada password yang anda ingat!
+
+    // ================= MULAI =================
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // Simple password protection
+    const password = prompt("Masukkan kata laluan admin:");
+    if (password !== ADMIN_PASSWORD) {
+        alert("Kata laluan salah! Akses ditolak.");
+        window.location.href = "index.html"; // atau tutup tab: window.close();
+        throw new Error("Access denied");
+    }
+
+    // Load data
+    const collectionPath = db.collection('artifacts')
+        .doc('msw-kuantan-2026')  // <-- GANTI 'msw-kuantan-2026' dengan appId anda kalau berbeza
+        .collection('public')
+        .collection('data')
+        .collection('pendaftaran');
+
+    collectionPath
+        .orderBy('timestamp', 'desc')
+        .onSnapshot(snapshot => {
+            const tableBody = document.getElementById('tableBody');
+            const countEl = document.getElementById('count');
+            const loading = document.getElementById('loading');
+            const table = document.getElementById('pesertaTable');
+
+            tableBody.innerHTML = '';
+            let bil = 1;
+
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const ts = data.timestamp ? data.timestamp.seconds * 1000 : null;
+                const tarikh = ts ? new Date(ts).toLocaleString('ms-MY', {
+                    day: '2-digit', month: 'short', year: 'numeric',
+                    hour: '2-digit', minute: '2-digit'
+                }) : '—';
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${bil++}</td>
+                    <td>${data.nama || '—'}</td>
+                    <td>${data.ic || '—'}</td>
+                    <td>${data.negeri || '—'}</td>
+                    <td>${data.tempat_bertugas || '—'}</td>
+                    <td>${data.tel || '—'}</td>
+                    <td class="timestamp">${tarikh}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            countEl.textContent = snapshot.size;
+            loading.style.display = 'none';
+            table.style.display = 'table';
+        }, error => {
+            console.error("Error loading data:", error);
+            document.getElementById('loading').innerHTML = 
+                '<span style="color:red;">Ralat memuat data. Semak console browser (F12).</span>';
+        });
+</script>
+
+</body>
+</html>
