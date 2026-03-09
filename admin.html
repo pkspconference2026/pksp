@@ -82,6 +82,17 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+const auth = getAuth(app);
+signInAnonymously(auth)
+  .then(() => {
+    console.log("Admin signed in anonymously – read dibenarkan");
+    loadData();
+  })
+  .catch((error) => {
+    console.error("Anon auth error:", error);
+  });
 
     console.log("Firebase initialized – test debug 3");
 
