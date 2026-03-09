@@ -22,9 +22,10 @@
         #password-container input { padding: 12px; width: 80%; font-size: 1.2em; margin-bottom: 15px; box-sizing: border-box; }
         #password-container button { padding: 12px 40px; background: #1e3a8a; color: white; border: none; cursor: pointer; font-size: 1.1em; }
         #password-container button:hover { background: #0f172a; }
-        .download-btn { padding: 10px 20px; margin: 10px; background: #c5a059; color: white; border: none; cursor: pointer; font-size: 1em; }
-        .download-btn.pdf { background: #1e3a8a; }
-        .back-btn { margin-top: 30px; padding: 10px 20px; background: #6b7280; color: white; border: none; cursor: pointer; }
+        .btn { padding: 10px 20px; margin: 10px; cursor: pointer; font-size: 1em; border: none; }
+        .btn-csv { background: #c5a059; color: white; }
+        .btn-pdf { background: #1e3a8a; color: white; }
+        .btn-back { background: #6b7280; color: white; margin-top: 30px; }
     </style>
 </head>
 <body>
@@ -63,12 +64,12 @@
         </table>
 
         <div style="text-align:center; margin-top:30px;">
-            <button class="download-btn" onclick="downloadCSV()">Download CSV</button>
-            <button class="download-btn pdf" onclick="downloadPDF()">Download PDF (Print)</button>
+            <button class="btn btn-csv" onclick="downloadCSV()">Download CSV</button>
+            <button class="btn btn-pdf" onclick="downloadPDF()">Download PDF (Print)</button>
         </div>
 
-        <div style="text-align:center; margin-top:20px;">
-            <button class="back-btn" onclick="window.location.href='https://pkspconference2026.netlify.app/'">Kembali ke Laman Utama</button>
+        <div style="text-align:center;">
+            <button class="btn btn-back" onclick="window.location.href='https://pkspconference2026.netlify.app/'">Kembali ke Laman Utama</button>
         </div>
     </div>
 </div>
@@ -99,12 +100,11 @@
 
     console.log("Firebase initialized – debug 3");
 
-    // Auto sign in anonymous supaya read dibenarkan
     signInAnonymously(auth)
         .then(() => console.log("Admin signed in anonymously – read OK"))
         .catch(err => console.error("Anon sign-in error:", err));
 
-    // Password check
+    // Password button
     document.getElementById('loginBtn').addEventListener('click', () => {
         console.log("Button Masuk diklik – debug 4");
         const pass = document.getElementById('adminPass').value.trim();
@@ -173,11 +173,11 @@
 
     // DOWNLOAD CSV
     function downloadCSV() {
-        console.log("Download CSV ditekan");
+        console.log("Download CSV ditekan – debug download");
 
         const table = document.getElementById('pesertaTable');
         if (!table || table.style.display === 'none') {
-            alert("Table belum load atau tak kelihatan!");
+            alert("Table peserta belum load!");
             return;
         }
 
@@ -199,10 +199,10 @@
         document.body.removeChild(link);
     }
 
-    // DOWNLOAD PDF (simple print)
+    // DOWNLOAD PDF (print)
     function downloadPDF() {
-        console.log("Download PDF ditekan");
-        window.print();  // Buka dialog print → pilih Save as PDF
+        console.log("Download PDF ditekan – debug PDF");
+        window.print();
     }
 </script>
 
