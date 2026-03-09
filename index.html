@@ -387,7 +387,10 @@
         </div>
     </section>
 
-    <div class="text-center mb-10">
+    <section id="daftar" class="py-40 bg-brand-dark px-6">
+        <div class="max-w-4xl mx-auto bg-white rounded-[5rem] p-12 md:p-20 shadow-2xl" data-aos="flip-up">
+            <div id="reg-form-container">
+                <div class="text-center mb-10">
     <div class="inline-block bg-brand-gold/10 text-brand-gold px-8 py-4 rounded-2xl font-bold text-lg mb-6">
         Yuran Pendaftaran (awal burung hingga 30 Jun 2026)
     </div>
@@ -406,19 +409,6 @@
         </div>
     </div>
 </div>
-
-<!-- Dalam <form> tambah sebelum button submit -->
-<div class="flex items-start gap-3 mt-6">
-    <input type="checkbox" id="setuju" required class="mt-1 w-5 h-5 accent-brand-blue">
-    <label for="setuju" class="text-sm text-slate-600">
-        Saya mengaku bahawa maklumat di atas adalah benar dan saya bersetuju dengan 
-        <a href="#" class="text-brand-blue hover:underline">terma & syarat</a> serta 
-        <a href="#" class="text-brand-blue hover:underline">polisi privasi</a> persidangan.
-    </label>
-</div>
-    <section id="daftar" class="py-40 bg-brand-dark px-6">
-        <div class="max-w-4xl mx-auto bg-white rounded-[5rem] p-12 md:p-20 shadow-2xl" data-aos="flip-up">
-            <div id="reg-form-container">
                 <h2 class="text-4xl font-black mb-12 text-center uppercase">Pendaftaran Peserta</h2>
                 <form onsubmit="handleRegistration(event)" class="space-y-6">
                     <input name="nama" required type="text" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="Nama Penuh">
@@ -447,7 +437,16 @@
                         <option value="W.P. Labuan">W.P. Labuan</option>
                         <option value="W.P. Putrajaya">W.P. Putrajaya</option>
                     </select>
-
+                    
+<!-- Dalam <form> tambah sebelum button submit -->
+<div class="flex items-start gap-3 mt-6">
+    <input type="checkbox" id="setuju" required class="mt-1 w-5 h-5 accent-brand-blue">
+    <label for="setuju" class="text-sm text-slate-600">
+        Saya mengaku bahawa maklumat di atas adalah benar dan saya bersetuju dengan 
+        <a href="#" class="text-brand-blue hover:underline">terma & syarat</a> serta 
+        <a href="#" class="text-brand-blue hover:underline">polisi privasi</a> persidangan.
+    </label>
+</div>
                     <button type="submit" class="w-full py-6 bg-brand-blue text-white font-black rounded-3xl uppercase shadow-xl hover:bg-slate-800 transition-all">Sahkan Pendaftaran</button>
                 </form>
             </div>
@@ -532,6 +531,7 @@
     </script>
 </body>
 </html>
+
 
 
 
