@@ -98,6 +98,40 @@ console.log("Skrip admin STARTED! Type=module OK.");
     </table>
 </div>
 
+    <!-- Letak sebelum <script type="module"> -->
+<div id="password-container" style="text-align:center; margin:50px 0;">
+    <h2>Masuk Kata Laluan Admin</h2>
+    <input type="password" id="adminPass" placeholder="Kata laluan" style="padding:10px; width:300px; font-size:1.2em;">
+    <button onclick="checkPassword()" style="padding:10px 20px; margin-left:10px; background:#1e3a8a; color:white; border:none; cursor:pointer;">Masuk</button>
+</div>
+
+<div id="admin-content" style="display:none;">
+    <!-- Kandungan asal container anda (h1, p count, loading, table) -->
+</div>
+
+<script type="module">
+    // ... import & config sama ...
+
+    function checkPassword() {
+        const pass = document.getElementById('adminPass').value;
+        if (pass === ADMIN_PASSWORD) {
+            document.getElementById('password-container').style.display = 'none';
+            document.getElementById('admin-content').style.display = 'block';
+            loadData();  // Panggil query selepas password betul
+        } else {
+            alert('Kata laluan salah!');
+        }
+    }
+
+    function loadData() {
+        // Letak kod query onSnapshot anda di sini
+        const q = query(...); 
+        onSnapshot(q, (snapshot) => { ... });
+    }
+
+    // Optional: Kalau nak auto load tanpa password untuk test, panggil loadData() terus
+</script>
+    
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
