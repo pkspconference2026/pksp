@@ -124,10 +124,10 @@
 
     // Load data
     const collectionPath = db.collection('artifacts')
-        .doc('msw-kuantan-2026')  // <-- GANTI 'msw-kuantan-2026' dengan appId anda kalau berbeza
-        .collection('public')
-        .collection('data')
-        .collection('pendaftaran');
+    .doc('msw-kuantan-2026')   // <--- PASTIKAN BETUL-BETUL 'msw-kuantan-2026' (dengan hyphen!)
+    .collection('public')
+    .collection('data')
+    .collection('pendaftaran');
 
     collectionPath
         .orderBy('timestamp', 'desc')
