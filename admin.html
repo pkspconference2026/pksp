@@ -22,7 +22,7 @@
         #password-container input { padding: 12px; width: 80%; font-size: 1.2em; margin-bottom: 15px; box-sizing: border-box; }
         #password-container button { padding: 12px 40px; background: #1e3a8a; color: white; border: none; cursor: pointer; font-size: 1.1em; }
         #password-container button:hover { background: #0f172a; }
-        .btn { padding: 10px 20px; margin: 10px; cursor: pointer; font-size: 1em; border: none; }
+        .btn { padding: 10px 20px; margin: 10px; cursor: pointer; font-size: 1em; border: none; border-radius: 5px; }
         .btn-csv { background: #c5a059; color: white; }
         .btn-pdf { background: #1e3a8a; color: white; }
         .btn-back { background: #6b7280; color: white; margin-top: 30px; }
@@ -64,8 +64,8 @@
         </table>
 
         <div style="text-align:center; margin-top:30px;">
-            <button class="btn btn-csv" onclick="downloadCSV()">Download CSV</button>
-            <button class="btn btn-pdf" onclick="downloadPDF()">Download PDF (Print)</button>
+            <button class="btn btn-csv" id="btnCSV">Download CSV</button>
+            <button class="btn btn-pdf" id="btnPDF">Download PDF (Print)</button>
         </div>
 
         <div style="text-align:center;">
@@ -104,7 +104,7 @@
         .then(() => console.log("Admin signed in anonymously – read OK"))
         .catch(err => console.error("Anon sign-in error:", err));
 
-    // Password button
+    // Password check
     document.getElementById('loginBtn').addEventListener('click', () => {
         console.log("Button Masuk diklik – debug 4");
         const pass = document.getElementById('adminPass').value.trim();
@@ -173,11 +173,11 @@
 
     // DOWNLOAD CSV
     function downloadCSV() {
-        console.log("Download CSV ditekan – debug download");
+        console.log("Download CSV ditekan – debug CSV start");
 
         const table = document.getElementById('pesertaTable');
         if (!table || table.style.display === 'none') {
-            alert("Table peserta belum load!");
+            alert("Table peserta belum load atau tak kelihatan!");
             return;
         }
 
@@ -197,13 +197,25 @@
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+
+        console.log("CSV download triggered – check fail download");
     }
 
-    // DOWNLOAD PDF (print)
+    // DOWNLOAD PDF (simple print)
     function downloadPDF() {
-        console.log("Download PDF ditekan – debug PDF");
+        console.log("Download PDF ditekan – debug PDF start");
+        alert("Buka dialog print. Pilih 'Save as PDF' di printer.");
         window.print();
     }
+
+    // Attach button events (supaya confirm jalan walaupun onclick hilang)
+    document.addEventListener('DOMContentLoaded', () => {
+        const btnCSV = document.getElementById('btnCSV');
+        const btnPDF = document.getElementById('btnPDF');
+
+        if (btnCSV) btnCSV.addEventListener('click', downloadCSV);
+        if (btnPDF) btnPDF.addEventListener('click', downloadPDF);
+    });
 </script>
 
 </body>
