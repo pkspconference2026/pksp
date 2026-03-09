@@ -67,75 +67,72 @@
             text-align: center;
             margin: 20px 0;
         }
+        #password-container {
+            text-align: center;
+            padding: 80px 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        #password-container input {
+            padding: 12px;
+            width: 80%;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+        #password-container button {
+            padding: 12px 30px;
+            background: #1e3a8a;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em;
+        }
+        #password-container button:hover {
+            background: #0f172a;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Senarai Peserta Pendaftaran<br>Persidangan Pegawai Kerja Sosial Perubatan 2026</h1>
-    
-    <p style="text-align:center; font-size:1.1em;">
-        Jumlah peserta terkini: <span id="count">0</span> orang
-    </p>
-
-    <div id="loading">Memuat data peserta...</div>
-    <div id="error-message"></div>
-
-    <table id="pesertaTable" style="display:none;">
-        <thead>
-            <tr>
-                <th>Bil.</th>
-                <th>Nama Penuh</th>
-                <th>No. K/P</th>
-                <th>Negeri</th>
-                <th>Tempat Bertugas</th>
-                <th>No. Telefon</th>
-                <th>Tarikh Daftar</th>
-            </tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-    </table>
+<div id="password-container">
+    <h2>Masuk Kata Laluan Admin</h2>
+    <input type="password" id="adminPass" placeholder="Kata laluan" autocomplete="off">
+    <br>
+    <button onclick="checkPassword()">Masuk</button>
 </div>
 
-    <!-- Letak sebelum <script type="module"> -->
-<div id="password-container" style="text-align:center; margin:50px 0;">
-    <h2>SECURITY PASSWORD</h2>
-    <input type="password" id="adminPass" placeholder="Kata laluan" style="padding:10px; width:300px; font-size:1.2em;">
-    <button onclick="checkPassword()" style="padding:10px 20px; margin-left:10px; background:#1e3a8a; color:white; border:none; cursor:pointer;">Masuk</button>
+<div id="main-content" style="display:none;">
+    <div class="container">
+        <h1>Senarai Peserta Pendaftaran<br>Persidangan Pegawai Kerja Sosial Perubatan 2026</h1>
+        
+        <p style="text-align:center; font-size:1.1em;">
+            Jumlah peserta terkini: <span id="count">0</span> orang
+        </p>
+
+        <div id="loading">Memuat data peserta...</div>
+        <div id="error-message"></div>
+
+        <table id="pesertaTable" style="display:none;">
+            <thead>
+                <tr>
+                    <th>Bil.</th>
+                    <th>Nama Penuh</th>
+                    <th>No. K/P</th>
+                    <th>Negeri</th>
+                    <th>Tempat Bertugas</th>
+                    <th>No. Telefon</th>
+                    <th>Tarikh Daftar</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
 </div>
 
-<div id="admin-content" style="display:none;">
-    <!-- Kandungan asal container anda (h1, p count, loading, table) -->
-</div>
-
-<script type="module">
-    // ... import & config sama ...
-
-    function checkPassword() {
-        const pass = document.getElementById('adminPass').value;
-        if (pass 123 ADMIN_PASSWORD) {
-            document.getElementById('password-container').style.display = 'none';
-            document.getElementById('admin-content').style.display = 'block';
-            loadData();  // Panggil query selepas password betul
-        } else {
-            alert('Kata laluan salah!');
-        }
-    }
-
-    function loadData() {
-        // Letak kod query onSnapshot anda di sini
-        const q = query(...); 
-        onSnapshot(q, (snapshot) => { ... });
-    }
-
-    // Optional: Kalau nak auto load tanpa password untuk test, panggil loadData() terus
-</script>
-    
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    // Config Firebase (sama dengan index.html anda)
     const firebaseConfig = {
         apiKey: "AIzaSyBRKVRVCNW5fQxKcGHGH_lQdrpfBpmGmUU",
         authDomain: "pkspconference.firebaseapp.com",
@@ -145,73 +142,83 @@
         appId: "1:643373687923:web:0aa25f76f9080e3d1df606"
     };
 
-    const ADMIN_PASSWORD = "hafiz2026admin";  // Tukar kalau nak
+    const ADMIN_PASSWORD = "pksp2026admin";
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Password check
-    const password = prompt("Masukkan kata laluan admin:");
-    if (password !== ADMIN_PASSWORD) {
-        alert("Kata laluan salah! Akses ditolak.");
-        window.location.href = "index.html";
-        return;
+    function checkPassword() {
+        const pass = document.getElementById('adminPass').value;
+        if (pass === ADMIN_PASSWORD) {
+            document.getElementById('password-container').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+            loadData();  // Mulakan loading data selepas password betul
+        } else {
+            alert('Kata laluan salah!');
+        }
     }
 
-    // Query data - path tepat dari screenshot Firebase anda
-    const q = query(
-        collection(db, "artifacts", "msw-kuantan-2026", "public", "data", "pendaftaran"),
-        orderBy("timestamp", "desc")
-    );
+    function loadData() {
+        console.log("Memulakan query Firestore...");
 
-    onSnapshot(q, (snapshot) => {
-        const tableBody = document.getElementById("tableBody");
-        const countEl = document.getElementById("count");
-        const loading = document.getElementById("loading");
-        const table = document.getElementById("pesertaTable");
-        const errorMsg = document.getElementById("error-message");
+        const q = query(
+            collection(db, "artifacts", "msw-kuantan-2026", "public", "data", "pendaftaran"),
+            orderBy("timestamp", "desc")
+        );
 
-        tableBody.innerHTML = "";
-        let bil = 1;
+        onSnapshot(q, (snapshot) => {
+            console.log("Snapshot diterima! Bilangan dokumen:", snapshot.size);
 
-        snapshot.forEach((doc) => {
-            const data = doc.data();
-            const ts = data.timestamp ? data.timestamp.seconds * 1000 : null;
-            const tarikh = ts
-                ? new Date(ts).toLocaleString("ms-MY", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                  })
-                : "—";
+            const tableBody = document.getElementById("tableBody");
+            const countEl = document.getElementById("count");
+            const loading = document.getElementById("loading");
+            const table = document.getElementById("pesertaTable");
+            const errorMsg = document.getElementById("error-message");
 
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${bil++}</td>
-                <td>${data.nama || "—"}</td>
-                <td>${data.ic || "—"}</td>
-                <td>${data.negeri || "—"}</td>
-                <td>${data.tempat_bertugas || "—"}</td>
-                <td>${data.tel || "—"}</td>
-                <td class="timestamp">${tarikh}</td>
-            `;
-            tableBody.appendChild(row);
+            tableBody.innerHTML = "";
+            let bil = 1;
+
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                const ts = data.timestamp ? data.timestamp.seconds * 1000 : null;
+                const tarikh = ts
+                    ? new Date(ts).toLocaleString("ms-MY", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                      })
+                    : "—";
+
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${bil++}</td>
+                    <td>${data.nama || "—"}</td>
+                    <td>${data.ic || "—"}</td>
+                    <td>${data.negeri || "—"}</td>
+                    <td>${data.tempat_bertugas || "—"}</td>
+                    <td>${data.tel || "—"}</td>
+                    <td class="timestamp">${tarikh}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            countEl.textContent = snapshot.size;
+            loading.style.display = "none";
+            table.style.display = "table";
+            errorMsg.innerHTML = "";
+
+            if (snapshot.size === 0) {
+                errorMsg.innerHTML = "Tiada rekod pendaftaran lagi (atau rules Firestore mungkin menghalang read).";
+            }
+        }, (error) => {
+            console.error("Ralat Firestore:", error);
+            document.getElementById("loading").style.display = "none";
+            document.getElementById("error-message").innerHTML = 
+                `Ralat: ${error.message} (kod: ${error.code})<br>Sila semak console (F12)`;
         });
-
-        countEl.textContent = snapshot.size;
-        loading.style.display = "none";
-        table.style.display = "table";
-        errorMsg.innerHTML = "";
-
-        console.log("Peserta ditemui:", snapshot.size);
-    }, (error) => {
-        console.error("Firestore Error:", error);
-        document.getElementById("loading").style.display = "none";
-        document.getElementById("error-message").innerHTML = 
-            `Ralat memuat data: ${error.message} (kod: ${error.code})<br>Sila semak console browser (F12)`;
-    });
+    }
 </script>
 
 </body>
