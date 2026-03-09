@@ -178,6 +178,43 @@
             document.getElementById("error-message").innerHTML = `Ralat: ${error.message} (kod: ${error.code})<br>Sila semak console (F12)`;
         });
     }
+
+    // Fungsi Download CSV
+function downloadCSV() {
+    const table = document.getElementById('pesertaTable');
+    if (!table) return alert("Table belum load!");
+
+    let csv = [];
+    const rows = table.querySelectorAll('tr');
+    
+    rows.forEach(row => {
+        const cols = row.querySelectorAll('td, th');
+        const rowData = Array.from(cols).map(col => `"${col.innerText.replace(/"/g, '""')}"`);
+        csv.push(rowData.join(','));
+    });
+
+    const csvContent = csv.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'Senarai_Peserta_Pendaftaran.csv';
+    link.click();
+}
+
+// Fungsi Download PDF (guna window.print untuk simple PDF)
+function downloadPDF() {
+    const mainContent = document.getElementById('main-content');
+    if (!mainContent) return alert("Kandungan belum load!");
+
+    // Sembunyikan password container kalau masih ada
+    document.getElementById('password-container').style.display = 'none';
+
+    // Print page (boleh save sebagai PDF dari print dialog)
+    window.print();
+
+    // Optional: Kembalikan visibility kalau perlu
+    // document.getElementById('password-container').style.display = 'block';
+}
 </script>
 
 </body>
