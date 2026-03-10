@@ -178,29 +178,54 @@
     </div>
 
     <!-- Navbar -->
-    <nav class="fixed w-full bg-white/95 backdrop-blur-md z-50 border-b border-slate-200 shadow-sm">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div class="flex items-center space-x-4 cursor-pointer" onclick="window.scrollTo({top:0, behavior:'smooth'})">
-                <div class="flex items-center gap-3">
-                    <img src="Logo TKPM.png" alt="Logo" class="w-14 h-14 object-contain">
-                    <div class="text-left font-black text-brand-blue uppercase leading-tight text-[10px]">
-                        <span>Persatuan Pegawai</span><br/>
-                        <span>Pembangunan Masyarakat</span><br/>
-                        <span class="text-brand-gold">(Perubatan) Malaysia</span>
-                    </div>
+<nav class="fixed w-full bg-white/95 backdrop-blur-md z-50 border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <div class="flex items-center space-x-4 cursor-pointer" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+            <div class="flex items-center gap-3">
+                <img src="Logo TKPM.png" alt="Logo" class="w-14 h-14 object-contain">
+                <div class="text-left font-black text-brand-blue uppercase leading-tight text-[10px]">
+                    <span>Persatuan Pegawai</span><br/>
+                    <span>Pembangunan Masyarakat</span><br/>
+                    <span class="text-brand-gold">(Perubatan) Malaysia</span>
                 </div>
             </div>
-            <div class="hidden lg:flex items-center space-x-8 text-xs font-black uppercase tracking-widest text-slate-600">
-                <a href="#penceramah" class="hover:text-brand-blue transition-colors">Penceramah</a>
-                <a href="#aturcara" class="hover:text-brand-blue transition-colors">Aturcara</a>
-                <a href="#faq" class="hover:text-brand-blue transition-colors">FAQ</a>
-                <a href="#borang" class="hover:text-brand-blue transition-colors">Muat Turun</a>
-                <a href="#penaja" class="hover:text-brand-blue transition-colors">Penaja</a>
-                <a href="#lokasi" class="hover:text-brand-blue transition-colors">Lokasi</a>
-                <a href="#daftar" class="bg-brand-blue text-white px-8 py-3 rounded-full hover:bg-slate-800 transition-all">Daftar</a>
-            </div>
         </div>
-    </nav>
+
+        <div class="hidden lg:flex items-center space-x-8 text-xs font-black uppercase tracking-widest text-slate-600 relative">
+            <a href="#penceramah" class="hover:text-brand-blue transition-colors">Penceramah</a>
+            <a href="#aturcara" class="hover:text-brand-blue transition-colors">Aturcara</a>
+            <a href="#faq" class="hover:text-brand-blue transition-colors">FAQ</a>
+
+            <!-- Dropdown Muat Turun -->
+            <div class="relative group">
+                <span class="cursor-pointer hover:text-brand-blue transition-colors flex items-center gap-1">
+                    Muat Turun
+                    <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-hover:rotate-180"></i>
+                </span>
+
+                <!-- Dropdown content (muncul bila hover) -->
+                <div class="absolute hidden group-hover:block right-0 mt-2 w-64 bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden z-50">
+    <a href="gs://pkspconference.firebasestorage.app/muat turun/Screenshot 2026-02-19 141645.png" target="_blank" class="block px-6 py-4 text-slate-700 hover:bg-brand-soft transition-colors border-b border-slate-100">
+        <span class="font-bold text-brand-blue">Slide Penceramah</span>
+        <p class="text-xs text-slate-500 mt-1">Muat turun slaid semua penceramah jemputan</p>
+    </a>
+    <a href="https://firebasestorage.googleapis.com/.../Buku_Aturcara.pdf?alt=media" target="_blank" class="block px-6 py-4 text-slate-700 hover:bg-brand-soft transition-colors border-b border-slate-100">
+        <span class="font-bold text-brand-blue">Buku Aturcara</span>
+        <p class="text-xs text-slate-500 mt-1">Jadual lengkap persidangan 3 hari</p>
+    </a>
+    <a href="https://firebasestorage.googleapis.com/.../Poster_Saintifik.pdf?alt=media" target="_blank" class="block px-6 py-4 text-slate-700 hover:bg-brand-soft transition-colors">
+        <span class="font-bold text-brand-blue">Poster Saintifik</span>
+        <p class="text-xs text-slate-500 mt-1">Template & panduan poster saintifik</p>
+    </a>
+</div>
+            </div>
+
+            <a href="#penaja" class="hover:text-brand-blue transition-colors">Penaja</a>
+            <a href="#lokasi" class="hover:text-brand-blue transition-colors">Lokasi</a>
+            <a href="#daftar" class="bg-brand-blue text-white px-8 py-3 rounded-full hover:bg-slate-800 transition-all">Daftar</a>
+        </div>
+    </div>
+</nav>
 
     <!-- Hero -->
     <section class="pt-48 pb-32 px-6 bg-gradient-to-br from-slate-50 via-blue-50/40 to-slate-100 text-center relative overflow-hidden">
