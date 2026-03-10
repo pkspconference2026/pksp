@@ -60,6 +60,9 @@
                     <th>Tarikh Daftar</th>
                     <th>Bukti Bayaran</th>
                     <th>Status Bayaran</th>
+                    <th>Bukti Bayaran</th>
+                    <th>Status Bayaran</th>
+                    <th>Tindakan</th>
                 </tr>
             </thead>
             <tbody id="tableBody"></tbody>
@@ -82,6 +85,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
     import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, onSnapshot, query, orderBy, doc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
     console.log("Import Firebase OK – debug 2");
 
@@ -230,6 +234,34 @@ tableBody.appendChild(row);
         if (btnCSV) btnCSV.addEventListener('click', downloadCSV);
         if (btnPDF) btnPDF.addEventListener('click', downloadPDF);
     });
+
+    async function updateStatus(docId, newStatus) {
+    console.log(`Update status untuk ${docId} ke ${newStatus}`);
+
+    if (!confirm(`Anda pasti nak ${newStatus.toLowerCase()} bayaran peserta ini?`)) {
+        return;
+    }
+
+    try {
+        const docRef = doc(db, "artifacts", "msw-kuantan-2026", "public", "data", "pendaftaran", docId);
+        await updateDoc(docRef, {
+            statusBayaran: newStatus,
+            updatedAt: serverTimestamp()
+        });
+        console.log("Status berjaya diupdate ke", newStatus);
+
+        // Update UI terus (tak perlu refresh page)
+        const statusCell = document.getElementById(`status-${docId}`);
+        if (statusCell) {
+            statusCell.innerText = newStatus;
+        }
+
+        alert(`Status bayaran berjaya diubah ke "${newStatus}"!`);
+    } catch (err) {
+        console.error("Ralat update status:", err);
+        alert("Gagal update status: " + err.message);
+    }
+}
 </script>
 
 </body>
