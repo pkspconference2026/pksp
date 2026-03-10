@@ -34,56 +34,77 @@
         async function initAuth() { try { await signInAnonymously(auth); } catch (e) { console.error(e); } }
 
         window.handleRegistration = async (e) => {
-            e.preventDefault();
-            const btn = e.target.querySelector('button');
-            btn.disabled = true;
-            btn.innerText = "Memproses...";
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    btn.disabled = true;
+    btn.innerText = "Memproses...";
 
-            if (!e.target.setuju.checked) {
-                alert("Sila tandakan persetujuan terma & syarat.");
-                btn.disabled = false;
-                btn.innerText = "Sahkan Pendaftaran";
-                return;
-            }
+    if (!e.target.setuju.checked) {
+        alert("Sila tandakan persetujuan terma & syarat.");
+        btn.disabled = false;
+        btn.innerText = "Sahkan Pendaftaran";
+        return;
+    }
 
-            const formData = {
-                nama: e.target.nama.value,
-                ic: e.target.ic.value,
-                tempat_bertugas: e.target.tempat_bertugas.value,
-                negeri: e.target.negeri.value,
-                tel: e.target.tel.value,
-                timestamp: serverTimestamp()
-            };
-            try {
-                const collRef = collection(db, 'artifacts', appId, 'public', 'data', 'pendaftaran');
-                await addDoc(collRef, formData);
-                document.getElementById('reg-form-container').classList.add('hidden');
-                document.getElementById('success-message').classList.remove('hidden');
-            } catch (err) { alert("Ralat! Sila cuba lagi."); } finally { 
-                btn.disabled = false; 
-                btn.innerText = "Sahkan Pendaftaran"; 
-            }
-        };
+    // Ambil fail bukti bayaran
+    const buktiFile = e.target.buktiBayaran.files[0];
+    let buktiURL = null;
 
-        function listenToParticipants() {
-            const collRef = collection(db, 'artifacts', appId, 'public', 'data', 'pendaftaran');
-            onSnapshot(collRef, (snapshot) => {
-                const list = [];
-                snapshot.forEach(doc => list.push(doc.data()));
-                list.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
-                const container = document.getElementById('admin-list');
-                const countEl = document.getElementById('participant-count');
-                if (container) {
-                    countEl.innerText = list.length;
-                    container.innerHTML = list.map((p, i) => `
-                        <tr class="border-b border-slate-100 text-brand-dark text-[10px] uppercase font-bold">
-                            <td class="p-4">${list.length - i}</td>
-                            <td class="p-4">${p.nama}</td>
-                            <td class="p-4">${p.tempat_bertugas}</td>
-                            <td class="p-4 text-brand-gold">${p.negeri}</td>
-                        </tr>`).join('');
-                }
-            });
+    // Kalau ada fail, upload ke Storage
+    if (buktiFile) {
+        if (buktiFile.size > 5 * 1024 * 1024) { // limit 5MB
+            alert("Fail terlalu besar! Maksimum 5MB sahaja.");
+            btn.disabled = false;
+            btn.innerText = "Sahkan Pendaftaran";
+            return;
+        }
+
+        try {
+            const storage = getStorage(app);
+            const fileName = `${Date.now()}_${buktiFile.name}`;
+            const storageRef = ref(storage, `bukti-bayaran/${fileName}`);
+            await uploadBytes(storageRef, buktiFile);
+            buktiURL = await getDownloadURL(storageRef);
+            console.log("Bukti bayaran uploaded:", buktiURL);
+        } catch (err) {
+            console.error("Upload error:", err);
+            alert("Gagal muat naik bukti bayaran: " + err.message);
+            btn.disabled = false;
+            btn.innerText = "Sahkan Pendaftaran";
+            return;
+        }
+    } else {
+        alert("Sila muat naik bukti pembayaran!");
+        btn.disabled = false;
+        btn.innerText = "Sahkan Pendaftaran";
+        return;
+    }
+
+    // Data untuk simpan di Firestore
+    const formData = {
+        nama: e.target.nama.value,
+        ic: e.target.ic.value,
+        tempat_bertugas: e.target.tempat_bertugas.value,
+        negeri: e.target.negeri.value,
+        tel: e.target.tel.value,
+        buktiBayaran: buktiURL,           // link ke gambar/resit
+        statusBayaran: "Menunggu semakan", // status awal
+        timestamp: serverTimestamp()
+    };
+
+    try {
+        const collRef = collection(db, 'artifacts', appId, 'public', 'data', 'pendaftaran');
+        await addDoc(collRef, formData);
+        document.getElementById('reg-form-container').classList.add('hidden');
+        document.getElementById('success-message').classList.remove('hidden');
+    } catch (err) {
+        console.error("Ralat simpan data:", err);
+        alert("Ralat pendaftaran: " + err.message);
+    } finally {
+        btn.disabled = false;
+        btn.innerText = "Sahkan Pendaftaran";
+    }
+};
         }
         initAuth();
     </script>
@@ -577,6 +598,7 @@
     </script>
 </body>
 </html>
+
 
 
 
