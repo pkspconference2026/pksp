@@ -58,6 +58,8 @@
                     <th>Tempat Bertugas</th>
                     <th>No. Telefon</th>
                     <th>Tarikh Daftar</th>
+                    <th>Bukti Bayaran</th>
+                    <th>Status Bayaran</th>
                 </tr>
             </thead>
             <tbody id="tableBody"></tbody>
@@ -144,7 +146,7 @@
                 const tarikh = ts ? new Date(ts).toLocaleString("ms-MY", {day:"2-digit", month:"short", year:"numeric", hour:"2-digit", minute:"2-digit"}) : "—";
 
                 const row = document.createElement("tr");
-                row.innerHTML = `
+                    row.innerHTML = `
                     <td>${bil++}</td>
                     <td>${data.nama || "—"}</td>
                     <td>${data.ic || "—"}</td>
@@ -152,6 +154,12 @@
                     <td>${data.tempat_bertugas || "—"}</td>
                     <td>${data.tel || "—"}</td>
                     <td class="timestamp">${tarikh}</td>
+                    <td>
+                        ${data.buktiBayaran ? 
+                        `<a href="${data.buktiBayaran}" target="_blank" class="text-brand-blue hover:underline">Lihat Resit</a>` : 
+                        "Tiada bukti"}
+                    </td>
+                    <td>${data.statusBayaran || "Belum bayar"}</td>
                 `;
                 tableBody.appendChild(row);
             });
