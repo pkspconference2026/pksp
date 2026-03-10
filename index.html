@@ -383,17 +383,17 @@
         </div>
 
         <!-- Tab untuk pilih hari -->
-        <div class="flex justify-center gap-4 mb-12">
-            <button onclick="switchTab(1)" class="tab-btn active px-10 py-4 rounded-full font-black text-xs uppercase transition-all border border-slate-200 bg-brand-blue text-white">
-                Hari 1
-            </button>
-            <button onclick="switchTab(2)" class="tab-btn px-10 py-4 rounded-full font-black text-xs uppercase transition-all border border-slate-200 text-slate-600 bg-white hover:bg-slate-100">
-                Hari 2
-            </button>
-            <button onclick="switchTab(3)" class="tab-btn px-10 py-4 rounded-full font-black text-xs uppercase transition-all border border-slate-200 text-slate-600 bg-white hover:bg-slate-100">
-                Hari 3
-            </button>
-        </div>
+<div class="flex justify-center gap-4 mb-12">
+    <button data-day="1" class="tab-btn active px-10 py-4 rounded-full font-black text-xs uppercase transition-all border border-slate-200 bg-brand-blue text-white">
+        Hari 1
+    </button>
+    <button data-day="2" class="tab-btn px-10 py-4 rounded-full font-black text-xs uppercase transition-all border border-slate-200 text-slate-600 bg-white hover:bg-slate-100">
+        Hari 2
+    </button>
+    <button data-day="3" class="tab-btn px-10 py-4 rounded-full font-black text-xs uppercase transition-all border border-slate-200 text-slate-600 bg-white hover:bg-slate-100">
+        Hari 3
+    </button>
+</div>
 
 <!-- Fungsi switchTab (ganti yang lama) -->
 <script>
@@ -411,19 +411,29 @@ function switchTab(day) {
         selectedDay.classList.remove('hidden');
     }
 
-    // Update tab style
+    // Reset semua tab
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('active', 'bg-brand-blue', 'text-white');
         btn.classList.add('text-slate-600', 'bg-white', 'hover:bg-slate-100');
     });
 
-    // Tambah active pada tab yang diklik
-    const activeBtn = document.querySelector(`.tab-btn[onclick="switchTab(${day})"]`);
+    // Tambah active pada tab yang betul
+    const activeBtn = document.querySelector(`.tab-btn[data-day="${day}"]`);
     if (activeBtn) {
         activeBtn.classList.add('active', 'bg-brand-blue', 'text-white');
         activeBtn.classList.remove('text-slate-600', 'bg-white', 'hover:bg-slate-100');
     }
 }
+
+// Attach event listener (supaya tak bergantung onclick inline)
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const day = btn.dataset.day;
+            switchTab(day);
+        });
+    });
+});
 </script>
 
         <!-- Hari 1 -->
