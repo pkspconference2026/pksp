@@ -178,17 +178,31 @@
         </a>
     </div>
 
-    <!-- Navbar -->
-    <nav class="fixed w-full bg-white/95 backdrop-blur-md z-50 border-b border-slate-200 shadow-sm">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div class="flex items-center space-x-4 cursor-pointer" onclick="window.scrollTo({top:0, behavior:'smooth'})">
-                <img src="Logo TKPM.png" alt="Logo" class="w-20 mx-auto md:mx-0 mb-6">
+   <!-- Navbar -->
+<nav class="fixed w-full bg-white/95 backdrop-blur-md z-50 border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <div class="flex items-center space-x-4 cursor-pointer" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+            <!-- Logo & teks -->
+            <div class="flex items-center gap-3">
+                <img src="Logo TKPM.png" alt="Logo" class="w-14 h-14 object-contain">
                 <div class="text-left font-black text-brand-blue uppercase leading-tight text-[10px]">
                     <span>Persatuan Pegawai</span><br/>
                     <span>Pembangunan Masyarakat</span><br/>
                     <span class="text-brand-gold">(Perubatan) Malaysia</span>
                 </div>
             </div>
+        </div>
+        <div class="hidden lg:flex items-center space-x-8 text-xs font-black uppercase tracking-widest text-slate-600">
+            <a href="#penceramah" class="hover:text-brand-blue transition-colors">Penceramah</a>
+            <a href="#aturcara" class="hover:text-brand-blue transition-colors">Aturcara</a>
+            <a href="#faq" class="hover:text-brand-blue transition-colors">FAQ</a>
+            <a href="#borang" class="hover:text-brand-blue transition-colors">Muat Turun</a>
+            <a href="#penaja" class="hover:text-brand-blue transition-colors">Penaja</a>
+            <a href="#lokasi" class="hover:text-brand-blue transition-colors">Lokasi</a>
+            <a href="#daftar" class="bg-brand-blue text-white px-8 py-3 rounded-full hover:bg-slate-800 transition-all">Daftar</a>
+        </div>
+    </div>
+</nav>
             <div class="hidden lg:flex items-center space-x-8 text-xs font-black uppercase tracking-widest text-slate-600">
                 <a href="#penceramah" class="hover:text-brand-blue transition-colors">Penceramah</a>
                 <a href="#aturcara" class="hover:text-brand-blue transition-colors">Aturcara</a>
@@ -640,6 +654,7 @@
     </script>
 </body>
 </html>
+
 
 
 
