@@ -13,8 +13,9 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-      const firebaseConfig = {
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
+     
+        const firebaseConfig = {
   apiKey: "AIzaSyBRKVRVCNW5fQxKcGHGH_lQdrpfBpmGmUU",
   authDomain: "pkspconference.firebaseapp.com",
   projectId: "pkspconference",
@@ -576,6 +577,7 @@
     </script>
 </body>
 </html>
+
 
 
 
