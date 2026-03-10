@@ -387,13 +387,44 @@
             <button onclick="switchTab(1)" class="tab-btn active px-10 py-4 rounded-full font-black text-xs uppercase transition-all border border-slate-200 bg-brand-blue text-white">
                 Hari 1
             </button>
-            <button onclick="switchTab(2)" class="tab-btn px-10 py-4 rounded-full font-black text-xs uppercase transition-all border border-slate-200 text-slate-400">
+            <button onclick="switchTab(2)" class="tab-btn px-10 py-4 rounded-full font-black text-xs uppercase transition-all border border-slate-200 text-slate-600 bg-white hover:bg-slate-100">
                 Hari 2
             </button>
-            <button onclick="switchTab(3)" class="tab-btn px-10 py-4 rounded-full font-black text-xs uppercase transition-all border border-slate-200 text-slate-400">
+            <button onclick="switchTab(3)" class="tab-btn px-10 py-4 rounded-full font-black text-xs uppercase transition-all border border-slate-200 text-slate-600 bg-white hover:bg-slate-100">
                 Hari 3
             </button>
         </div>
+
+<!-- Fungsi switchTab (ganti yang lama) -->
+<script>
+function switchTab(day) {
+    // Sembunyikan semua hari
+    document.querySelectorAll('.schedule-day').forEach(el => {
+        el.classList.remove('active');
+        el.classList.add('hidden');
+    });
+
+    // Tunjuk hari yang dipilih
+    const selectedDay = document.getElementById('day-' + day);
+    if (selectedDay) {
+        selectedDay.classList.add('active');
+        selectedDay.classList.remove('hidden');
+    }
+
+    // Update tab style
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active', 'bg-brand-blue', 'text-white');
+        btn.classList.add('text-slate-600', 'bg-white', 'hover:bg-slate-100');
+    });
+
+    // Tambah active pada tab yang diklik
+    const activeBtn = document.querySelector(`.tab-btn[onclick="switchTab(${day})"]`);
+    if (activeBtn) {
+        activeBtn.classList.add('active', 'bg-brand-blue', 'text-white');
+        activeBtn.classList.remove('text-slate-600', 'bg-white', 'hover:bg-slate-100');
+    }
+}
+</script>
 
         <!-- Hari 1 -->
         <div id="day-1" class="schedule-day active space-y-6">
