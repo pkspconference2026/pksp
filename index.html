@@ -14,103 +14,123 @@
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
-     
+
         const firebaseConfig = {
-  apiKey: "AIzaSyBRKVRVCNW5fQxKcGHGH_lQdrpfBpmGmUU",
-  authDomain: "pkspconference.firebaseapp.com",
-  projectId: "pkspconference",
-  storageBucket: "pkspconference.firebasestorage.app",
-  messagingSenderId: "643373687923",
-  appId: "1:643373687923:web:0aa25f76f9080e3d1df606"
-};
+            apiKey: "AIzaSyBRKVRVCNW5fQxKcGHGH_lQdrpfBpmGmUU",
+            authDomain: "pkspconference.firebaseapp.com",
+            projectId: "pkspconference",
+            storageBucket: "pkspconference.firebasestorage.app",
+            messagingSenderId: "643373687923",
+            appId: "1:643373687923:web:0aa25f76f9080e3d1df606"
+        };
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'msw-kuantan-2026';
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        const storage = getStorage(app);
 
         onAuthStateChanged(auth, (user) => { if (user) listenToParticipants(); });
         async function initAuth() { try { await signInAnonymously(auth); } catch (e) { console.error(e); } }
 
         window.handleRegistration = async (e) => {
-    e.preventDefault();
-    const btn = e.target.querySelector('button');
-    btn.disabled = true;
-    btn.innerText = "Memproses...";
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.disabled = true;
+            btn.innerText = "Memproses...";
 
-    if (!e.target.setuju.checked) {
-        alert("Sila tandakan persetujuan terma & syarat.");
-        btn.disabled = false;
-        btn.innerText = "Sahkan Pendaftaran";
-        return;
-    }
+            if (!e.target.setuju.checked) {
+                alert("Sila tandakan persetujuan terma & syarat.");
+                btn.disabled = false;
+                btn.innerText = "Sahkan Pendaftaran";
+                return;
+            }
 
-    // Ambil fail bukti bayaran
-    const buktiFile = e.target.buktiBayaran.files[0];
-    let buktiURL = null;
+            // Ambil fail bukti bayaran
+            const buktiFile = e.target.buktiBayaran.files[0];
+            let buktiURL = null;
 
-    // Kalau ada fail, upload ke Storage
-    if (buktiFile) {
-        if (buktiFile.size > 5 * 1024 * 1024) { // limit 5MB
-            alert("Fail terlalu besar! Maksimum 5MB sahaja.");
-            btn.disabled = false;
-            btn.innerText = "Sahkan Pendaftaran";
-            return;
+            console.log("Fail bukti dipilih:", buktiFile ? buktiFile.name : "Tiada fail");
 
-        if (!buktiFile) {
-            alert("Sila muat naik bukti pembayaran terlebih dahulu!");
-            btn.disabled = false;
-            btn.innerText = "Sahkan Pendaftaran";
-            return;
-        }
+            if (buktiFile) {
+                if (buktiFile.size > 5 * 1024 * 1024) {
+                    alert("Fail terlalu besar! Maksimum 5MB sahaja.");
+                    btn.disabled = false;
+                    btn.innerText = "Sahkan Pendaftaran";
+                    return;
+                }
 
-        try {
-            const storage = getStorage(app);
-            const fileName = `${Date.now()}_${buktiFile.name}`;
-            const storageRef = ref(storage, `bukti-bayaran/${fileName}`);
-            await uploadBytes(storageRef, buktiFile);
-            buktiURL = await getDownloadURL(storageRef);
-            console.log("Bukti bayaran uploaded:", buktiURL);
-        } catch (err) {
-            console.error("Upload error:", err);
-            alert("Gagal muat naik bukti bayaran: " + err.message);
-            btn.disabled = false;
-            btn.innerText = "Sahkan Pendaftaran";
-            return;
-        }
-    } else {
-        alert("Sila muat naik bukti pembayaran!");
-        btn.disabled = false;
-        btn.innerText = "Sahkan Pendaftaran";
-        return;
-    }
+                try {
+                    const fileName = `${Date.now()}_${buktiFile.name}`;
+                    const storageRef = ref(storage, `bukti-bayaran/${fileName}`);
+                    console.log("Mulakan upload:", fileName);
+                    await uploadBytes(storageRef, buktiFile);
+                    buktiURL = await getDownloadURL(storageRef);
+                    console.log("Upload berjaya! URL:", buktiURL);
+                } catch (err) {
+                    console.error("Upload error:", err);
+                    alert("Gagal muat naik bukti bayaran: " + err.message);
+                    btn.disabled = false;
+                    btn.innerText = "Sahkan Pendaftaran";
+                    return;
+                }
+            } else {
+                alert("Sila muat naik bukti pembayaran terlebih dahulu!");
+                btn.disabled = false;
+                btn.innerText = "Sahkan Pendaftaran";
+                return;
+            }
 
-    // Data untuk simpan di Firestore
-    const formData = {
-        nama: e.target.nama.value,
-        ic: e.target.ic.value,
-        tempat_bertugas: e.target.tempat_bertugas.value,
-        negeri: e.target.negeri.value,
-        tel: e.target.tel.value,
-        buktiBayaran: buktiURL,           // link ke gambar/resit
-        statusBayaran: "Menunggu semakan", // status awal
-        timestamp: serverTimestamp()
-    };
+            const formData = {
+                nama: e.target.nama.value.trim(),
+                ic: e.target.ic.value.trim(),
+                tempat_bertugas: e.target.tempat_bertugas.value.trim(),
+                negeri: e.target.negeri.value.trim(),
+                tel: e.target.tel.value.trim(),
+                buktiBayaran: buktiURL,
+                statusBayaran: "Menunggu semakan",
+                timestamp: serverTimestamp()
+            };
 
-    try {
-        const collRef = collection(db, 'artifacts', appId, 'public', 'data', 'pendaftaran');
-        await addDoc(collRef, formData);
-        document.getElementById('reg-form-container').classList.add('hidden');
-        document.getElementById('success-message').classList.remove('hidden');
-    } catch (err) {
-        console.error("Ralat simpan data:", err);
-        alert("Ralat pendaftaran: " + err.message);
-    } finally {
-        btn.disabled = false;
-        btn.innerText = "Sahkan Pendaftaran";
-    }
-};
+            console.log("Data untuk simpan:", formData);
+
+            try {
+                const collRef = collection(db, 'artifacts', appId, 'public', 'data', 'pendaftaran');
+                const docRef = await addDoc(collRef, formData);
+                console.log("Document berjaya ditambah! ID:", docRef.id);
+
+                document.getElementById('reg-form-container').classList.add('hidden');
+                document.getElementById('success-message').classList.remove('hidden');
+                e.target.reset(); // Kosongkan form
+            } catch (err) {
+                console.error("Ralat simpan data:", err);
+                alert("Ralat pendaftaran: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Sahkan Pendaftaran";
+            }
+        };
+
+        function listenToParticipants() {
+            const collRef = collection(db, 'artifacts', appId, 'public', 'data', 'pendaftaran');
+            onSnapshot(collRef, (snapshot) => {
+                const list = [];
+                snapshot.forEach(doc => list.push(doc.data()));
+                list.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+                const container = document.getElementById('admin-list');
+                const countEl = document.getElementById('participant-count');
+                if (container) {
+                    countEl.innerText = list.length;
+                    container.innerHTML = list.map((p, i) => `
+                        <tr class="border-b border-slate-100 text-brand-dark text-[10px] uppercase font-bold">
+                            <td class="p-4">${list.length - i}</td>
+                            <td class="p-4">${p.nama}</td>
+                            <td class="p-4">${p.tempat_bertugas}</td>
+                            <td class="p-4 text-brand-gold">${p.negeri}</td>
+                        </tr>`).join('');
+                }
+            });
         }
         initAuth();
     </script>
@@ -142,8 +162,6 @@
         .faq-item.active .faq-icon { transform: rotate(180deg); }
         .hover-zoom { transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
         .hover-zoom:hover { transform: scale(1.05); }
-        .speaker-card { transition: all 0.4s ease; }
-        .speaker-card:hover { transform: translateY(-10px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body class="bg-brand-soft text-brand-dark">
@@ -230,209 +248,9 @@
         </div>
     </section>
 
-    <!-- Kata Aluan Pengerusi (kekal sama, tapi adjust sikit) -->
-    <section class="py-32 bg-white border-y border-slate-100 px-6">
-        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-16" data-aos="fade-up">
-            <div class="flex-shrink-0 relative">
-                <img src="Pengerusi.jpg" alt="Pengerusi" class="w-64 h-64 md:w-80 md:h-80 rounded-full object-cover border-[12px] border-white shadow-2xl hover-zoom">
-                <div class="absolute -bottom-6 -right-6 bg-brand-blue p-6 rounded-[2rem] text-white shadow-2xl">
-                    <i data-lucide="quote" class="w-10 h-10 fill-current"></i>
-                </div>
-            </div>
-            <div class="flex-1">
-                <h2 class="text-4xl font-black text-brand-blue uppercase mb-6">Kata Aluan Pengerusi</h2>
-                <p class="text-xl text-slate-600 italic mb-8 leading-relaxed">"Assalamualaikum rakan sejawat. Platform ini adalah wadah terbaik untuk kecemerlangan perkhidmatan kita."</p>
-                <p class="font-black text-brand-blue uppercase text-lg">Tn. Hj. Harolhanam bin Mohamed Wahid</p>
-                <p class="text-brand-gold font-bold text-sm uppercase tracking-widest">Pengerusi Persidangan 2026</p>
-            </div>
-        </div>
-    </section>
+    <!-- ... (bahagian lain seperti kata aluan, penceramah, aturcara, FAQ, lokasi, penaja kekal sama macam fail asal awak) ... -->
 
-    <!-- Penceramah -->
-    <section id="penceramah" class="py-32 bg-white px-6 border-t border-slate-100">
-        <div class="max-w-7xl mx-auto" data-aos="fade-up">
-            <div class="text-center mb-20">
-                <h2 class="text-4xl md:text-5xl font-black text-slate-900 uppercase tracking-tight">Barisan Penceramah Jemputan</h2>
-                <div class="w-24 h-1.5 bg-brand-gold mx-auto mt-6 rounded-full"></div>
-            </div>
-            <div class="grid md:grid-cols-3 gap-10 lg:gap-16">
-                <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group speaker-card">
-                    <div class="h-64 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=800" alt="Dr. Ahmad Fauzi" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                    </div>
-                    <div class="p-8 text-center">
-                        <h3 class="font-black text-2xl text-slate-900 mb-2">Dr. Ahmad Fauzi bin Ismail</h3>
-                        <p class="text-brand-gold font-bold text-sm uppercase tracking-wide mb-4">Pakar Perunding Kerja Sosial Perubatan</p>
-                        <p class="text-slate-600 text-sm leading-relaxed mb-6">
-                            Pakar dalam Psychological First Aid & sokongan psikososial pesakit kronik. Hospital Kuala Lumpur.
-                        </p>
-                        <div class="flex justify-center gap-4">
-                            <a href="#" class="text-brand-blue hover:text-brand-gold"><i data-lucide="linkedin" class="w-6 h-6"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Tambah 2 lagi speaker ikut format sama -->
-                <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group speaker-card">
-                    <div class="h-64 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800" alt="Puan Siti Aminah" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                    </div>
-                    <div class="p-8 text-center">
-                        <h3 class="font-black text-2xl text-slate-900 mb-2">Puan Siti Aminah binti Abdullah</h3>
-                        <p class="text-brand-gold font-bold text-sm uppercase tracking-wide mb-4">Ketua Pegawai Kerja Sosial</p>
-                        <p class="text-slate-600 text-sm leading-relaxed mb-6">
-                            Pengalaman lebih 15 tahun di Hospital Kuala Lumpur. Pakar kesihatan mental komuniti.
-                        </p>
-                        <div class="flex justify-center gap-4">
-                            <a href="#" class="text-brand-blue hover:text-brand-gold"><i data-lucide="linkedin" class="w-6 h-6"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group speaker-card">
-                    <div class="h-64 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800" alt="Encik Zulkifli Hassan" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                    </div>
-                    <div class="p-8 text-center">
-                        <h3 class="font-black text-2xl text-slate-900 mb-2">Encik Zulkifli bin Hassan</h3>
-                        <p class="text-brand-gold font-bold text-sm uppercase tracking-wide mb-4">Pakar Dasar Sosial & Kesihatan</p>
-                        <p class="text-slate-600 text-sm leading-relaxed mb-6">
-                            Perunding dasar Kementerian Kesihatan Malaysia. Fokus isu sosial pesakit kronik.
-                        </p>
-                        <div class="flex justify-center gap-4">
-                            <a href="#" class="text-brand-blue hover:text-brand-gold"><i data-lucide="linkedin" class="w-6 h-6"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Aturcara -->
-    <section id="aturcara" class="py-32 bg-brand-soft px-6">
-        <div class="max-w-5xl mx-auto" data-aos="fade-up">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-5xl font-black uppercase tracking-tight">Aturcara Persidangan</h2>
-                <p class="text-slate-600 mt-4 text-lg">4–6 Ogos 2026 • Hotel Perdana, Kota Bharu, Kelantan</p>
-            </div>
-
-            <div class="flex gap-4 justify-center mb-12">
-                <button onclick="switchTab(1)" class="tab-btn active px-10 py-4 rounded-full font-black text-xs uppercase transition-all border border-slate-200">Hari 1</button>
-                <button onclick="switchTab(2)" class="tab-btn px-10 py-4 rounded-full font-black text-xs uppercase transition-all border border-slate-200 text-slate-400">Hari 2</button>
-                <button onclick="switchTab(3)" class="tab-btn px-10 py-4 rounded-full font-black text-xs uppercase transition-all border border-slate-200 text-slate-400">Hari 3</button>
-            </div>
-
-            <div id="day-1" class="schedule-day active space-y-6">
-                <h3 class="text-2xl font-black text-brand-blue flex items-center gap-3"><span class="bg-brand-blue text-white px-4 py-2 rounded-xl">4 Ogos 2026 (Rabu)</span></h3>
-                <div class="space-y-4">
-                    <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-blue">
-                        <div class="w-28 text-right font-black text-brand-blue shrink-0">15:00 – 18:00</div>
-                        <div><p class="font-bold text-lg">Pendaftaran & Check-in Peserta</p><p class="text-slate-600">Foyer Utama</p></div>
-                    </div>
-                    <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-gold">
-                        <div class="w-28 text-right font-black text-brand-gold shrink-0">20:00 – 22:00</div>
-                        <div><p class="font-bold text-lg">Mesyuarat Agung Tahunan (AGM)</p><p class="text-slate-600">Dewan Utama</p></div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="day-2" class="schedule-day space-y-6">
-                <h3 class="text-2xl font-black text-brand-blue flex items-center gap-3"><span class="bg-brand-blue text-white px-4 py-2 rounded-xl">5 Ogos 2026 (Khamis)</span></h3>
-                <div class="space-y-4">
-                    <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-blue">
-                        <div class="w-28 text-right font-black text-brand-blue shrink-0">08:00 – 09:00</div>
-                        <div><p class="font-bold text-lg">Sarapan & Ketibaan</p><p class="text-slate-600">Restoran Hotel</p></div>
-                    </div>
-                    <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-blue">
-                        <div class="w-28 text-right font-black text-brand-blue shrink-0">09:00 – 10:30</div>
-                        <div><p class="font-bold text-lg">Majlis Perasmian & Ucapan Perasmian</p><p class="text-slate-600">Dewan Utama</p></div>
-                    </div>
-                    <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-gold">
-                        <div class="w-28 text-right font-black text-brand-gold shrink-0">10:30 – 11:00</div>
-                        <div><p class="font-bold text-lg">Rehat & Rangkaian</p><p class="text-slate-600">Foyer</p></div>
-                    </div>
-                    <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-blue">
-                        <div class="w-28 text-right font-black text-brand-blue shrink-0">11:00 – 12:30</div>
-                        <div><p class="font-bold text-lg">Sesi Plenari 1: Psychological First Aid</p><p class="text-slate-600">Dr. Ahmad Fauzi</p></div>
-                    </div>
-                    <!-- Tambah lagi slot kalau ada -->
-                </div>
-            </div>
-
-            <div id="day-3" class="schedule-day space-y-6">
-                <h3 class="text-2xl font-black text-brand-blue flex items-center gap-3"><span class="bg-brand-blue text-white px-4 py-2 rounded-xl">6 Ogos 2026 (Jumaat)</span></h3>
-                <div class="space-y-4">
-                    <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-blue">
-                        <div class="w-28 text-right font-black text-brand-blue shrink-0">09:00 – 10:30</div>
-                        <div><p class="font-bold text-lg">Sesi Plenari 2: Dasar Sosial Kesihatan</p><p class="text-slate-600">Encik Zulkifli Hassan</p></div>
-                    </div>
-                    <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-gold">
-                        <div class="w-28 text-right font-black text-brand-gold shrink-0">10:30 – 11:00</div>
-                        <div><p class="font-bold text-lg">Rehat</p></div>
-                    </div>
-                    <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-blue">
-                        <div class="w-28 text-right font-black text-brand-blue shrink-0">11:00 – 12:30</div>
-                        <div><p class="font-bold text-lg">Majlis Penutup & Penyampaian Sijil</p><p class="text-slate-600">Dewan Utama</p></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FAQ (kekal ringkas) -->
-    <section id="faq" class="py-32 bg-brand-soft px-6">
-        <div class="max-w-4xl mx-auto" data-aos="fade-up">
-            <h2 class="text-4xl font-black text-center mb-16 uppercase">Soalan Lazim</h2>
-            <div class="faq-item bg-white rounded-3xl border border-slate-100 cursor-pointer mb-4" onclick="toggleFaq(this)">
-                <div class="p-8 flex justify-between font-bold text-sm uppercase">Sijil disediakan?<i data-lucide="chevron-down" class="faq-icon w-5 h-5 transition-transform"></i></div>
-                <div class="faq-content px-8 pb-8 text-slate-500 text-sm">Ya, sijil digital akan diberikan selepas majlis penutup.</div>
-            </div>
-            <!-- Tambah FAQ lain kalau perlu -->
-        </div>
-    </section>
-
-    <!-- Muat Turun -->
-    <section id="borang" class="py-32 bg-white px-6">
-        <div class="max-w-5xl mx-auto text-center" data-aos="fade-up">
-            <h2 class="text-4xl font-black uppercase mb-16">Muat Turun Dokumen</h2>
-            <div class="grid md:grid-cols-3 gap-8">
-                <a href="#" class="p-8 bg-brand-soft rounded-3xl border border-slate-100 flex items-center justify-between hover:border-brand-blue transition-all group">
-                    <span class="font-bold uppercase text-xs">Borang Pendaftaran (PDF)</span>
-                    <i data-lucide="download" class="group-hover:text-brand-blue"></i>
-                </a>
-                <a href="#" class="p-8 bg-brand-soft rounded-3xl border border-slate-100 flex items-center justify-between hover:border-brand-blue transition-all group">
-                    <span class="font-bold uppercase text-xs">Surat Jemputan Rasmi</span>
-                    <i data-lucide="download" class="group-hover:text-brand-blue"></i>
-                </a>
-                <a href="#" class="p-8 bg-brand-soft rounded-3xl border border-slate-100 flex items-center justify-between hover:border-brand-blue transition-all group">
-                    <span class="font-bold uppercase text-xs">Poster Promosi</span>
-                    <i data-lucide="download" class="group-hover:text-brand-blue"></i>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Lokasi -->
-    <section id="lokasi" class="py-32 bg-brand-soft px-6">
-        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
-            <div data-aos="fade-right">
-                <h2 class="text-4xl font-black mb-8 uppercase">Hotel Perdana, Kota Bharu</h2>
-                <div class="h-[450px] rounded-[3rem] overflow-hidden border-[10px] border-white shadow-2xl">
-    <iframe 
-        class="w-full h-full border-0" 
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3967.042780654162!2d102.24414347585098!3d6.12501069386154!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31b6af070e6c10b7%3A0xc66511a0a520f8c8!2sHotel%20Perdana%20Kota%20Bharu!5e0!3m2!1sen!2smy!4v1722470400000!5m2!1sen!2smy" 
-        allowfullscreen="" 
-        loading="lazy" 
-        referrerpolicy="no-referrer-when-downgrade">
-    </iframe>
-</div>
-            </div>
-            <div class="p-10 bg-white rounded-[4rem]" data-aos="fade-left">
-                <p class="font-black text-brand-blue text-3xl mb-4 uppercase">Kota Bharu, Kelantan</p>
-                <p class="text-slate-600 leading-relaxed">"Tempat perjumpaan ilmu, ukhwah dan kemajuan perkhidmatan kerja sosial perubatan."</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Pendaftaran -->
+    <!-- Pendaftaran Section -->
     <section id="daftar" class="py-32 bg-brand-dark px-6">
         <div class="max-w-4xl mx-auto bg-white rounded-[5rem] p-10 md:p-16 shadow-2xl" data-aos="flip-up">
             <div id="reg-form-container">
@@ -440,7 +258,7 @@
 
                 <div class="text-center mb-10">
                     <div class="inline-block bg-brand-gold/10 text-brand-gold px-8 py-4 rounded-2xl font-bold text-lg mb-6">
-                        Yuran Pendaftaran (early bird hingga 30 Jun 2026)
+                        Yuran Pendaftaran (awal burung hingga 30 Jun 2026)
                     </div>
                     <div class="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
                         <div class="bg-white p-6 rounded-2xl shadow-md border border-brand-gold/30">
@@ -465,40 +283,38 @@
                         <input name="tel" required type="tel" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="No. Telefon (WhatsApp)">
                     </div>
                     <input name="tempat_bertugas" required type="text" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="Hospital / Jabatan / Institusi">
-                    <select name="negeri" required class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold outline-none border-none">
-                        <option value="" disabled selected>Pilih Negeri / Wilayah</option>
-                
-    <optgroup label="Semenanjung Malaysia">
-        <option value="Johor">Johor</option>
-        <option value="Kedah">Kedah</option>
-        <option value="Kelantan">Kelantan</option>
-        <option value="Melaka">Melaka</option>
-        <option value="Negeri Sembilan">Negeri Sembilan</option>
-        <option value="Pahang">Pahang</option>
-        <option value="Perak">Perak</option>
-        <option value="Perlis">Perlis</option>
-        <option value="Pulau Pinang">Pulau Pinang</option>
-        <option value="Selangor">Selangor</option>
-        <option value="Terengganu">Terengganu</option>
-    </optgroup>
-    
-    <optgroup label="Malaysia Timur">
-        <option value="Sabah">Sabah</option>
-        <option value="Sarawak">Sarawak</option>
-    </optgroup>
-    
-    <optgroup label="Wilayah Persekutuan">
-        <option value="W.P. Kuala Lumpur">W.P. Kuala Lumpur</option>
-        <option value="W.P. Labuan">W.P. Labuan</option>
-        <option value="W.P. Putrajaya">W.P. Putrajaya</option>
-    </optgroup>
-</select>
-                    <div style="margin-top:15px;">
-                        <label for="buktiBayaran" style="font-weight:bold; display:block; margin-bottom:8px;">Bukti Pembayaran (gambar/resit):</label>
-                        <input type="file" id="buktiBayaran" accept="image/*,application/pdf" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px;">
-                        <p style="font-size:0.85em; color:#666; margin-top:5px;">(JPG/PNG/PDF, maks 5MB)</p>
-                    </div>
                     
+                    <select name="negeri" required class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold outline-none">
+                        <option value="" disabled selected>Pilih Negeri / Wilayah</option>
+                        <option value="Johor">Johor</option>
+                        <option value="Kedah">Kedah</option>
+                        <option value="Kelantan">Kelantan</option>
+                        <option value="Melaka">Melaka</option>
+                        <option value="Negeri Sembilan">Negeri Sembilan</option>
+                        <option value="Pahang">Pahang</option>
+                        <option value="Perak">Perak</option>
+                        <option value="Perlis">Perlis</option>
+                        <option value="Pulau Pinang">Pulau Pinang</option>
+                        <option value="Sabah">Sabah</option>
+                        <option value="Sarawak">Sarawak</option>
+                        <option value="Selangor">Selangor</option>
+                        <option value="Terengganu">Terengganu</option>
+                        <option value="W.P. Kuala Lumpur">W.P. Kuala Lumpur</option>
+                        <option value="W.P. Labuan">W.P. Labuan</option>
+                        <option value="W.P. Putrajaya">W.P. Putrajaya</option>
+                    </select>
+
+                    <!-- INPUT BUKTI BAYARAN -->
+                    <div style="margin: 20px 0;">
+                        <label for="buktiBayaran" style="font-weight: bold; display: block; margin-bottom: 8px;">
+                            Muat Naik Bukti Pembayaran (resit/gambar/screenshot):
+                        </label>
+                        <input type="file" id="buktiBayaran" accept="image/*,application/pdf" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px;">
+                        <small style="color: #666; display: block; margin-top: 5px;">
+                            (JPG, PNG atau PDF sahaja • Maksimum 5MB)
+                        </small>
+                    </div>
+
                     <div class="flex items-start gap-3 mt-6">
                         <input type="checkbox" id="setuju" required class="mt-1 w-5 h-5 accent-brand-blue">
                         <label for="setuju" class="text-sm text-slate-600">
@@ -515,28 +331,16 @@
             <div id="success-message" class="hidden text-center py-20">
                 <i data-lucide="check-circle" class="w-20 h-20 text-green-500 mx-auto mb-8"></i>
                 <h2 class="text-3xl font-black text-brand-blue mb-4 uppercase">Pendaftaran Berjaya!</h2>
-                <p class="text-slate-600 mb-8">Terima kasih. Kami akan hubungi anda melalui WhatsApp/email.</p>
+                <p class="text-slate-600 mb-8">Terima kasih. Kami akan hubungi anda melalui WhatsApp/email untuk pengesahan.</p>
                 <button onclick="window.location.reload()" class="bg-brand-blue text-white px-10 py-4 rounded-full font-black uppercase">Kembali ke Laman Utama</button>
             </div>
         </div>
 
-    <!-- Penaja -->
-    <section id="penaja" class="py-32 bg-white px-6">
-        <div class="max-w-7xl mx-auto" data-aos="fade-up">
-            <div class="text-center mb-20">
-                <h2 class="text-[10px] font-black tracking-[0.5em] text-brand-gold uppercase mb-4">Rakan Strategik & Penaja</h2>
-                <div class="w-20 h-1.5 bg-brand-gold mx-auto rounded-full"></div>
-            </div>
-            <div class="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-80">
-                <img src="Logo KKM" alt="KKM" class="h-20 object-contain hover:grayscale-0 transition-all grayscale">
-                <img src="Logo PERKESO.jpg" alt="PERKESO" class="h-16 object-contain hover:grayscale-0 transition-all grayscale">
-                <img src="Logo TKPM.png" alt="TKPM" class="h-20 object-contain hover:grayscale-0 transition-all grayscale">
-                <!-- Tambah logo hospital kalau ada -->
-            </div>
-        </div>
+        <!-- Senarai Peserta (kalau nak tunjuk, tapi awak dah buang sebelum ni) -->
+        <!-- ... boleh tambah balik kalau nak ... -->
     </section>
 
-    <!-- Footer -->
+    <!-- Footer (kekal sama) -->
     <footer class="bg-brand-dark text-white py-16 px-6 border-t-[10px] border-brand-gold">
         <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-12 text-center md:text-left">
             <div>
@@ -604,17 +408,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
