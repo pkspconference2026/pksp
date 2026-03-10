@@ -7,7 +7,7 @@
     
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8f9fa; color: #333; margin: 0; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        .container { max-width: 1400px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
         h1 { color: #1e3a8a; text-align: center; margin-bottom: 30px; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ddd; }
@@ -19,13 +19,17 @@
         #count { font-weight: bold; color: #c5a059; }
         #error-message { color: red; font-weight: bold; text-align: center; margin: 20px 0; }
         #password-container { text-align: center; padding: 100px 20px; max-width: 500px; margin: 0 auto; }
-        #password-container input { padding: 12px; width: 80%; font-size: 1.2em; margin-bottom: 15px; box-sizing: border-box; }
-        #password-container button { padding: 12px 40px; background: #1e3a8a; color: white; border: none; cursor: pointer; font-size: 1.1em; }
+        #password-container input { padding: 12px; width: 80%; font-size: 1.2em; margin-bottom: 15px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px; }
+        #password-container button { padding: 12px 40px; background: #1e3a8a; color: white; border: none; cursor: pointer; font-size: 1.1em; border-radius: 5px; }
         #password-container button:hover { background: #0f172a; }
-        .btn { padding: 10px 20px; margin: 10px; cursor: pointer; font-size: 1em; border: none; border-radius: 5px; }
-        .btn-csv { background: #c5a059; color: white; }
-        .btn-pdf { background: #1e3a8a; color: white; }
-        .btn-back { background: #6b7280; color: white; margin-top: 30px; }
+        .btn { padding: 8px 16px; margin: 4px; cursor: pointer; font-size: 0.9em; border: none; border-radius: 5px; color: white; }
+        .btn-lulus { background: #10b981; }
+        .btn-tolak { background: #ef4444; }
+        .btn-download { padding: 10px 20px; background: #c5a059; color: white; border: none; cursor: pointer; font-size: 1em; border-radius: 5px; margin: 10px; }
+        .btn-pdf { background: #1e3a8a; }
+        .btn-back { background: #6b7280; color: white; margin-top: 30px; padding: 12px 24px; font-size: 1em; }
+        a { color: #1e3a8a; text-decoration: underline; }
+        a:hover { color: #0f172a; }
     </style>
 </head>
 <body>
@@ -60,8 +64,6 @@
                     <th>Tarikh Daftar</th>
                     <th>Bukti Bayaran</th>
                     <th>Status Bayaran</th>
-                    <th>Bukti Bayaran</th>
-                    <th>Status Bayaran</th>
                     <th>Tindakan</th>
                 </tr>
             </thead>
@@ -69,12 +71,12 @@
         </table>
 
         <div style="text-align:center; margin-top:30px;">
-            <button class="btn btn-csv" id="btnCSV">Download CSV</button>
-            <button class="btn btn-pdf" id="btnPDF">Download PDF (Print)</button>
+            <button class="btn-download" onclick="downloadCSV()">Download CSV</button>
+            <button class="btn-download btn-pdf" onclick="downloadPDF()">Download PDF (Print)</button>
         </div>
 
-        <div style="text-align:center;">
-            <button class="btn btn-back" onclick="window.location.href='https://pkspconference2026.netlify.app/'">Kembali ke Laman Utama</button>
+        <div style="text-align:center; margin-top:30px;">
+            <button class="btn-back" onclick="window.location.href='https://pkspconference2026.netlify.app/'">Kembali ke Laman Utama</button>
         </div>
     </div>
 </div>
@@ -83,9 +85,8 @@
     console.log("Skrip admin LOADED – debug 1");
 
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, collection, onSnapshot, query, orderBy, doc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
     console.log("Import Firebase OK – debug 2");
 
@@ -150,28 +151,28 @@
                 const tarikh = ts ? new Date(ts).toLocaleString("ms-MY", {day:"2-digit", month:"short", year:"numeric", hour:"2-digit", minute:"2-digit"}) : "—";
 
                 const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${bil++}</td>
-                <td>${data.nama || "—"}</td>
-                <td>${data.ic || "—"}</td>
-                <td>${data.negeri || "—"}</td>
-                <td>${data.tempat_bertugas || "—"}</td>
-                <td>${data.tel || "—"}</td>
-                <td class="timestamp">${tarikh}</td>
-                <td>
-                    ${data.buktiBayaran ? 
-                    `<a href="${data.buktiBayaran}" target="_blank" class="text-brand-blue hover:underline">Lihat Resit</a>` : 
-                    "Tiada bukti"}
-                </td>
-                <td id="status-${doc.id}">
-                    ${data.statusBayaran || "Menunggu semakan"}
-                </td>
-                <td>
-                <button onclick="updateStatus('${doc.id}', 'Lulus')" class="bg-green-600 text-white px-3 py-1 rounded text-xs hover:bg-green-700">Lulus</button>
-                <button onclick="updateStatus('${doc.id}', 'Tolak')" class="bg-red-600 text-white px-3 py-1 rounded text-xs hover:bg-red-700 ml-2">Tolak</button>
-                </td>
-            `;
-tableBody.appendChild(row);
+                row.innerHTML = `
+                    <td>${bil++}</td>
+                    <td>${data.nama || "—"}</td>
+                    <td>${data.ic || "—"}</td>
+                    <td>${data.negeri || "—"}</td>
+                    <td>${data.tempat_bertugas || "—"}</td>
+                    <td>${data.tel || "—"}</td>
+                    <td class="timestamp">${tarikh}</td>
+                    <td>
+                        ${data.buktiBayaran ? 
+                            `<a href="${data.buktiBayaran}" target="_blank" class="text-brand-blue hover:underline">Lihat Resit</a>` : 
+                            "Tiada bukti"}
+                    </td>
+                    <td id="status-${doc.id}">
+                        ${data.statusBayaran || "Menunggu semakan"}
+                    </td>
+                    <td>
+                        <button class="btn" onclick="updateStatus('${doc.id}', 'Lulus')">Lulus</button>
+                        <button class="btn" onclick="updateStatus('${doc.id}', 'Tolak')">Tolak</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
             });
 
             countEl.textContent = snapshot.size;
@@ -189,13 +190,41 @@ tableBody.appendChild(row);
         });
     }
 
+    async function updateStatus(docId, newStatus) {
+        console.log(`Update status untuk ${docId} ke ${newStatus}`);
+
+        if (!confirm(`Anda pasti nak ${newStatus.toLowerCase()} bayaran peserta ini?`)) {
+            return;
+        }
+
+        try {
+            const docRef = doc(db, "artifacts", "msw-kuantan-2026", "public", "data", "pendaftaran", docId);
+            await updateDoc(docRef, {
+                statusBayaran: newStatus,
+                updatedAt: serverTimestamp()
+            });
+            console.log("Status berjaya diupdate ke", newStatus);
+
+            // Update UI terus
+            const statusCell = document.getElementById(`status-${docId}`);
+            if (statusCell) {
+                statusCell.innerText = newStatus;
+            }
+
+            alert(`Status bayaran berjaya diubah ke "${newStatus}"!`);
+        } catch (err) {
+            console.error("Ralat update status:", err);
+            alert("Gagal update status: " + err.message);
+        }
+    }
+
     // DOWNLOAD CSV
     function downloadCSV() {
-        console.log("Download CSV ditekan – debug CSV start");
+        console.log("Download CSV ditekan");
 
         const table = document.getElementById('pesertaTable');
         if (!table || table.style.display === 'none') {
-            alert("Table peserta belum load atau tak kelihatan!");
+            alert("Table peserta belum load!");
             return;
         }
 
@@ -215,53 +244,14 @@ tableBody.appendChild(row);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-
-        console.log("CSV download triggered – check fail download");
     }
 
-    // DOWNLOAD PDF (simple print)
+    // DOWNLOAD PDF (print)
     function downloadPDF() {
-        console.log("Download PDF ditekan – debug PDF start");
+        console.log("Download PDF ditekan");
         alert("Buka dialog print. Pilih 'Save as PDF' di printer.");
         window.print();
     }
-
-    // Attach button events (supaya confirm jalan walaupun onclick hilang)
-    document.addEventListener('DOMContentLoaded', () => {
-        const btnCSV = document.getElementById('btnCSV');
-        const btnPDF = document.getElementById('btnPDF');
-
-        if (btnCSV) btnCSV.addEventListener('click', downloadCSV);
-        if (btnPDF) btnPDF.addEventListener('click', downloadPDF);
-    });
-
-    async function updateStatus(docId, newStatus) {
-    console.log(`Update status untuk ${docId} ke ${newStatus}`);
-
-    if (!confirm(`Anda pasti nak ${newStatus.toLowerCase()} bayaran peserta ini?`)) {
-        return;
-    }
-
-    try {
-        const docRef = doc(db, "artifacts", "msw-kuantan-2026", "public", "data", "pendaftaran", docId);
-        await updateDoc(docRef, {
-            statusBayaran: newStatus,
-            updatedAt: serverTimestamp()
-        });
-        console.log("Status berjaya diupdate ke", newStatus);
-
-        // Update UI terus (tak perlu refresh page)
-        const statusCell = document.getElementById(`status-${docId}`);
-        if (statusCell) {
-            statusCell.innerText = newStatus;
-        }
-
-        alert(`Status bayaran berjaya diubah ke "${newStatus}"!`);
-    } catch (err) {
-        console.error("Ralat update status:", err);
-        alert("Gagal update status: " + err.message);
-    }
-}
 </script>
 
 </body>
