@@ -57,11 +57,12 @@
         <div id="error-message"></div>
 
         <table id="pesertaTable" style="display:none;">
-            <thead>
+            <<thead>
                 <tr>
                     <th>Bil.</th>
                     <th>Nama Penuh</th>
                     <th>No. K/P</th>
+                    <th>Kategori</th>
                     <th>Negeri</th>
                     <th>Tempat Bertugas</th>
                     <th>No. Telefon</th>
@@ -159,6 +160,7 @@
                     <td>${bil++}</td>
                     <td>${data.nama || "—"}</td>
                     <td>${data.ic || "—"}</td>
+                    <td>${data.kategori || "—"}</td>
                     <td>${data.negeri || "—"}</td>
                     <td>${data.tempat_bertugas || "—"}</td>
                     <td>${data.tel || "—"}</td>
