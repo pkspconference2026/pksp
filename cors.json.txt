@@ -1,0 +1,12 @@
+[
+  {
+    "origin": ["https://pkspconference2026.github.io", "http://localhost:5500"],
+    "method": ["GET"],
+    "maxAgeSeconds": 3600
+  }
+]
+```
+
+**4. Apply CORS rules tu**
+```
+gsutil cors set cors.json gs://pkspconference.firebasestorage.app
