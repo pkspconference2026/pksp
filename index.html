@@ -177,7 +177,6 @@
         </a>
     </div>
 
-    <!-- Navbar -->
 <!-- Navbar -->
 <nav class="fixed w-full bg-white/95 backdrop-blur-md z-50 border-b border-slate-200 shadow-sm">
     <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
@@ -195,7 +194,7 @@
         <div class="hidden lg:flex items-center space-x-8 text-xs font-black uppercase tracking-widest text-slate-600">
             <a href="#penceramah" class="hover:text-brand-blue transition-colors">Penceramah</a>
             <a href="#aturcara" class="hover:text-brand-blue transition-colors">Aturcara</a>
-            <a href="#faq" class="hover:text-brand-blue transition-colors">FAQ</a>
+            <a href="jawatankuasa.html" target="_blank" class="hover:text-brand-blue transition-colors">Jawatankuasa</a>
 
             <!-- Dropdown Muat Turun yang lebih stabil -->
             <div class="relative group">
@@ -204,24 +203,29 @@
                     <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-hover:rotate-180"></i>
                 </span>
 
-                <!-- Dropdown content – tambah padding & delay supaya tak hilang cepat -->
-                <div class="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden z-50 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-200 ease-in-out group-hover:delay-150">
-                    <a href="#" class="block px-6 py-4 text-slate-700 hover:bg-brand-soft transition-colors border-b border-slate-100">
-                        <span class="font-bold text-brand-blue">Slide Penceramah</span>
-                        <p class="text-xs text-slate-500 mt-1">Muat turun slaid semua penceramah jemputan</p>
+                <!-- Bridge invisible supaya hover tak putus bila gerak mouse ke dropdown -->
+                <div class="absolute right-0 top-full h-3 w-72"></div>
+
+                <!-- Dropdown content -->
+                <div class="absolute right-0 top-full pt-3 w-72 z-50 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-150">
+                <div class="bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden">
+                    <a href="Files/test.png.png" download 
+                        class="block px-6 py-4 text-slate-700 hover:bg-brand-soft transition-colors border-b border-slate-100">
+                    <span class="font-bold text-brand-blue">Slide Penceramah</span>
                     </a>
-                    <a href="#" class="block px-6 py-4 text-slate-700 hover:bg-brand-soft transition-colors border-b border-slate-100">
-                        <span class="font-bold text-brand-blue">Buku Aturcara</span>
-                        <p class="text-xs text-slate-500 mt-1">Jadual lengkap persidangan 3 hari</p>
+                    <a href="files/slide-penceramah.pdf" download 
+                        class="block px-6 py-4 text-slate-700 hover:bg-brand-soft transition-colors border-b border-slate-100">
+                    <span class="font-bold text-brand-blue">Buku Program</span>
                     </a>
-                    <a href="#" class="block px-6 py-4 text-slate-700 hover:bg-brand-soft transition-colors">
-                        <span class="font-bold text-brand-blue">Poster Saintifik</span>
-                        <p class="text-xs text-slate-500 mt-1">Template & panduan poster saintifik</p>
+                     <a href="files/slide-penceramah.pdf" download 
+                        class="block px-6 py-4 text-slate-700 hover:bg-brand-soft transition-colors border-b border-slate-100">
+                    <span class="font-bold text-brand-blue">Syarat Penyertaan Pertandingan Poster</span>
                     </a>
+                </div>
                 </div>
             </div>
 
-            <a href="#penaja" class="hover:text-brand-blue transition-colors">Penaja</a>
+            <a href="kertas-saintifik.html" target="_blank" class="hover:text-brand-blue transition-colors">Kertas Saintifik</a>
             <a href="#lokasi" class="hover:text-brand-blue transition-colors">Lokasi</a>
             <a href="#daftar" class="bg-brand-blue text-white px-8 py-3 rounded-full hover:bg-slate-800 transition-all">Daftar</a>
         </div>
@@ -262,10 +266,10 @@
             <div id="countdown" class="flex justify-center flex-wrap gap-4 md:gap-8 mb-12"></div>
 
             <div class="flex flex-col sm:flex-row justify-center gap-5 md:gap-8">
-                <a href="#daftar" class="bg-brand-blue text-white px-10 md:px-14 py-5 rounded-3xl font-black uppercase text-sm md:text-base shadow-xl hover:bg-slate-800 transition-all transform hover:scale-105">
+                <a href="#daftar" class="border-2 border-brand-blue text-brand-blue px-10 md:px-14 py-5 rounded-3xl font-black uppercase text-sm md:text-base bg-transparent hover:bg-brand-blue hover:text-white transition-all transform hover:scale-105">
                     Daftar Sekarang
                 </a>
-                <a href="https://wa.me/60123456789" class="bg-green-600 text-white px-10 md:px-14 py-5 rounded-3xl font-black uppercase text-sm md:text-base shadow-xl flex items-center justify-center gap-3 hover:bg-green-700 transition-all transform hover:scale-105">
+                <a href="https://wa.me/60123456789" class="border-2 border-green-600 text-green-600 px-10 md:px-14 py-5 rounded-3xl font-black uppercase text-sm md:text-base bg-transparent flex items-center justify-center gap-3 hover:bg-green-600 hover:text-white transition-all transform hover:scale-105">
                     <i data-lucide="message-circle" class="w-5 h-5"></i> Sertai WhatsApp Group
                 </a>
                 <a href="#" class="border-2 border-brand-gold text-brand-gold px-10 md:px-14 py-5 rounded-3xl font-black uppercase text-sm md:text-base hover:bg-brand-gold hover:text-white transition-all">
@@ -275,54 +279,67 @@
         </div>
     </section>
 
-    <!-- Kata Aluan Pengerusi (dua orang) -->
-    <section class="py-32 bg-white border-y border-slate-100 px-6">
-        <div class="max-w-7xl mx-auto" data-aos="fade-up">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-5xl font-black text-brand-blue uppercase tracking-tight">
-                    Kata Aluan Pengerusi
-                </h2>
-                <div class="w-24 h-1.5 bg-brand-gold mx-auto mt-6 rounded-full"></div>
+    <!-- Kata Aluan Pengerusi -->
+<section class="py-32 bg-white border-y border-slate-100 px-6">
+    <div class="max-w-7xl mx-auto" data-aos="fade-up">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-black text-brand-blue uppercase tracking-tight">
+                Kata Aluan
+            </h2>
+            <div class="w-24 h-1.5 bg-brand-gold mx-auto mt-6 rounded-full"></div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-12 lg:gap-16">
+
+            <!-- 1. Ketua Profesion -->
+            <div class="flex flex-col items-center">
+                <div class="relative mb-8">
+                    <div class="w-56 h-56 rounded-full bg-slate-100 border-[12px] border-white shadow-2xl flex items-center justify-center">
+                        <i data-lucide="user" class="w-24 h-24 text-slate-300"></i>
+                    </div>
+                    <div class="absolute -bottom-6 -right-6 bg-brand-blue p-5 rounded-[2rem] text-white shadow-2xl">
+                        <i data-lucide="quote" class="w-8 h-8 fill-current"></i>
+                    </div>
+                </div>
+                <h3 class="font-black text-xl text-brand-blue mb-2 text-center">Zulhan bin Ambi</h3>
+                <p class="text-brand-gold font-bold text-xs uppercase tracking-widest mb-4 text-center">Ketua Profesion Pegawai Kerja Sosial Perubatan, Kementerian Kesihatan Malaysia</p>
+                <p class="text-slate-500 leading-relaxed text-center">
+                    Profesion Kerja Sosial Perubatan terus berkembang sebagai tunjang kepada sistem penjagaan kesihatan negara. Melalui persidangan ini, kita bersama-sama memperkasa diri dengan ilmu dan strategi terkini bagi memastikan setiap pesakit mendapat sokongan psikososial yang holistik dan bermakna. Saya berharap semua peserta dapat memanfaatkan sepenuhnya platform ilmu yang berharga ini.
+                </p>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-12 lg:gap-16">
-                <!-- Presiden Persatuan -->
-                <div class="flex flex-col items-center md:items-start">
-                    <div class="relative mb-8">
-                        <img src="Presiden Persatuan.jpg" alt="Presiden" class="w-64 h-64 md:w-80 md:h-80 rounded-full object-cover border-[12px] border-white shadow-2xl hover-zoom">
-                        <div class="absolute -bottom-6 -right-6 bg-brand-blue p-6 rounded-[2rem] text-white shadow-2xl">
-                            <i data-lucide="quote" class="w-10 h-10 fill-current"></i>
-                        </div>
+            <!-- 2. Presiden Persatuan -->
+            <div class="flex flex-col items-center">
+                <div class="relative mb-8">
+                    <img src="Presiden Persatuan.jpg" alt="Presiden" class="w-56 h-56 rounded-full object-cover border-[12px] border-white shadow-2xl hover-zoom">
+                    <div class="absolute -bottom-6 -right-6 bg-brand-blue p-5 rounded-[2rem] text-white shadow-2xl">
+                        <i data-lucide="quote" class="w-8 h-8 fill-current"></i>
                     </div>
-                    <h3 class="font-black text-2xl text-brand-blue mb-2">Tn. Hj. Harolhanam bin Mohamed Wahid</h3>
-                    <p class="text-brand-gold font-bold text-sm uppercase tracking-widest mb-4">Presiden Persatuan Pegawai Pembangunan Masyarakat (Perubatan) Malaysia</p>
-                    <p class="text-slate-600 text-lg leading-relaxed text-center md:text-left">
-                        Assalamualaikum wbt. Selamat datang ke Persidangan Pegawai Kerja Sosial Perubatan Malaysia 2026. 
-                        Persidangan ini adalah wadah terbaik untuk berkongsi ilmu, pengalaman dan inovasi dalam memperkasa perkhidmatan kerja sosial perubatan. 
-                        Semoga kita semua dapat memperkukuhkan kolaborasi demi kesejahteraan pesakit dan komuniti.
-                    </p>
                 </div>
-
-                <!-- Pengerusi Persidangan -->
-                <div class="flex flex-col items-center md:items-start">
-                    <div class="relative mb-8">
-                        <img src="Pengerusi_Persidangan.jpg" alt="Pengerusi Persidangan" class="w-64 h-64 md:w-80 md:h-80 rounded-full object-cover border-[12px] border-white shadow-2xl hover-zoom">
-                        <div class="absolute -bottom-6 -right-6 bg-brand-gold p-6 rounded-[2rem] text-white shadow-2xl">
-                            <i data-lucide="quote" class="w-10 h-10 fill-current"></i>
-                        </div>
+                <h3 class="font-black text-xl text-brand-blue mb-2 text-center">Hj. Harolhanam bin Mohamed Wahid</h3>
+                <p class="text-brand-gold font-bold text-xs uppercase tracking-widest mb-4 text-center">Presiden Persatuan Pegawai Pembangunan Masyarakat (Perubatan) Malaysia</p>
+                <p class="text-slate-500 leading-relaxed text-center">
+                    Persidangan Pegawai Kerja Sosial Perubatan (PKSP) ke 29 merupakan kolaborasi penganjuran yang sangat baik di antara Persatuan Pegawai Pembangunan Masyarakat (Perubatan) Malaysia dengan kerjasama Profesion Pegawai Kerja Sosial Perubatan, Kementerian Kesihatan Malaysia. Persidangan ini diharapkan akan dapat meningkatkan imej profesion dan persatuan di peringkat KKM dan negara melalui pendekatan Teknologi AI dalam amalan Kerja Sosial Perubatan. Selamat Bersidang.
+                </p>
+            </div>
+            
+            <!-- 3. Pengerusi Persidangan -->
+            <div class="flex flex-col items-center">
+                <div class="relative mb-8">
+                    <img src="P.Zaila.jpg" alt="Pengerusi Persidangan" class="w-56 h-56 rounded-full object-cover border-[12px] border-white shadow-2xl hover-zoom">
+                    <div class="absolute -bottom-6 -right-6 bg-brand-gold p-5 rounded-[2rem] text-white shadow-2xl">
+                        <i data-lucide="quote" class="w-8 h-8 fill-current"></i>
                     </div>
-                    <h3 class="font-black text-2xl text-brand-gold mb-2">Dr. Siti Noraini binti Ahmad</h3>
-                    <p class="text-brand-blue font-bold text-sm uppercase tracking-widest mb-4">Pengerusi Persidangan 2026</p>
-                    <p class="text-slate-600 text-lg leading-relaxed text-center md:text-left">
-                        Assalamualaikum dan salam sejahtera. Kami amat berbesar hati mengalu-alukan semua peserta ke persidangan kali ini. 
-                        Dengan tema "Memperkasa Kerja Sosial Perubatan: Inovasi, Kolaborasi & Kesejahteraan Pesakit", 
-                        kami yakin persidangan ini akan menjadi platform bermakna untuk berkongsi idea dan membina rangkaian kerjasama yang kukuh. 
-                        Semoga ilmu yang dikongsi memberi manfaat besar kepada perkhidmatan kita semua.
-                    </p>
                 </div>
+                <h3 class="font-black text-xl text-brand-blue mb-2 text-center">Pn. Hjh Zailawati binti Mamat</h3>
+                <p class="text-brand-gold font-bold text-xs uppercase tracking-widest mb-4 text-center">Pengerusi Persidangan Kali ke-29</p>
+                <p class="text-slate-500 leading-relaxed text-center">
+                    Persidangan ini menjadi platform penting bagi Pegawai Kerja Sosial Perubatan untuk berkongsi pengetahuan, pengalaman serta amalan terbaik dalam memperkukuhkan perkhidmatan kerja sosial perubatan di Malaysia. Dalam dunia perubatan yang semakin berkembang dan mencabar, peranan Pegawai Kerja Sosial Perubatan amat signifikan dalam memastikan aspek psikososial pesakit dan keluarga terus diberi perhatian secara menyeluruh dan berkesan.
+                </p>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Penceramah -->
     <section id="penceramah" class="py-32 bg-white px-6 border-t border-slate-100">
@@ -344,7 +361,6 @@
                             Pakar dalam Psychological First Aid & sokongan psikososial pesakit kronik. Hospital Kuala Lumpur.
                         </p>
                         <div class="flex justify-center gap-4">
-                            <a href="#" class="text-brand-blue hover:text-brand-gold"><i data-lucide="linkedin" class="w-6 h-6"></i></a>
                         </div>
                     </div>
                 </div>
@@ -361,7 +377,6 @@
                             Pakar dalam Psychological First Aid & sokongan psikososial pesakit kronik. Hospital Kuala Lumpur.
                         </p>
                         <div class="flex justify-center gap-4">
-                            <a href="#" class="text-brand-blue hover:text-brand-gold"><i data-lucide="linkedin" class="w-6 h-6"></i></a>
                         </div>
                     </div>
                 </div>
@@ -378,7 +393,6 @@
                             Pakar dalam Psychological First Aid & sokongan psikososial pesakit kronik. Hospital Kuala Lumpur.
                         </p>
                         <div class="flex justify-center gap-4">
-                            <a href="#" class="text-brand-blue hover:text-brand-gold"><i data-lucide="linkedin" class="w-6 h-6"></i></a>
                         </div>
                     </div>
                 </div>
@@ -556,7 +570,7 @@
 
                 <div class="text-center mb-10">
                     <div class="inline-block bg-brand-gold/10 text-brand-gold px-8 py-4 rounded-2xl font-bold text-lg mb-6">
-                        Yuran Pendaftaran (awal burung hingga 30 Jun 2026)
+                        Yuran Pendaftaran
                     </div>
                     <div class="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
                         <div class="bg-white p-6 rounded-2xl shadow-md border border-brand-gold/30">
@@ -569,7 +583,7 @@
                         </div>
                         <div class="bg-white p-6 rounded-2xl shadow-md border border-brand-gold/30">
                             <p class="text-3xl font-black text-brand-blue">RM80</p>
-                            <p class="text-sm text-slate-600 mt-2">Pelajar</p>
+                            <p class="text-sm text-slate-600 mt-2">Orang Awam</p>
                         </div>
                     </div>
                 </div>
@@ -582,12 +596,47 @@
                     </div>
                     <input name="tempat_bertugas" required type="text" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="Hospital / Jabatan / Institusi">
                     
+                    <select name="kategori" required class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold outline-none">
+                        <option value="" disabled selected>Pilih Kategori Peserta</option>
+                        <option value="Ahli TKPM">Ahli TKPM (RM150)</option>
+                        <option value="Bukan Ahli">Bukan Ahli (RM250)</option>
+                        <option value="Pelajar">Pelajar (RM80)</option>
+                    </select>
+
                     <select name="negeri" required class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold outline-none">
                         <option value="" disabled selected>Pilih Negeri / Wilayah</option>
-                        <option value="Johor">Johor</option>
-                        <!-- ... senarai negeri lain ... -->
+    
+                     <optgroup label="Zon Utara">
+                            <option value="Perlis">Perlis</option>
+                            <option value="Kedah">Kedah</option>
+                            <option value="Pulau Pinang">Pulau Pinang</option>
+                            <option value="Perak">Perak</option>
+                    </optgroup>
+
+                    <optgroup label="Zon Timur">
+                        <option value="Kelantan">Kelantan</option>
+                        <option value="Terengganu">Terengganu</option>
+                        <option value="Pahang">Pahang</option>
+                    </optgroup>
+
+                    <optgroup label="Zon Tengah">
+                        <option value="Selangor">Selangor</option>
+                        <option value="Negeri Sembilan">Negeri Sembilan</option>
+                        <option value="W.P. Kuala Lumpur">W.P. Kuala Lumpur</option>
                         <option value="W.P. Putrajaya">W.P. Putrajaya</option>
-                    </select>
+                    </optgroup>
+
+                    <optgroup label="Zon Selatan">
+                        <option value="Melaka">Melaka</option>
+                        <option value="Johor">Johor</option>
+                    </optgroup>
+
+                    <optgroup label="Zon Sabah & Sarawak">
+                        <option value="Sabah">Sabah</option>
+                        <option value="Sarawak">Sarawak</option>
+                        <option value="W.P. Labuan">W.P. Labuan</option>
+                    </optgroup>
+                </select>
 
                     <!-- INPUT BUKTI BAYARAN -->
                     <div style="margin: 20px 0;">
@@ -751,7 +800,24 @@
 
         function toggleFaq(el) {
             el.classList.toggle('active');
+
+            
         }
+
+        async function downloadFile(url, filename) {
+    try {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(a.href);
+    } catch (err) {
+        alert('Gagal muat turun. Cuba semula.');
+        console.error(err);
+    }
+}
     </script>
 </body>
 </html>
