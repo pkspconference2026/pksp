@@ -191,6 +191,12 @@
             </div>
         </div>
 
+<!-- Hamburger Button -->
+            <button id="hamburger" class="lg:hidden flex flex-col gap-1.5 p-2" onclick="toggleMenu()">
+                <span class="w-6 h-0.5 bg-brand-blue block transition-all"></span>
+                <span class="w-6 h-0.5 bg-brand-blue block transition-all"></span>
+                <span class="w-6 h-0.5 bg-brand-blue block transition-all"></span>
+            </button>
         <div class="hidden lg:flex items-center space-x-8 text-xs font-black uppercase tracking-widest text-slate-600">
             <a href="#penceramah" class="hover:text-brand-blue transition-colors">Penceramah</a>
             <a href="#aturcara" class="hover:text-brand-blue transition-colors">Aturcara</a>
@@ -230,6 +236,15 @@
             <a href="#daftar" class="bg-brand-blue text-white px-8 py-3 rounded-full hover:bg-slate-800 transition-all">Daftar</a>
         </div>
     </div>
+    <!-- Mobile Menu -->
+<div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-slate-200 px-6 py-4 space-y-4">
+    <a href="#penceramah" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">Penceramah</a>
+    <a href="#aturcara" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">Aturcara</a>
+    <a href="jawatankuasa.html" target="_blank" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">Jawatankuasa</a>
+    <a href="kertas-saintifik.html" target="_blank" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">Kertas Saintifik</a>
+    <a href="#lokasi" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">Lokasi</a>
+    <a href="#daftar" onclick="toggleMenu()" class="block w-full text-center bg-brand-blue text-white px-8 py-3 rounded-full font-black uppercase text-xs hover:bg-slate-800 transition-all">Daftar</a>
+</div>
 </nav>
 
     <!-- Hero -->
@@ -816,6 +831,15 @@
         alert('Gagal muat turun. Cuba semula.');
         console.error(err);
     }
+
+    function toggleMenu() {
+    const menu = document.getElementById('mobile-menu');
+    menu.classList.toggle('hidden');
+}
+}
+function toggleMenu() {
+    const menu = document.getElementById('mobile-menu');
+    menu.classList.toggle('hidden');
 }
     </script>
 </body>
