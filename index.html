@@ -161,6 +161,10 @@
         .faq-item.active .faq-icon { transform: rotate(180deg); }
         .hover-zoom { transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
         .hover-zoom:hover { transform: scale(1.05); }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+        .accordion-item.active .accordion-content { max-height: 200px; }
+        .accordion-item.active .accordion-icon { transform: rotate(180deg); }
+        .accordion-icon { transition: transform 0.3s ease; }
     </style>
 </head>
 <body class="bg-brand-soft text-brand-dark">
@@ -270,7 +274,7 @@
             <div class="flex flex-col sm:flex-row justify-center items-center gap-4 md:gap-8 mb-10 text-lg font-semibold text-slate-600">
                 <div class="flex items-center gap-3">
                     <i data-lucide="calendar" class="w-6 h-6 text-brand-gold"></i>
-                    <span>4–6 Ogos 2026</span>
+                    <span>2-4 Ogos 2026</span>
                 </div>
                 <div class="flex items-center gap-3">
                     <i data-lucide="map-pin" class="w-6 h-6 text-brand-gold"></i>
@@ -436,218 +440,299 @@
             </div>
 
             <!-- Hari 1 -->
-<div id="day-1" class="schedule-day active space-y-6">
-    <h3 class="text-2xl font-black text-brand-blue flex items-center gap-3">
+<div id="day-1" class="schedule-day active space-y-3">
+    <h3 class="text-2xl font-black text-brand-blue flex items-center gap-3 mb-6">
         <span class="bg-brand-blue text-white px-4 py-2 rounded-xl">2 Ogos 2026 (Ahad)</span>
     </h3>
-    <div class="space-y-4">
-        <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-gold">
-            <div class="w-36 font-bold shrink-0">2.30ptg – 4.00ptg</div>
-            <div>
-                <p class="font-black text-lg">Pendaftaran Peserta / Check-in</p>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex gap-4 items-center">
+    <span class="text-xs font-black text-brand-gold w-28 shrink-0">2.30 – 4.00 ptg</span>
+    <span class="font-bold text-brand-dark">Pendaftaran Peserta / Check-in</span>
+</div>
+
+    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
+            <div class="flex gap-4 items-center">
+                <span class="text-xs font-black text-brand-gold w-28 shrink-0">4.00 – 5.00 ptg</span>
+                <span class="font-bold text-brand-dark">Perkongsian Pengalaman</span>
             </div>
-        </div>
-        <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-blue">
-            <div class="w-36 font-bold shrink-0">4.00ptg – 5.00ptg</div>
-            <div>
-                <p class="font-black text-lg">Perkongsian Pengalaman Pengurusan Rumah Generasiku Sayang Jabatan Kesihatan Negeri Kelantan</p>
-                <p class="text-slate-600">Dr. Amirah Farhana binti Md Noorpi, Pejabat Kesihatan Bandar Tumpat</p>
-            </div>
-        </div>
-        <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-gold">
-            <div class="w-36 font-bold shrink-0">7.00mlm – 8.00mlm</div>
-            <div>
-                <p class="font-black text-lg">Makan Malam</p>
-            </div>
-        </div>
-        <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-blue">
-            <div class="w-36 font-bold shrink-0">8.00mlm – 8.15mlm</div>
-            <div>
-                <p class="font-black text-lg">Taklimat Persidangan</p>
-                <p class="text-slate-600">Pn. Hjh Zailawati binti Mamat • Pengerusi Persidangan PKSP Malaysia Ke-29</p>
-            </div>
-        </div>
-        <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-gold">
-            <div class="w-36 font-bold shrink-0">8.15mlm – 9.15mlm</div>
-            <div>
-                <p class="font-black text-lg">Pembentangan Kertas Saintifik</p>
-                <p class="text-slate-600 italic">Cabaran Keluarga Sebagai Penjaga Utama Kepada Pesakit Kecederaan Otak Traumatik dan Adaptasi Strategi Daya Tindak Fokus Emosi</p>
-                <p class="text-slate-600">Dr. Nor Amalina binti Jali • Hospital Sultan Haji Ahmad Shah, Temerloh</p>
-            </div>
-        </div>
-        <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-blue">
-            <div class="w-36 font-bold shrink-0">9.15mlm – 10.00mlm</div>
-            <div>
-                <p class="font-black text-lg">Pembentangan Kertas Saintifik</p>
-                <p class="text-slate-600 italic">Pengaruh Persekitaran Taska Terhadap Kepuasan Ibu Bapa Kajian dari Aspek Keselamatan Kesihatan</p>
-                <p class="text-slate-600">Pn. Wan Hamizah binti Wan Hassan</p>
-            </div>
-        </div>
-        <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-gold">
-            <div class="w-36 font-bold shrink-0">10.00mlm</div>
-            <div>
-                <p class="font-black text-lg">Bersurai</p>
-            </div>
+            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
+        </button>
+        <div class="accordion-content px-5 pb-5">
+            <p class="text-slate-600 italic text-sm">Pengurusan Rumah Generasiku Sayang Jabatan Kesihatan Negeri Kelantan</p>
+            <p class="text-slate-500 text-sm mt-1">Dr. Amirah Farhana binti Md Noorpi • Pejabat Kesihatan Bandar Tumpat</p>
         </div>
     </div>
+
+   <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex gap-4 items-center">
+    <span class="text-xs font-black text-brand-gold w-28 shrink-0">7.00 – 8.00 ptg</span>
+    <span class="font-bold text-brand-dark">Makan Malam</span>
+</div>
+
+    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
+            <div class="flex gap-4 items-center">
+                <span class="text-xs font-black text-brand-gold w-28 shrink-0">8.00 – 8.15 mlm</span>
+                <span class="font-bold text-brand-dark">Taklimat Persidangan</span>
+            </div>
+            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
+        </button>
+        <div class="accordion-content px-5 pb-5">
+            <p class="text-slate-500 text-sm">Pn. Hjh Zailawati binti Mamat • Pengerusi Persidangan PKSP Malaysia Ke-29</p>
+        </div>
+    </div>
+
+    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
+            <div class="flex gap-4 items-center">
+                <span class="text-xs font-black text-brand-gold w-28 shrink-0">8.15 – 9.15 mlm</span>
+                <span class="font-bold text-brand-dark">Pembentangan Kertas Saintifik</span>
+            </div>
+            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
+        </button>
+        <div class="accordion-content px-5 pb-5">
+            <p class="text-slate-600 italic text-sm">Cabaran Keluarga Sebagai Penjaga Utama Kepada Pesakit Kecederaan Otak Traumatik dan Adaptasi Strategi Daya Tindak Fokus Emosi</p>
+            <p class="text-slate-500 text-sm mt-1">Dr. Nor Amalina binti Jali • Hospital Sultan Haji Ahmad Shah, Temerloh</p>
+        </div>
+    </div>
+
+    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
+            <div class="flex gap-4 items-center">
+                <span class="text-xs font-black text-brand-gold w-28 shrink-0">9.15 – 10.00 mlm</span>
+                <span class="font-bold text-brand-dark">Pembentangan Kertas Saintifik</span>
+            </div>
+            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
+        </button>
+        <div class="accordion-content px-5 pb-5">
+            <p class="text-slate-600 italic text-sm">Pengaruh Persekitaran Taska Terhadap Kepuasan Ibu Bapa Kajian dari Aspek Keselamatan Kesihatan</p>
+            <p class="text-slate-500 text-sm mt-1">Pn. Wan Hamizah binti Wan Hassan</p>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex gap-4 items-center">
+    <span class="text-xs font-black text-brand-gold w-28 shrink-0">2.30 – 4.00 ptg</span>
+    <span class="font-bold text-brand-dark">Bersurai</span>
+</div>
 </div>
 
             <!-- Hari 2 -->
-<div id="day-2" class="schedule-day hidden space-y-6">
-    <h3 class="text-2xl font-black text-brand-blue flex items-center gap-3">
+<div id="day-2" class="schedule-day hidden space-y-3">
+    <h3 class="text-2xl font-black text-brand-blue flex items-center gap-3 mb-6">
         <span class="bg-brand-blue text-white px-4 py-2 rounded-xl">3 Ogos 2026 (Isnin)</span>
     </h3>
-    <div class="space-y-4">
-        <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-gold">
-            <div class="w-36 font-bold shrink-0">8.00pg – 8.15pg</div>
-            <div>
-                <p class="font-black text-lg">Kehadiran dan Pendaftaran Peserta Hari Ke-2</p>
+
+   <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex gap-4 items-center">
+    <span class="text-xs font-black text-brand-gold w-28 shrink-0">8.00 – 8.15 pg</span>
+    <span class="font-bold text-brand-dark">Kehadiran & Pendaftaran Peserta Hari Ke-2</span>
+</div>
+
+    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
+            <div class="flex gap-4 items-center">
+                <span class="text-xs font-black text-brand-gold w-28 shrink-0">8.15 – 10.15 pg</span>
+                <span class="font-bold text-brand-dark">Ceramah 1</span>
             </div>
+            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
+        </button>
+        <div class="accordion-content px-5 pb-5">
+            <p class="text-slate-600 italic text-sm">Digital Mindset & Kesejahteraan Mental: Strategi Resiliensi Pegawai Kerja Sosial Perubatan di Alaf Baharu</p>
+            <p class="text-slate-500 text-sm mt-1">Prof. Dr. Hizili Hussin • Universiti Malaysia Kelantan (UMK)</p>
         </div>
-        <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-blue">
-            <div class="w-36 font-bold shrink-0">8.15pg – 10.15pg</div>
-            <div>
-                <p class="font-black text-lg">Ceramah 1</p>
-                <p class="text-slate-600 italic">Digital Mindset & Kesejahteraan Mental: Strategi Resiliensi Pegawai Kerja Sosial Perubatan di Alaf Baharu</p>
-                <p class="text-slate-600">Prof. Dr. Hizili Hussin • Universiti Malaysia Kelantan (UMK)</p>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex gap-4 items-center">
+    <span class="text-xs font-black text-brand-gold w-28 shrink-0">10.15 – 10.45 pg</span>
+    <span class="font-bold text-brand-dark">Minum Pagi</span>
+</div>
+
+    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
+            <div class="flex gap-4 items-center">
+                <span class="text-xs font-black text-brand-gold w-28 shrink-0">9.15 – 10.00 mlm</span>
+                <span class="font-bold text-brand-dark">Majlis Perasmian PKSP Ke-29</span>
             </div>
+            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
+        </button>
+        <div class="accordion-content px-5 pb-5">
+            <p class="text-slate-500 text-sm">YB Datuk Seri Dr. Haji Dzulkefly bin Ahmad • Menteri Kesihatan Malaysia</p>
         </div>
-        <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-gold">
-            <div class="w-36 font-bold shrink-0">10.15pg – 10.45pg</div>
-            <div>
-                <p class="font-black text-lg">Minum Pagi</p>
+    </div>
+
+    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
+            <div class="flex gap-4 items-center">
+                <span class="text-xs font-black text-brand-gold w-28 shrink-0">1.00 – 2.00 ptg</span>
+                <span class="font-bold text-brand-dark">Makan Tengahari / Rehat</span>
             </div>
-        </div>
-        <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-blue">
-            <div class="w-36 font-bold shrink-0">9.15mlm – 10.00mlm</div>
-            <div>
-                <p class="font-black text-lg">Majlis Perasmian Persidangan PKSP Malaysia Ke-29</p>
-                <p class="text-slate-600">Oleh YB Datuk Seri Dr. Haji Dzulkefly bin Ahmad • Menteri Kesihatan Malaysia</p>
+            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
+        </button>
+    </div>
+
+    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
+            <div class="flex gap-4 items-center">
+                <span class="text-xs font-black text-brand-gold w-28 shrink-0">2.00 – 2.30 ptg</span>
+                <span class="font-bold text-brand-dark">Pembentangan Kertas Saintifik</span>
             </div>
+            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
+        </button>
+        <div class="accordion-content px-5 pb-5">
+            <p class="text-slate-600 italic text-sm">Psychosocial Health Challenges Among Adolescents: Implication for Medical Social Work Practice</p>
+            <p class="text-slate-500 text-sm mt-1">En. Sutharssan Nadarajan • Hospital Sri Aman Sarawak</p>
         </div>
-        <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-gold">
-            <div class="w-36 font-bold shrink-0">1.00ptg – 2.00ptg</div>
-            <div>
-                <p class="font-black text-lg">Makan Tengahari / Rehat</p>
+    </div>
+
+    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
+            <div class="flex gap-4 items-center">
+                <span class="text-xs font-black text-brand-gold w-28 shrink-0">2.30 – 3.30 ptg</span>
+                <span class="font-bold text-brand-dark">Ceramah 2</span>
             </div>
+            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
+        </button>
+        <div class="accordion-content px-5 pb-5">
+            <p class="text-slate-600 italic text-sm">Mengemudi Masa Depan Kerja Sosial Perubatan dalam Ekosistem Kesihatan Mampan</p>
+            <p class="text-slate-500 text-sm mt-1">Prof. Dr. Lukman @ Zawawi bin Mohamad • UNISZA</p>
         </div>
-        <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-blue">
-            <div class="w-36 font-bold shrink-0">2.00ptg – 2.30ptg</div>
-            <div>
-                <p class="font-black text-lg">Pembentangan Kertas Saintifik</p>
-                <p class="text-slate-600 italic">Psychosocial Health Challenges Among Adolescents: Implication for Medical Social Work Practice</p>
-                <p class="text-slate-600">En. Sutharssan Nadarajan • Hospital Sri Aman Sarawak</p>
+    </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex gap-4 items-center">
+    <span class="text-xs font-black text-brand-gold w-28 shrink-0">3.30 – 5.00 ptg</span>
+    <span class="font-bold text-brand-dark">Lawatan & Penilaian Poster</span>
+</div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex gap-4 items-center">
+    <span class="text-xs font-black text-brand-gold w-28 shrink-0">6.00 – 7.00 mlm</span>
+    <span class="font-bold text-brand-dark">Rehat / Riadah</span>
+</div>
+    
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex gap-4 items-center">
+    <span class="text-xs font-black text-brand-gold w-28 shrink-0">7.00 – 8.00 mlm</span>
+    <span class="font-bold text-brand-dark">Makan Malam</span>
+</div>
+
+    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
+            <div class="flex gap-4 items-center">
+                <span class="text-xs font-black text-brand-gold w-28 shrink-0">8.00 – 10.30 mlm</span>
+                <span class="font-bold text-brand-dark">Dialog Perkhidmatan PKSP KKM</span>
             </div>
+            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
+        </button>
+        <div class="accordion-content px-5 pb-5">
+            <p class="text-slate-600 text-sm font-bold mt-1">Ahli Panel:</p>
+            <p class="text-slate-500 text-sm">1. En. Zulhan bin Ambi — Ketua Profesion PKSP KKM</p>
+            <p class="text-slate-500 text-sm">2. Pn. Nor Azura binti Abd Majid — Timbalan Ketua Profesion PKSP KKM</p>
+            <p class="text-slate-500 text-sm">3. Tn. Hj. Harolhanam bin Mohamed Wahid — Presiden PPPM(P)M</p>
+            <p class="text-slate-600 text-sm font-bold mt-2">Moderator:</p>
+            <p class="text-slate-500 text-sm">Pn. Hjh Zailawati binti Mamat</p>
         </div>
-        <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-gold">
-            <div class="w-36 font-bold shrink-0">2.30ptg – 3.30ptg</div>
-            <div>
-                <p class="font-black text-lg">Ceramah 2</p>
-                <p class="text-slate-600 italic">Mengemudi Masa Depan Kerja Sosial Perubatan dalam Ekosistem Kesihatan Mampan</p>
-                <p class="text-slate-600">Prof. Dr. Lukman @ Zawawi bin Mohamad • Universiti Sultan Zainal Abidin (UNISZA)</p>
+    </div>
+
+    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
+            <div class="flex gap-4 items-center">
+                <span class="text-xs font-black text-brand-gold w-28 shrink-0">10.30 mlm</span>
+                <span class="font-bold text-brand-dark">Bersurai</span>
             </div>
-        </div>
-        <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-blue">
-            <div class="w-36 font-bold shrink-0">3.30ptg – 5.00ptg</div>
-            <div>
-                <p class="font-black text-lg">Lawatan dan Penilaian Bagi Pertandingan Pembentangan Poster</p>
-            </div>
-        </div>
-        <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-gold">
-            <div class="w-36 font-bold shrink-0">6.00ptg – 7.00mlm</div>
-            <div>
-                <p class="font-black text-lg">Rehat / Riadah</p>
-            </div>
-        </div>
-        <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-blue">
-            <div class="w-36 font-bold shrink-0">7.00mlm – 8.00mlm</div>
-            <div>
-                <p class="font-black text-lg">Makan Malam</p>
-            </div>
-        </div>
-        <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-gold">
-            <div class="w-36 font-bold shrink-0">8.00mlm – 10.30mlm</div>
-            <div>
-                <p class="font-black text-lg">Dialog Perkhidmatan Kerja Sosial Perubatan, Kementerian Kesihatan Malaysia</p>
-                <p class="text-slate-600 mt-2">Ahli Panel:</p>
-                <p class="text-slate-600">1. En. Zulhan bin Ambi — Ketua Profesion PKSP KKM</p>
-                <p class="text-slate-600">2. Pn. Nor Azura binti Abd Majid — Timbalan Ketua Profesion PKSP KKM</p>
-                <p class="text-slate-600">3. Tn. Hj. Harolhanam bin Mohamed Wahid — Presiden PPPM(P)M</p>
-                <p class="text-slate-600 mt-2">Moderator: Pn. Hjh Zailawati binti Mamat</p>
-            </div>
-        </div>
-        <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-blue">
-            <div class="w-36 font-bold shrink-0">10.30mlm</div>
-            <div>
-                <p class="font-black text-lg">Bersurai</p>
-            </div>
-        </div>
+            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
+        </button>
     </div>
 </div>
 
             <!-- Hari 3 -->
-<div id="day-3" class="schedule-day hidden space-y-6">
-    <h3 class="text-2xl font-black text-brand-blue flex items-center gap-3">
+<div id="day-3" class="schedule-day hidden space-y-3">
+    <h3 class="text-2xl font-black text-brand-blue flex items-center gap-3 mb-6">
         <span class="bg-brand-blue text-white px-4 py-2 rounded-xl">4 Ogos 2026 (Selasa)</span>
     </h3>
-    <div class="space-y-4">
-        <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-gold">
-            <div class="w-36 font-bold shrink-0">8.00pg – 8.15pg</div>
-            <div>
-                <p class="font-black text-lg">Kehadiran dan Pendaftaran Peserta Hari Ke-3</p>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex gap-4 items-center">
+    <span class="text-xs font-black text-brand-gold w-28 shrink-0">8.00 – 8.15 pg</span>
+    <span class="font-bold text-brand-dark">Kehadiran & Pendaftaran Peserta Hari Ke-3</span>
+</div>
+
+    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
+            <div class="flex gap-4 items-center">
+                <span class="text-xs font-black text-brand-gold w-28 shrink-0">8.15 – 9.15 pg</span>
+                <span class="font-bold text-brand-dark">Ceramah 3</span>
             </div>
+            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
+        </button>
+        <div class="accordion-content px-5 pb-5">
+            <p class="text-slate-600 italic text-sm">Transformasi Digital Komuniti: Memperkasakan Pengurusan Kes dan Advokasi Pesakit Melalui Data & Kecerdasan Buatan (AI)</p>
+            <p class="text-slate-500 text-sm mt-1">Dr. Wan Munira binti Wan Jaafar • UPM</p>
         </div>
-        <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-blue">
-            <div class="w-36 font-bold shrink-0">8.15pg – 9.15pg</div>
-            <div>
-                <p class="font-black text-lg">Ceramah 3</p>
-                <p class="text-slate-600 italic">Transformasi Digital Komuniti: Memperkasakan Pengurusan Kes dan Advokasi Pesakit Melalui Data & Kecerdasan Buatan (AI)</p>
-                <p class="text-slate-600">Dr. Wan Munira binti Wan Jaafar • UPM</p>
+    </div>
+
+    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
+            <div class="flex gap-4 items-center">
+                <span class="text-xs font-black text-brand-gold w-28 shrink-0">9.15 – 9.45 pg</span>
+                <span class="font-bold text-brand-dark">Pembentangan Kertas Saintifik</span>
             </div>
+            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
+        </button>
+        <div class="accordion-content px-5 pb-5">
+            <p class="text-slate-600 italic text-sm">Daya Tindak Golongan Gelandangan Dalam Mengatasi Masalah Kesihatan Mental</p>
+            <p class="text-slate-500 text-sm mt-1">Cik Suhaizah binti Zainudin • Hospital Canselor Tuanku Muhriz (HCTM)</p>
         </div>
-        <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-gold">
-            <div class="w-36 font-bold shrink-0">9.15pg – 9.45pg</div>
-            <div>
-                <p class="font-black text-lg">Pembentangan Kertas Saintifik</p>
-                <p class="text-slate-600 italic">Daya Tindak Golongan Gelandangan Dalam Mengatasi Masalah Kesihatan Mental</p>
-                <p class="text-slate-600">Cik Suhaizah binti Zainudin • Hospital Canselor Tuanku Muhriz (HCTM)</p>
+    </div>
+
+    <<div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex gap-4 items-center">
+    <span class="text-xs font-black text-brand-gold w-28 shrink-0">10.15 – 10.45 pg</span>
+    <span class="font-bold text-brand-dark">Minum Pagi</span>
+</div>
+
+    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
+            <div class="flex gap-4 items-center">
+                <span class="text-xs font-black text-brand-gold w-28 shrink-0">10.30 – 11.30 pg</span>
+                <span class="font-bold text-brand-dark">Ceramah 4</span>
             </div>
+            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
+        </button>
+        <div class="accordion-content px-5 pb-5">
+            <p class="text-slate-600 italic text-sm">Sempadan Digital: Menetapkan Had Etika Penggunaan AI dalam Praktis Kerja Sosial</p>
+            <p class="text-slate-500 text-sm mt-1">Dr. Nor Jana binti Saim • UKM</p>
         </div>
-        <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-blue">
-            <div class="w-36 font-bold shrink-0">10.15pg – 10.45pg</div>
-            <div>
-                <p class="font-black text-lg">Minum Pagi</p>
+    </div>
+
+    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
+            <div class="flex gap-4 items-center">
+                <span class="text-xs font-black text-brand-gold w-28 shrink-0">11.30pg – 12.30tgh</span>
+                <span class="font-bold text-brand-dark">Bicara Eksekutif</span>
             </div>
+            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
+        </button>
+        <div class="accordion-content px-5 pb-5">
+            <p class="text-slate-600 italic text-sm">Hala Tuju Pegawai Kerja Sosial Perubatan di Malaysia</p>
+            <p class="text-slate-500 text-sm mt-1">YBhg Dato' Dr. Mohd Azman bin Yacob • Pengarah Kesihatan Negeri Kelantan</p>
         </div>
-        <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-gold">
-            <div class="w-36 font-bold shrink-0">10.30pg – 11.30pg</div>
-            <div>
-                <p class="font-black text-lg">Ceramah 4</p>
-                <p class="text-slate-600 italic">Sempadan Digital: Menetapkan Had Etika Penggunaan AI dalam Praktis Kerja Sosial</p>
-                <p class="text-slate-600">Dr. Nor Jana binti Saim • UKM</p>
+    </div>
+
+    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
+            <div class="flex gap-4 items-center">
+                <span class="text-xs font-black text-brand-gold w-28 shrink-0">12.30tgh – 1.00ptg</span>
+                <span class="font-bold text-brand-dark">Majlis Penutup PKSP Ke-29</span>
             </div>
+            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
+        </button>
+        <div class="accordion-content px-5 pb-5">
+            <p class="text-slate-500 text-sm">YBhg Dato' Dr. Mohd Azman bin Yacob • Pengarah Kesihatan Negeri Kelantan</p>
         </div>
-        <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-blue">
-            <div class="w-36 font-bold shrink-0">11.30pg – 12.30tgh</div>
-            <div>
-                <p class="font-black text-lg">Bicara Eksekutif</p>
-                <p class="text-slate-600 italic">Hala Tuju Pegawai Kerja Sosial Perubatan di Malaysia</p>
-                <p class="text-slate-600">YBhg Dato' Dr. Mohd Azman bin Yacob • Pengarah Kesihatan Negeri Kelantan</p>
+    </div>
+<div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
+            <div class="flex gap-4 items-center">
+                <span class="text-xs font-black text-brand-gold w-28 shrink-0">1.00 ptg</span>
+                <span class="font-bold text-brand-dark">Makan Tengahari / Rehat</span>
             </div>
-        </div>
-        <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-gold">
-            <div class="w-36 font-bold shrink-0">12.30tgh – 1.00ptg</div>
-            <div>
-                <p class="font-black text-lg">Majlis Penutup Persidangan PKSP Ke-29</p>
-                <p class="text-slate-600">Oleh YBhg Dato' Dr. Mohd Azman bin Yacob • Pengarah Kesihatan Negeri Kelantan</p>
-            </div>
-        </div>
-        <div class="flex gap-6 bg-white p-6 rounded-2xl shadow-sm border-l-4 border-brand-blue">
-            <div class="w-36 font-bold shrink-0">1.00ptg</div>
-            <div>
-                <p class="font-black text-lg">Makan Tengahari / Check-out</p>
-            </div>
-        </div>
+            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
+        </button>
     </div>
 </div>
 
@@ -936,6 +1021,20 @@
 function toggleMenu() {
     const menu = document.getElementById('mobile-menu');
     menu.classList.toggle('hidden');
+}
+function toggleAccordion(btn) {
+    const item = btn.parentElement;
+    const isActive = item.classList.contains('active');
+    
+    // Tutup semua accordion dalam hari yang sama
+    item.closest('.schedule-day').querySelectorAll('.accordion-item').forEach(el => {
+        el.classList.remove('active');
+    });
+    
+    // Buka yang diklik kalau belum active
+    if (!isActive) item.classList.add('active');
+    
+    lucide.createIcons();
 }
     </script>
 </body>
