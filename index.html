@@ -1023,5 +1023,25 @@ function toggleAccordion(btn) {
     lucide.createIcons();
 }
     </script>
+    <!-- Popup Raya -->
+<div id="raya-popup" class="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm">
+    <div class="relative bg-gradient-to-br from-[#1e3a8a]/80 to-[#0f172a]/80 backdrop-blur-md border border-brand-gold/40 rounded-[3rem] p-12 mx-6 max-w-md w-full text-center shadow-2xl">
+        
+        <!-- Butang tutup -->
+        <button onclick="document.getElementById('raya-popup').style.display='none'" 
+    class="absolute top-5 right-5 w-10 h-10 bg-white/20 hover:bg-white/40 rounded-full flex items-center justify-center text-white font-black text-lg transition-all">
+    ✕
+</button>
+
+        <!-- Content -->
+        <div class="text-5xl mb-6">🌙⭐</div>
+        <h2 class="text-3xl font-black text-brand-gold uppercase tracking-widest mb-3">Selamat Hari Raya</h2>
+        <h3 class="text-xl font-black text-white uppercase tracking-widest mb-6">Aidilfitri 1446H</h3>
+        <p class="text-slate-300 leading-relaxed mb-8">
+            Maaf Zahir & Batin daripada seluruh Jawatankuasa Persidangan Pegawai Kerja Sosial Perubatan Malaysia 2026
+        </p>
+        <div class="w-16 h-1 bg-brand-gold mx-auto rounded-full"></div>
+    </div>
+</div>
 </body>
 </html>
