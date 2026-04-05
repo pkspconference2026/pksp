@@ -82,16 +82,19 @@
             }
 
             const formData = {
-                nama: e.target.nama.value.trim(),
-                ic: e.target.ic.value.trim(),
-                tempat_bertugas: e.target.tempat_bertugas.value.trim(),
-                negeri: e.target.negeri.value.trim(),
-                kategori: e.target.kategori.value.trim(),
-                tel: e.target.tel.value.trim(),
-                buktiBayaran: buktiURL,
-                statusBayaran: "Menunggu semakan",
-                timestamp: serverTimestamp()
-            };
+                const formData = {
+                    nama: e.target.nama.value.trim(),
+                    ic: e.target.ic.value.trim(),
+                    tel: e.target.tel.value.trim(),
+                    email: e.target.email.value.trim(),
+                    jawatan_gred: e.target.jawatan_gred.value.trim(),
+                    tempat_bertugas: e.target.tempat_bertugas.value.trim(),
+                    negeri: e.target.negeri.value.trim(),
+                    kategori: e.target.kategori.value.trim(),
+                    buktiBayaran: buktiURL,
+                    statusBayaran: "Menunggu semakan",
+                    timestamp: serverTimestamp()
+                };
 
             console.log("Data untuk simpan:", formData);
 
@@ -236,7 +239,28 @@
                 </div>
             </div>
 
-            <a href="kertas-saintifik.html" target="_blank" class="hover:text-brand-blue transition-colors">Kertas Saintifik</a>
+            <!-- Dropdown Kertas Saintifik -->
+<div class="relative group">
+    <span class="cursor-pointer hover:text-brand-blue transition-colors flex items-center gap-1">
+        Kertas Saintifik
+        <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-hover:rotate-180"></i>
+    </span>
+
+    <div class="absolute right-0 top-full h-3 w-72"></div>
+
+    <div class="absolute right-0 top-full pt-3 w-72 z-50 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-150">
+        <div class="bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden">
+            <a href="penyertaan.html" target="_blank"
+                class="block px-6 py-4 text-slate-700 hover:bg-brand-soft transition-colors border-b border-slate-100">
+                <span class="font-bold text-brand-blue">Penyertaan</span>
+            </a>
+            <a href="Poster KS.jpeg" target="_blank"
+                class="block px-6 py-4 text-slate-700 hover:bg-brand-soft transition-colors">
+                <span class="font-bold text-brand-blue">Syarat Pertandingan</span>
+            </a>
+        </div>
+    </div>
+</div>
             <a href="#lokasi" class="hover:text-brand-blue transition-colors">Lokasi</a>
             <a href="#daftar" class="bg-brand-blue text-white px-8 py-3 rounded-full hover:bg-slate-800 transition-all">Daftar</a>
         </div>
@@ -246,7 +270,8 @@
     <a href="#penceramah" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">Penceramah</a>
     <a href="#aturcara" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">Aturcara</a>
     <a href="jawatankuasa.html" target="_blank" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">Jawatankuasa</a>
-    <a href="kertas-saintifik.html" target="_blank" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">Kertas Saintifik</a>
+    <a href="penyertaan.html" target="_blank" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">↳ Penyertaan</a>
+    <a href="syarat-pertandingan.html" target="_blank" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">↳ Syarat Pertandingan</a>
     <a href="#lokasi" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">Lokasi</a>
     <a href="#daftar" onclick="toggleMenu()" class="block w-full text-center bg-brand-blue text-white px-8 py-3 rounded-full font-black uppercase text-xs hover:bg-slate-800 transition-all">Daftar</a>
 </div>
@@ -796,11 +821,13 @@
 
                 <form onsubmit="handleRegistration(event)" class="space-y-6">
                     <input name="nama" required type="text" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="Nama Penuh">
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <input name="ic" required type="text" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="No. K/P (tanpa '-')">
-                        <input name="tel" required type="tel" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="No. Telefon (WhatsApp)">
-                    </div>
+                    <div class="grid md:grid-cols-3 gap-6">
+                    <input name="ic" required type="text" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="No. K/P (tanpa '-')">
+                    <input name="tel" required type="tel" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="No. Telefon">
+                    <input name="email" required type="email" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="Email">
+                </div>
                     <input name="tempat_bertugas" required type="text" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="Hospital / Jabatan / Institusi">
+                    <input name="jawatan_gred" required type="text" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="Jawatan & Gred (cth: Pegawai Kerja Sosial Perubatan S9)">
                     
                     <select name="kategori" required class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold outline-none">
                         <option value="" disabled selected>Kategori Peserta</option>
