@@ -267,10 +267,13 @@
     <a href="#aturcara" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">Aturcara</a>
     <a href="jawatankuasa.html" target="_blank" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">Jawatankuasa</a>
     <div class="relative">
-        <a href="#" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">Kertas Saintifik</a>
-        <div class="absolute left-full top-0 w-48 bg-white border border-slate-200 rounded shadow-lg hidden group-hover:block">
-            <a href="https://forms.gle/o9tbTVVyngbu5sLc8" target="_blank" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2 pl-4">↳ Penyertaan</a>
-            <a href="Poster KS.jpeg" target="_blank" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2 pl-4">↳ Syarat Pertandingan</a>
+        <button onclick="toggleDropdown(event)" class="w-full text-left text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2 flex items-center justify-between">
+            Kertas Saintifik
+            <i data-lucide="chevron-down" class="w-4 h-4 transition-transform" id="kertas-icon"></i>
+        </button>
+        <div id="kertas-dropdown" class="hidden bg-slate-50 border-l border-slate-200 mt-2 rounded">
+            <a href="https://forms.gle/o9tbTVVyngbu5sLc8" target="_blank" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2 pl-6">↳ Penyertaan</a>
+            <a href="Poster KS.jpeg" target="_blank" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2 pl-6">↳ Syarat Pertandingan</a>
         </div>
     </div>
     <a href="#lokasi" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">Lokasi</a>
@@ -1072,14 +1075,17 @@
     }
 
     function toggleMenu() {
-    const menu = document.getElementById('mobile-menu');
-    menu.classList.toggle('hidden');
-}
-}
-function toggleMenu() {
-    const menu = document.getElementById('mobile-menu');
-    menu.classList.toggle('hidden');
-}
+        const menu = document.getElementById('mobile-menu');
+        menu.classList.toggle('hidden');
+    }
+    
+    function toggleDropdown(event) {
+        event.preventDefault();
+        const dropdown = document.getElementById('kertas-dropdown');
+        const icon = document.getElementById('kertas-icon');
+        dropdown.classList.toggle('hidden');
+        icon.style.transform = dropdown.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+    }
 function toggleAccordion(btn) {
     const item = btn.parentElement;
     const isActive = item.classList.contains('active');
