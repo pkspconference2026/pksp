@@ -77,8 +77,8 @@
         </table>
 
         <div style="text-align:center; margin-top:30px;">
-            <button class="btn-download" onclick="downloadCSV()">Download CSV</button>
-            <button class="btn-download btn-pdf" onclick="downloadPDF()">Download PDF (Print)</button>
+           <button class="btn-download" id="btnCSV">Download CSV</button>
+            <button class="btn-download btn-pdf" id="btnPDF">Download PDF (Print)</button>
         </div>
 
         <div style="text-align:center; margin-top:30px;">
@@ -272,6 +272,9 @@
         alert("Buka dialog print. Pilih 'Save as PDF' di printer.");
         window.print();
     }
+    
+    document.getElementById('btnCSV').addEventListener('click', downloadCSV);
+    document.getElementById('btnPDF').addEventListener('click', downloadPDF);
 </script>
 
 </body>
