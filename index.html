@@ -81,6 +81,30 @@
                 return;
             }
 
+            // Selepas buktiURL berjaya dapat, tambah upload suratMemo
+            const suratFile = e.target.suratMemo.files[0];
+            let suratURL = null;
+
+            if (suratFile) {
+                if (suratFile.size > 5 * 1024 * 1024) {
+                    alert("Fail surat terlalu besar! Maksimum 5MB sahaja.");
+                    btn.disabled = false;
+                    btn.innerText = "Sahkan Pendaftaran";
+                    return;
+                }
+                try {
+                    const suratName = `${Date.now()}_${suratFile.name}`;
+                    const suratRef = ref(storage, `surat-memo/${suratName}`);
+                    await uploadBytes(suratRef, suratFile);
+                    suratURL = await getDownloadURL(suratRef);
+                } catch (err) {
+                    alert("Gagal muat naik surat/memo: " + err.message);
+                    btn.disabled = false;
+                    btn.innerText = "Sahkan Pendaftaran";
+                    return;
+                }
+            }
+
             const formData = {
                 const formData = {
                     nama: e.target.nama.value.trim(),
@@ -94,6 +118,7 @@
                     buktiBayaran: buktiURL,
                     statusBayaran: "Menunggu semakan",
                     timestamp: serverTimestamp()
+                    suratMemo: suratURL,
                 };
 
             console.log("Data untuk simpan:", formData);
@@ -318,9 +343,6 @@
             <div class="flex flex-col sm:flex-row justify-center gap-5 md:gap-8">
                 <a href="#daftar" class="border-2 border-brand-blue text-brand-blue px-10 md:px-14 py-5 rounded-3xl font-black uppercase text-sm md:text-base bg-transparent hover:bg-brand-blue hover:text-white transition-all transform hover:scale-105">
                     Daftar Sekarang
-                </a>
-                <a href="https://wa.me/60123456789" class="border-2 border-green-600 text-green-600 px-10 md:px-14 py-5 rounded-3xl font-black uppercase text-sm md:text-base bg-transparent flex items-center justify-center gap-3 hover:bg-green-600 hover:text-white transition-all transform hover:scale-105">
-                    <i data-lucide="message-circle" class="w-5 h-5"></i> Sertai WhatsApp Group
                 </a>
                 <a href="#" class="border-2 border-brand-gold text-brand-gold px-10 md:px-14 py-5 rounded-3xl font-black uppercase text-sm md:text-base hover:bg-brand-gold hover:text-white transition-all">
                     Muat Turun Flyer
@@ -892,6 +914,20 @@
                             (JPG, PNG atau PDF sahaja • Maksimum 5MB)
                         </small>
                     </div>
+
+                    <div class="bg-blue-50 border-l-4 border-brand-blue px-6 py-4 rounded-xl text-sm text-slate-700 leading-relaxed">
+                        <p>Sekiranya yuran pendaftaran tidak ditanggung oleh PTJ masing-masing, maka <strong>AHLI PPPM(P)M</strong> boleh menggunakan dana latihan Persatuan dengan syarat <strong>MENGEMUKAKAN SURAT/MEMO DARI PTJ TIDAK MENANGGUNG</strong>.</p>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <label for="suratMemo" style="font-weight: bold; display: block; margin-bottom: 8px;">
+                            Muat Naik Surat/Memo PTJ Tidak Menanggung <span style="color: #64748b; font-weight: normal;">(jika berkenaan)</span>:
+                        </label>
+                        <input type="file" id="suratMemo" name="suratMemo" accept="image/*,application/pdf" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px;">
+                         <small style="color: #666; display: block; margin-top: 5px;">
+                        (JPG, PNG atau PDF sahaja • Maksimum 5MB)
+                    </small>
+                </div>
 
                     <div class="flex items-start gap-3 mt-6">
                         <input type="checkbox" id="setuju" required class="mt-1 w-5 h-5 accent-brand-blue">

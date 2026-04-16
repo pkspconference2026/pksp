@@ -68,6 +68,7 @@
                     <th>No. Telefon</th>
                     <th>Tarikh Daftar</th>
                     <th>Bukti Bayaran</th>
+                    <th>Surat/Memo PTJ</th>
                     <th>Status Bayaran</th>
                     <th>Tindakan</th>
                 </tr>
@@ -169,6 +170,11 @@
                         ${data.buktiBayaran ? 
                             `<a href="${data.buktiBayaran}" target="_blank" class="text-brand-blue hover:underline">Lihat Resit</a>` : 
                             "Tiada bukti"}
+                    </td>
+                    <td>
+                        ${data.suratMemo ? 
+                            `<a href="${data.suratMemo}" target="_blank">Lihat Surat</a>` : 
+                            "Tiada"}
                     </td>
                     <td id="status-${doc.id}" class="${data.statusBayaran === 'Lulus' ? 'text-green-600 font-bold' : data.statusBayaran === 'Tolak' ? 'text-red-600 font-bold' : ''}">
                         ${data.statusBayaran || "Menunggu semakan"}
