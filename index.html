@@ -82,16 +82,19 @@
             }
 
             const formData = {
-                nama: e.target.nama.value.trim(),
-                ic: e.target.ic.value.trim(),
-                tempat_bertugas: e.target.tempat_bertugas.value.trim(),
-                negeri: e.target.negeri.value.trim(),
-                kategori: e.target.kategori.value.trim(),
-                tel: e.target.tel.value.trim(),
-                buktiBayaran: buktiURL,
-                statusBayaran: "Menunggu semakan",
-                timestamp: serverTimestamp()
-            };
+                const formData = {
+                    nama: e.target.nama.value.trim(),
+                    ic: e.target.ic.value.trim(),
+                    tel: e.target.tel.value.trim(),
+                    email: e.target.email.value.trim(),
+                    jawatan_gred: e.target.jawatan_gred.value.trim(),
+                    tempat_bertugas: e.target.tempat_bertugas.value.trim(),
+                    negeri: e.target.negeri.value.trim(),
+                    kategori: e.target.kategori.value.trim(),
+                    buktiBayaran: buktiURL,
+                    statusBayaran: "Menunggu semakan",
+                    timestamp: serverTimestamp()
+                };
 
             console.log("Data untuk simpan:", formData);
 
@@ -228,15 +231,32 @@
                         class="block px-6 py-4 text-slate-700 hover:bg-brand-soft transition-colors border-b border-slate-100">
                     <span class="font-bold text-brand-blue">Buku Program</span>
                     </a>
-                     <a href="files/slide-penceramah.pdf" download 
-                        class="block px-6 py-4 text-slate-700 hover:bg-brand-soft transition-colors border-b border-slate-100">
-                    <span class="font-bold text-brand-blue">Syarat Penyertaan Pertandingan Poster</span>
-                    </a>
                 </div>
                 </div>
             </div>
 
-            <a href="kertas-saintifik.html" target="_blank" class="hover:text-brand-blue transition-colors">Kertas Saintifik</a>
+            <!-- Dropdown Kertas Saintifik -->
+<div class="relative group">
+    <span class="cursor-pointer hover:text-brand-blue transition-colors flex items-center gap-1">
+        Kertas Saintifik
+        <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-hover:rotate-180"></i>
+    </span>
+
+    <div class="absolute right-0 top-full h-3 w-72"></div>
+
+    <div class="absolute right-0 top-full pt-3 w-72 z-50 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-150">
+        <div class="bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden">
+            <a href="https://forms.gle/o9tbTVVyngbu5sLc8" target="_blank"
+                class="block px-6 py-4 text-slate-700 hover:bg-brand-soft transition-colors border-b border-slate-100">
+                <span class="font-bold text-brand-blue">Penyertaan</span>
+            </a>
+            <a href="Poster KS.jpeg" target="_blank"
+                class="block px-6 py-4 text-slate-700 hover:bg-brand-soft transition-colors">
+                <span class="font-bold text-brand-blue">Syarat Pertandingan</span>
+            </a>
+        </div>
+    </div>
+</div>
             <a href="#lokasi" class="hover:text-brand-blue transition-colors">Lokasi</a>
             <a href="#daftar" class="bg-brand-blue text-white px-8 py-3 rounded-full hover:bg-slate-800 transition-all">Daftar</a>
         </div>
@@ -246,7 +266,17 @@
     <a href="#penceramah" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">Penceramah</a>
     <a href="#aturcara" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">Aturcara</a>
     <a href="jawatankuasa.html" target="_blank" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">Jawatankuasa</a>
-    <a href="kertas-saintifik.html" target="_blank" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">Kertas Saintifik</a>
+    <div class="relative">
+        <div>
+    <button onclick="toggleMobileSubmenu()" class="flex items-center justify-between w-full text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">
+        Kertas Saintifik
+        <i data-lucide="chevron-down" class="w-4 h-4" id="ks-chevron"></i>
+    </button>
+    <div id="ks-submenu" class="hidden pl-4 space-y-1 border-l-2 border-brand-gold ml-2 mt-1">
+        <a href="https://forms.gle/o9tbTVVyngbu5sLc8" target="_blank" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">↳ Penyertaan</a>
+        <a href="Poster KS.jpeg" target="_blank" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">↳ Syarat Pertandingan</a>
+    </div>
+</div>
     <a href="#lokasi" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">Lokasi</a>
     <a href="#daftar" onclick="toggleMenu()" class="block w-full text-center bg-brand-blue text-white px-8 py-3 rounded-full font-black uppercase text-xs hover:bg-slate-800 transition-all">Daftar</a>
 </div>
@@ -268,8 +298,8 @@
                 <span class="text-brand-blue">Malaysia 2026</span>
             </h1>
             
-            <p class="text-xl md:text-2xl text-slate-700 font-medium mb-4">
-                Memperkasa Kerja Sosial Perubatan: Inovasi, Kolaborasi & Kesejahteraan Pesakit
+            <p class="text-lg text-slate-500 font-medium mb-4 max-w-2xl mx-auto">
+                "Memperkasakan Perkhidmatan Kerja Sosial Perubatan Melalui Sinergi Digital dan Kecerdasan Buatan Ke Arah Sistem Kesihatan Mampan"
             </p>
             
             <div class="flex flex-col sm:flex-row justify-center items-center gap-4 md:gap-8 mb-10 text-lg font-semibold text-slate-600">
@@ -361,63 +391,90 @@
 </section>
 
     <!-- Penceramah -->
-    <section id="penceramah" class="py-32 bg-white px-6 border-t border-slate-100">
-        <div class="max-w-7xl mx-auto" data-aos="fade-up">
-            <div class="text-center mb-20">
-                <h2 class="text-4xl md:text-5xl font-black text-slate-900 uppercase tracking-tight">Barisan Penceramah Jemputan</h2>
-                <div class="w-24 h-1.5 bg-brand-gold mx-auto mt-6 rounded-full"></div>
-            </div>
-            <div class="grid md:grid-cols-3 gap-10 lg:gap-16">
-                <!-- Speaker 1 -->
-                <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group">
-                    <div class="h-64 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=800" alt="Dr. Ahmad Fauzi" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                    </div>
-                    <div class="p-8 text-center">
-                        <h3 class="font-black text-2xl text-slate-900 mb-2">Dr. Ahmad Fauzi bin Ismail</h3>
-                        <p class="text-brand-gold font-bold text-sm uppercase tracking-wide mb-4">Pakar Perunding Kerja Sosial Perubatan</p>
-                        <p class="text-slate-600 text-sm leading-relaxed mb-6">
-                            Pakar dalam Psychological First Aid & sokongan psikososial pesakit kronik. Hospital Kuala Lumpur.
-                        </p>
-                        <div class="flex justify-center gap-4">
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Speaker 2 -->
-                <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group">
-                    <div class="h-64 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=800" alt="Dr. Ahmad Fauzi" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                    </div>
-                    <div class="p-8 text-center">
-                        <h3 class="font-black text-2xl text-slate-900 mb-2">Dr. Ahmad Fauzi bin Ismail</h3>
-                        <p class="text-brand-gold font-bold text-sm uppercase tracking-wide mb-4">Pakar Perunding Kerja Sosial Perubatan</p>
-                        <p class="text-slate-600 text-sm leading-relaxed mb-6">
-                            Pakar dalam Psychological First Aid & sokongan psikososial pesakit kronik. Hospital Kuala Lumpur.
-                        </p>
-                        <div class="flex justify-center gap-4">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Speaker 3 -->
-                <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group">
-                    <div class="h-64 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=800" alt="Dr. Ahmad Fauzi" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                    </div>
-                    <div class="p-8 text-center">
-                        <h3 class="font-black text-2xl text-slate-900 mb-2">Dr. Ahmad Fauzi bin Ismail</h3>
-                        <p class="text-brand-gold font-bold text-sm uppercase tracking-wide mb-4">Pakar Perunding Kerja Sosial Perubatan</p>
-                        <p class="text-slate-600 text-sm leading-relaxed mb-6">
-                            Pakar dalam Psychological First Aid & sokongan psikososial pesakit kronik. Hospital Kuala Lumpur.
-                        </p>
-                        <div class="flex justify-center gap-4">
-                        </div>
-                    </div>
-                </div>
-            </div>
+<section id="penceramah" class="py-32 bg-white px-6 border-t border-slate-100">
+    <div class="max-w-7xl mx-auto" data-aos="fade-up">
+        <div class="text-center mb-20">
+            <h2 class="text-4xl md:text-5xl font-black text-slate-900 uppercase tracking-tight">Barisan Penceramah Jemputan</h2>
+            <div class="w-24 h-1.5 bg-brand-gold mx-auto mt-6 rounded-full"></div>
         </div>
-    </section>
+
+        <!-- Row 1: 3 card -->
+        <div class="grid md:grid-cols-3 gap-6 mb-6">
+
+            <!-- Speaker 1 -->
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group">
+                <div class="h-72 overflow-hidden">
+                    <img src="Dr Mohd Azman.jpeg" alt="Dato' Dr Mohd Azman" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
+                </div>
+                <div class="p-8 text-center">
+                    <h3 class="font-black text-xl text-slate-900 mb-1">YBhg. Dato' Dr Mohd Azman bin Yacob</h3>
+                    <p class="text-brand-gold font-bold text-xs uppercase tracking-wide mb-1">Pengarah Kesihatan Negeri Kelantan</p>
+                    <p class="text-slate-400 text-xs mb-4">Kesihatan Awam • Pengurusan Kesihatan • Dasar Perubatan</p>
+                    <p class="text-slate-600 text-sm leading-relaxed italic">"Hala Tuju dan Pemerkasaan Profesion Pegawai Kerja Sosial Perubatan di Malaysia"</p>
+                </div>
+            </div>
+
+            <!-- Speaker 2 -->
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group">
+                <div class="h-72 overflow-hidden">
+                    <img src="Prof. Lokman.png" alt="Prof. Dr. Lukman" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
+                </div>
+                <div class="p-8 text-center">
+                    <h3 class="font-black text-xl text-slate-900 mb-1">Prof. Dr. Lukman @ Zawawi bin Mohamad</h3>
+                    <p class="text-brand-gold font-bold text-xs uppercase tracking-wide mb-1">Universiti Sultan Zainal Abidin (UniSZA)</p>
+                    <p class="text-slate-400 text-xs mb-4">Kebajikan Kanak-kanak • Kerja Sosial • Pentadbiran</p>
+                    <p class="text-slate-600 text-sm leading-relaxed italic">"Mengemudi Masa Depan Kerja Sosial Perubatan dalam Ekosistem Kesihatan Mampan"</p>
+                </div>
+            </div>
+
+            <!-- Speaker 3 -->
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group">
+                <div class="h-72 overflow-hidden">
+                    <img src="Prof. Huzili.png" alt="Prof. Dr. Huzili" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
+                </div>
+                <div class="p-8 text-center">
+                    <h3 class="font-black text-xl text-slate-900 mb-1">Prof. Dr. Huzili Hussin</h3>
+                    <p class="text-brand-gold font-bold text-xs uppercase tracking-wide mb-1">Universiti Malaysia Kelantan (UMK)</p>
+                    <p class="text-slate-400 text-xs mb-4">Kaunseling & Psikologi Organisasi</p>
+                    <p class="text-slate-600 text-sm leading-relaxed italic">"Resiliensi Minda Digital: Memperkasakan Kesejahteraan Psikologi Pegawai Kerja Sosial di Alaf Kecerdasan Buatan"</p>
+                </div>
+            </div>
+
+        </div> <!-- ← PENUTUP Row 1 yang betul -->
+
+        <!-- Row 2: 2 card centered -->
+        <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+
+            <!-- Speaker 4 -->
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group">
+                <div class="h-72 overflow-hidden">
+                    <img src="Dr. Wan Munira.jpeg" alt="Dr. Wan Munira" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
+                </div>
+                <div class="p-8 text-center">
+                    <h3 class="font-black text-xl text-slate-900 mb-1">Dr. Wan Munira binti Wan Jaafar</h3>
+                    <p class="text-brand-gold font-bold text-xs uppercase tracking-wide mb-1">Universiti Putra Malaysia (UPM)</p>
+                    <p class="text-slate-400 text-xs mb-4">Pembangunan Komuniti • Masyarakat Digital • Kajian Gender</p>
+                    <p class="text-slate-600 text-sm leading-relaxed italic">"Sinergi Digital Komuniti: Mentransformasi Intervensi Kerja Sosial Perubatan Melalui Aplikasi Kecerdasan Buatan (AI)"</p>
+                </div>
+            </div>
+
+            <!-- Speaker 5 -->
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group">
+                <div class="h-72 overflow-hidden">
+                    <img src="Dr. Teoh.png" alt="Dr. Teoh" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
+                </div>
+                <div class="p-8 text-center">
+                    <h3 class="font-black text-xl text-slate-900 mb-1">Dr. Teoh Ai Hua</h3>
+                    <p class="text-brand-gold font-bold text-xs uppercase tracking-wide mb-1">Universiti Utara Malaysia (UUM)</p>
+                    <p class="text-slate-400 text-xs mb-4">Kerja Sosial • Kebajikan Sosial • Pengurusan Kes • Nilai & Etika Kerja Sosial</p>
+                    <p class="text-slate-600 text-sm leading-relaxed italic">"AI, Etika Dan Kesejahteraan Sosial: Peranan Pegawai Kerja Sosial Perubatan"</p>
+                </div>
+            </div>
+
+        </div> <!-- ← PENUTUP Row 2 -->
+
+    </div> <!-- ← PENUTUP max-w-7xl -->
+</section>
 
     <!-- Aturcara -->
     <section id="aturcara" class="py-32 bg-brand-soft px-6">
@@ -507,12 +564,12 @@
         </button>
         <div class="accordion-content px-5 pb-5">
             <p class="text-slate-600 italic text-sm">Pengaruh Persekitaran Taska Terhadap Kepuasan Ibu Bapa Kajian dari Aspek Keselamatan Kesihatan</p>
-            <p class="text-slate-500 text-sm mt-1">Pn. Wan Hamizah binti Wan Hassan</p>
+            <p class="text-slate-500 text-sm mt-1">Pn. Wan Hamizah binti Wan Hassan • Hospital Sultan Haji Ahmad Shah, Temerloh</p>
         </div>
     </div>
 
     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex gap-4 items-center">
-    <span class="text-xs font-black text-brand-gold w-28 shrink-0">2.30 – 4.00 ptg</span>
+    <span class="text-xs font-black text-brand-gold w-28 shrink-0">10.00 mlm</span>
     <span class="font-bold text-brand-dark">Bersurai</span>
 </div>
 </div>
@@ -538,7 +595,7 @@
         </button>
         <div class="accordion-content px-5 pb-5">
             <p class="text-slate-600 italic text-sm">Digital Mindset & Kesejahteraan Mental: Strategi Resiliensi Pegawai Kerja Sosial Perubatan di Alaf Baharu</p>
-            <p class="text-slate-500 text-sm mt-1">Prof. Dr. Hizili Hussin • Universiti Malaysia Kelantan (UMK)</p>
+            <p class="text-slate-500 text-sm mt-1">Prof. Dr. Huzili Hussin • Universiti Malaysia Kelantan (UMK)</p>
         </div>
     </div>
 
@@ -726,9 +783,11 @@
 
     <!-- Lokasi -->
     <section id="lokasi" class="py-32 bg-white px-6">
+        <h2 class="text-4xl font-black mb-10 text-center uppercase">Lokasi</h2>
         <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
             <div data-aos="fade-right">
                 <div class="h-[450px] rounded-[3rem] overflow-hidden border-[10px] border-white shadow-2xl">
+
                     <iframe 
                         class="w-full h-full border-0" 
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3967.042780654162!2d102.24414347585098!3d6.12501069386154!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31b6af070e6c10b7%3A0xc66511a0a520f8c8!2sHotel%20Perdana%20Kota%20Bharu!5e0!3m2!1sen!2smy!4v1741632000000!5m2!1sen!2smy" 
@@ -755,30 +814,37 @@
                     <div class="inline-block bg-brand-gold/10 text-brand-gold px-8 py-4 rounded-2xl font-bold text-lg mb-6">
                         Yuran Pendaftaran
                     </div>
-                    <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                    <div class="grid md:grid-cols-3 gap-2 max-w-4xl mx-auto">
                         <div class="bg-white p-6 rounded-2xl shadow-md border border-brand-gold/30">
-                            <p class="text-3xl font-black text-brand-blue">RM200</p>
-                            <p class="text-sm text-slate-600 mt-2">Ahli TKPM</p>
+                            <p class="text-3xl font-black text-brand-blue">RM250</p>
+                            <p class="text-sm text-slate-600 mt-2">Ahli Persatuan</p>
                         </div>
                         <div class="bg-white p-6 rounded-2xl shadow-md border border-brand-gold/30">
                             <p class="text-3xl font-black text-brand-blue">RM400</p>
                             <p class="text-sm text-slate-600 mt-2">Bukan Ahli</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-md border border-brand-gold/30">
+                            <p class="text-3xl font-black text-brand-blue">RM200</p>
+                            <p class="text-sm text-slate-600 mt-2">Pelajar</p>
                         </div>
                     </div>
                 </div>
 
                 <form onsubmit="handleRegistration(event)" class="space-y-6">
                     <input name="nama" required type="text" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="Nama Penuh">
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <input name="ic" required type="text" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="No. K/P (tanpa '-')">
-                        <input name="tel" required type="tel" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="No. Telefon (WhatsApp)">
-                    </div>
+                    <div class="grid md:grid-cols-3 gap-6">
+                    <input name="ic" required type="text" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="No. K/P (tanpa '-')">
+                    <input name="tel" required type="tel" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="No. Telefon">
+                    <input name="email" required type="email" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="Email">
+                </div>
                     <input name="tempat_bertugas" required type="text" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="Hospital / Jabatan / Institusi">
+                    <input name="jawatan_gred" required type="text" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="Jawatan & Gred (cth: Pegawai Kerja Sosial Perubatan S9)">
                     
                     <select name="kategori" required class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold outline-none">
                         <option value="" disabled selected>Kategori Peserta</option>
-                        <option value="Ahli TKPM">Ahli TKPM (RM200)</option>
+                        <option value="Ahli TKPM">Ahli Persatuan (RM250)</option>
                         <option value="Bukan Ahli">Bukan Ahli (RM400)</option>
+                        <option value="Bukan Ahli">Pelajar (RM200)</option>
                     </select>
 
                     <select name="negeri" required class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold outline-none">
@@ -850,31 +916,46 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-brand-dark text-white py-16 px-6 border-t-[10px] border-brand-gold">
-        <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-12 text-center md:text-left">
-            <div>
-                <img src="Logo TKPM.png" alt="Logo" class="w-20 mx-auto md:mx-0 mb-6">
-                <p class="text-sm opacity-80">Persatuan Pegawai Pembangunan Masyarakat (Perubatan) Malaysia</p>
-            </div>
-            <div>
-                <h4 class="font-black uppercase tracking-widest mb-6 text-brand-gold">Hubungi Kami</h4>
-                <p class="text-sm opacity-80 mb-2">Secretariat: +60 12-345 6789</p>
-                <p class="text-sm opacity-80 mb-2">Email: pksp2026@tkpm.org.my</p>
-                <div class="flex justify-center md:justify-start gap-6 mt-6">
-                    <a href="#"><i data-lucide="facebook" class="w-6 h-6"></i></a>
-                    <a href="#"><i data-lucide="instagram" class="w-6 h-6"></i></a>
-                    <a href="#"><i data-lucide="linkedin" class="w-6 h-6"></i></a>
+<footer class="bg-brand-dark text-white py-16 px-6 border-t-[10px] border-brand-gold">
+    <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-12 text-center md:text-left">
+        
+        <!-- Kolum 1: Anjuran -->
+        <div>
+            <h4 class="font-black uppercase tracking-widest mb-6 text-brand-gold">Anjuran Bersama</h4>
+            <div class="flex flex-col gap-4">
+                <div class="flex items-center gap-3">
+                    <img src="Jata Negara.png" alt="KKM" class="w-10 h-10 object-contain shrink-0">
+                    <p class="text-xs opacity-80 leading-tight">Kementerian Kesihatan Malaysia</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <img src="Jata Negara.png" alt="KPT" class="w-10 h-10 object-contain shrink-0">
+                    <p class="text-xs opacity-80 leading-tight">Kementerian Pendidikan Tinggi</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <img src="Logo TKPM.png" alt="PPPM(P)M" class="w-10 h-10 object-contain shrink-0">
+                    <p class="text-xs opacity-80 leading-tight">Persatuan Pegawai Pembangunan Masyarakat (Perubatan) Malaysia</p>
                 </div>
             </div>
-            <div>
-                <h4 class="font-black uppercase tracking-widest mb-6 text-brand-gold">Lokasi</h4>
-                <p class="text-sm opacity-80">Hotel Perdana Kota Bharu<br>2-4 Ogos 2026</p>
+        </div>
+
+        <!-- Kolum 2: Hubungi Kami -->
+        <div>
+            <h4 class="font-black uppercase tracking-widest mb-6 text-brand-gold">Hubungi Kami</h4>
+            <p class="text-sm opacity-80 mb-2">Secretariat: +60 12-345 6789</p>
+            <p class="text-sm opacity-80 mb-2">Email: pksp2026@tkpm.org.my</p>
             </div>
+
+        <!-- Kolum 3: Lokasi -->
+        <div>
+            <h4 class="font-black uppercase tracking-widest mb-6 text-brand-gold">Lokasi</h4>
+            <p class="text-sm opacity-80">Hotel Perdana Kota Bharu<br>2–4 Ogos 2026</p>
         </div>
-        <div class="text-center mt-12 text-sm opacity-60">
-            © 2026 Persatuan Pegawai Kerja Sosial Perubatan Malaysia. Hak cipta terpelihara.
-        </div>
-    </footer>
+
+    </div>
+    <div class="text-center mt-12 text-sm opacity-60">
+        © 2026 Persatuan Pegawai Kerja Sosial Perubatan Malaysia. Hak cipta terpelihara.
+    </div>
+</footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
@@ -994,14 +1075,17 @@
         console.error(err);
     }
 
-    function toggleMenu() {
-    const menu = document.getElementById('mobile-menu');
-    menu.classList.toggle('hidden');
-}
-}
+    }
 function toggleMenu() {
     const menu = document.getElementById('mobile-menu');
     menu.classList.toggle('hidden');
+}
+function toggleMobileSubmenu() {
+    const sub = document.getElementById('ks-submenu');
+    const chevron = document.getElementById('ks-chevron');
+    sub.classList.toggle('hidden');
+    chevron.style.transform = sub.classList.contains('hidden') ? '' : 'rotate(180deg)';
+    lucide.createIcons();
 }
 function toggleAccordion(btn) {
     const item = btn.parentElement;
@@ -1017,31 +1101,8 @@ function toggleAccordion(btn) {
     
     lucide.createIcons();
 }
-function closePopup() {
-    const popup = document.getElementById('raya-popup');
-    popup.style.opacity = '0';
-    setTimeout(() => popup.style.display = 'none', 300);
-}
     </script>
-    <!-- Popup Raya -->
-<div id="raya-popup" class="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300">
-    <div <div class="relative bg-white/5 backdrop-blur-lg border border-white/10 rounded-[3rem] p-12 mx-6 max-w-md w-full text-center shadow-2xl">
-        
-        <!-- Butang tutup -->
-        <button onclick="closePopup()" 
-    class="absolute top-5 right-5 w-10 h-10 bg-white/20 hover:bg-white/40 rounded-full flex items-center justify-center text-white font-black text-lg transition-all">
-    ✕
-</button>
-
-        <!-- Content -->
-        <div class="text-5xl mb-6">🌙⭐</div>
-        <h2 class="text-3xl font-black text-brand-gold uppercase tracking-widest mb-3">Selamat Hari Raya</h2>
-        <h3 class="text-xl font-black text-white uppercase tracking-widest mb-6">Aidilfitri 1447H</h3>
-        <p class="text-slate-300 leading-relaxed mb-8">
-            Maaf Zahir & Batin daripada seluruh Jawatankuasa Persidangan Pegawai Kerja Sosial Perubatan Malaysia 2026
-        </p>
-        <div class="w-16 h-1 bg-brand-gold mx-auto rounded-full"></div>
-    </div>
+    
 </div>
 
 
