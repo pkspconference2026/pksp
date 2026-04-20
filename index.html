@@ -109,12 +109,12 @@
                     nama: e.target.nama.value.trim(),
                     ic: e.target.ic.value.trim(),
                     tel: e.target.tel.value.trim(),
-                    email: e.target.email.value.trim(),
+                    email: e.target.email.value.trim(),````````````
                     jawatan_gred: e.target.jawatan_gred.value.trim(),
                     tempat_bertugas: e.target.tempat_bertugas.value.trim(),
                     negeri: e.target.negeri.value.trim(),
                     kategori: e.target.kategori.value.trim(),
-                    buktiBayaran: buktiURL,
+                    buktiBayaran: buktiURL,`
                     statusBayaran: "Menunggu semakan",
                     timestamp: serverTimestamp(),
                     suratMemo: suratURL,
@@ -323,7 +323,7 @@
             </h1>
             
             <p class="text-lg text-slate-500 font-medium mb-4 max-w-2xl mx-auto">
-                "Memperkasakan Perkhidmatan Kerja Sosial Perubatan Melalui Sinergi Digital dan Kecerdasan Buatan Ke Arah Sistem Kesihatan Mampan"
+                "Memperkasakan Perkhidmatan Kerja Sosial Perubatan Melalui Sinergi Digital dan Kecerdasan Buatan (AI)"
             </p>
             
             <div class="flex flex-col sm:flex-row justify-center items-center gap-4 md:gap-8 mb-10 text-lg font-semibold text-slate-600">
@@ -343,7 +343,7 @@
                 <a href="#daftar" class="border-2 border-brand-blue text-brand-blue px-10 md:px-14 py-5 rounded-3xl font-black uppercase text-sm md:text-base bg-transparent hover:bg-brand-blue hover:text-white transition-all transform hover:scale-105">
                     Daftar Sekarang
                 </a>
-                <a href="#" class="border-2 border-brand-gold text-brand-gold px-10 md:px-14 py-5 rounded-3xl font-black uppercase text-sm md:text-base hover:bg-brand-gold hover:text-white transition-all">
+                <a href="Main Poster Pesidangan.jpg" target="_blank" class="border-2 border-brand-gold text-brand-gold px-10 md:px-14 py-5 rounded-3xl font-black uppercase text-sm md:text-base hover:bg-brand-gold hover:text-white transition-all">
                     Muat Turun Flyer
                 </a>
             </div>
@@ -803,27 +803,26 @@
     </section>
 
     <!-- Lokasi -->
-    <section id="lokasi" class="py-32 bg-white px-6">
-        <h2 class="text-4xl font-black mb-10 text-center uppercase">Lokasi</h2>
-        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
-            <div data-aos="fade-right">
-                <div class="h-[450px] rounded-[3rem] overflow-hidden border-[10px] border-white shadow-2xl">
-
-                    <iframe 
-                        class="w-full h-full border-0" 
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3967.042780654162!2d102.24414347585098!3d6.12501069386154!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31b6af070e6c10b7%3A0xc66511a0a520f8c8!2sHotel%20Perdana%20Kota%20Bharu!5e0!3m2!1sen!2smy!4v1741632000000!5m2!1sen!2smy" 
-                        allowfullscreen="" 
-                        loading="lazy" 
-                        referrerpolicy="no-referrer-when-downgrade">
-                    </iframe>
-                </div>
-            </div>
-            <div class="p-10 bg-white rounded-[4rem]" data-aos="fade-left">
-                <p class="font-black text-brand-blue text-3xl mb-4 uppercase">Kota Bharu, Kelantan</p>
-                <p class="text-slate-600 leading-relaxed">"Tempat untuk perkongsian ilmu, meningkatkan ukhwah dan kemajuan profesion pegawai kerja sosial perubatan seluruh Malaysia."</p>
-            </div>
+<section id="lokasi" class="py-32 bg-white px-6">
+    <h2 class="text-4xl font-black mb-10 text-center uppercase">Lokasi</h2>
+    <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+        <div data-aos="fade-right">
+            <a href="https://www.google.com/maps?q=6.120821186256682,102.24102479754707" target="_blank" class="block h-[450px] rounded-[3rem] overflow-hidden border-[10px] border-white shadow-2xl">
+                <iframe 
+                    class="w-full h-full border-0 pointer-events-none" 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1667.9489058649467!2d102.24102479754707!3d6.120821186256682!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31b6afc4c037b419%3A0x7d0cb70b45409aa7!2sPerdana%20Kota%20Bharu!5e0!3m2!1sen!2smy!4v1776666242258!5m2!1sen!2smy" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </a>
         </div>
-    </section>
+        <div class="p-10 bg-white rounded-[4rem]" data-aos="fade-left">
+            <p class="font-black text-brand-blue text-3xl mb-4 uppercase">Hotel Perdana, Kota Bharu, Kelantan</p>
+            <p class="text-slate-600 leading-relaxed">"Tempat untuk perkongsian ilmu, meningkatkan ukhwah dan kemajuan profesion pegawai kerja sosial perubatan seluruh Malaysia."</p>
+        </div>
+    </div>
+</section>
 
     <!-- Pendaftaran -->
     <section id="daftar" class="py-32 bg-brand-dark px-6">
@@ -976,8 +975,10 @@
         <!-- Kolum 2: Hubungi Kami -->
         <div>
             <h4 class="font-black uppercase tracking-widest mb-6 text-brand-gold">Hubungi Kami</h4>
-            <p class="text-sm opacity-80 mb-2">Secretariat: +60 12-345 6789</p>
-            <p class="text-sm opacity-80 mb-2">Email: pksp2026@tkpm.org.my</p>
+            <p class="text-sm opacity-80 mb-2">Secretariat:</p>
+            <p class="text-sm opacity-80 mb-2">Pn Zuraini binti Ahmad:0199957589</p>
+            <p class="text-sm opacity-80 mb-2">Pn. Isjariffa binti Hj. Ishak @ Abu Bakar: 0123111754</p>
+            <p class="text-sm opacity-80 mb-2">Email: persidanganpksp29@gmail.com</p>
             </div>
 
         <!-- Kolum 3: Lokasi -->
@@ -988,7 +989,7 @@
 
     </div>
     <div class="text-center mt-12 text-sm opacity-60">
-        © 2026 Persatuan Pegawai Kerja Sosial Perubatan Malaysia. Hak cipta terpelihara.
+        © 2026 Persatuan Pegawai Pembangunan Masyarakat (Perubatan) Malaysia.
     </div>
 </footer>
 
