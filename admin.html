@@ -60,15 +60,16 @@
             <thead>
                 <tr>
                     <th>Bil.</th>
+                    <th>Tarikh Daftar</th>
                     <th>Nama Penuh</th>
                     <th>No. K/P</th>
-                    <th>Kategori</th>
-                    <th>Negeri</th>
-                    <th>Tempat Bertugas</th>
                     <th>No. Telefon</th>
-                    <th>Tarikh Daftar</th>
-                    <th>Bukti Bayaran</th>
-                    <th>Surat/Memo PTJ</th>
+                    <th>Email</th>
+                    <th>Tempat Bertugas</th>
+                    <th>Jawatan/Gred</th>
+                    <th>Kategori</th>
+                    <th>Cara Bayaran</th>
+                    <th>Negeri</th>          
                     <th>Status Bayaran</th>
                     <th>Tindakan</th>
                 </tr>
@@ -159,23 +160,16 @@
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${bil++}</td>
+                    <td class="timestamp">${tarikh}</td>
                     <td>${data.nama || "—"}</td>
                     <td>${data.ic || "—"}</td>
-                    <td>${data.kategori || "—"}</td>
-                    <td>${data.negeri || "—"}</td>
-                    <td>${data.tempat_bertugas || "—"}</td>
                     <td>${data.tel || "—"}</td>
-                    <td class="timestamp">${tarikh}</td>
-                    <td>
-                        ${data.buktiBayaran ? 
-                            `<a href="${data.buktiBayaran}" target="_blank" class="text-brand-blue hover:underline">Lihat Resit</a>` : 
-                            "Tiada bukti"}
-                    </td>
-                    <td>
-                        ${data.suratMemo ? 
-                            `<a href="${data.suratMemo}" target="_blank">Lihat Surat</a>` : 
-                            "Tiada"}
-                    </td>
+                    <td>${data.email || "—"}</td>
+                    <td>${data.tempat_bertugas || "—"}</td>
+                    <td>${data.jawatan_gred || "—"}</td>
+                    <td>${data.kategori || "—"}</td>
+                    <td>${data.cara_bayaran || "—"}</td>
+                    <td>${data.negeri || "—"}</td>
                     <td id="status-${doc.id}" class="${data.statusBayaran === 'Lulus' ? 'text-green-600 font-bold' : data.statusBayaran === 'Tolak' ? 'text-red-600 font-bold' : ''}">
                         ${data.statusBayaran || "Menunggu semakan"}
                     </td>

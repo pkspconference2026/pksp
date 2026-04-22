@@ -114,6 +114,7 @@
                     tempat_bertugas: e.target.tempat_bertugas.value.trim(),
                     negeri: e.target.negeri.value.trim(),
                     kategori: e.target.kategori.value.trim(),
+                    cara_bayaran: e.target.cara_bayaran.value.trim(),
                 };
 
             console.log("Data untuk simpan:", formData);
@@ -861,6 +862,12 @@
                         <option value="Ahli TKPM">Ahli Persatuan</option>
                         <option value="Bukan Ahli">Bukan Ahli</option>
                         <option value="Bukan Ahli">Pelajar</option>
+                    </select>
+
+                    <select name="cara_bayaran" required class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold outline-none">
+                        <option value="" disabled selected>Cara Pembayaran</option>
+                        <option value="Bayaran Sendiri">Bayaran Sendiri</option>
+                        <option value="Ditanggung oleh Persatuan">Ditanggung oleh Persatuan</option>
                     </select>
 
                     <select name="negeri" required class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold outline-none">
