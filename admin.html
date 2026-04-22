@@ -61,7 +61,7 @@
                 <tr>
                     <th>Bil.</th>
                     <th>Tarikh Daftar</th>
-                    <th>Nama Penuh</th>
+                    <th style="min-width:200px;">Nama Penuh</th>
                     <th>No. K/P</th>
                     <th>No. Telefon</th>
                     <th>Email</th>
@@ -161,7 +161,7 @@
                 row.innerHTML = `
                     <td>${bil++}</td>
                     <td class="timestamp">${tarikh}</td>
-                    <td>${data.nama || "—"}</td>
+                    <td style="white-space:nowrap;">${data.nama || "—"}</td>
                     <td>${data.ic || "—"}</td>
                     <td>${data.tel || "—"}</td>
                     <td>${data.email || "—"}</td>

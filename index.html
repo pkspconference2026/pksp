@@ -57,7 +57,7 @@
         negeri: e.target.negeri.value.trim(),
         kategori: e.target.kategori.value.trim(),
         cara_bayaran: e.target.cara_bayaran.value.trim(),
-        timestamp: new Date().toISOString()
+        timestamp: serverTimestamp()
     };
 
     try {
