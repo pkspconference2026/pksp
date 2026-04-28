@@ -35,107 +35,45 @@
         async function initAuth() { try { await signInAnonymously(auth); } catch (e) { console.error(e); } }
 
         window.handleRegistration = async (e) => {
-            e.preventDefault();
-            const btn = e.target.querySelector('button');
-            btn.disabled = true;
-            btn.innerText = "Memproses...";
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    btn.disabled = true;
+    btn.innerText = "Memproses...";
 
-            if (!e.target.setuju.checked) {
-                alert("Sila tandakan persetujuan terma & syarat.");
-                btn.disabled = false;
-                btn.innerText = "Sahkan Pendaftaran";
-                return;
-            }
+    if (!e.target.setuju.checked) {
+        alert("Sila tandakan persetujuan terma & syarat.");
+        btn.disabled = false;
+        btn.innerText = "Sahkan Pendaftaran";
+        return;
+    }
 
-            const buktiFile = e.target.buktiBayaran.files[0];
-            let buktiURL = null;
+    const formData = {
+        nama: e.target.nama.value.trim(),
+        ic: e.target.ic.value.trim(),
+        tel: e.target.tel.value.trim(),
+        email: e.target.email.value.trim(),
+        jawatan_gred: e.target.jawatan_gred.value.trim(),
+        tempat_bertugas: e.target.tempat_bertugas.value.trim(),
+        negeri: e.target.negeri.value.trim(),
+        kategori: e.target.kategori.value.trim(),
+        cara_bayaran: e.target.cara_bayaran.value.trim(),
+        timestamp: serverTimestamp()
+    };
 
-            console.log("Fail bukti dipilih:", buktiFile ? buktiFile.name : "Tiada fail");
-
-            if (buktiFile) {
-                if (buktiFile.size > 5 * 1024 * 1024) {
-                    alert("Fail terlalu besar! Maksimum 5MB sahaja.");
-                    btn.disabled = false;
-                    btn.innerText = "Sahkan Pendaftaran";
-                    return;
-                }
-
-                try {
-                    const fileName = `${Date.now()}_${buktiFile.name}`;
-                    const storageRef = ref(storage, `bukti-bayaran/${fileName}`);
-                    console.log("Mulakan upload:", fileName);
-                    await uploadBytes(storageRef, buktiFile);
-                    buktiURL = await getDownloadURL(storageRef);
-                    console.log("Upload berjaya! URL:", buktiURL);
-                } catch (err) {
-                    console.error("Upload error:", err);
-                    alert("Gagal muat naik bukti bayaran: " + err.message);
-                    btn.disabled = false;
-                    btn.innerText = "Sahkan Pendaftaran";
-                    return;
-                }
-            } else {
-                alert("Sila muat naik bukti pembayaran terlebih dahulu!");
-                btn.disabled = false;
-                btn.innerText = "Sahkan Pendaftaran";
-                return;
-            }
-
-            // Selepas buktiURL berjaya dapat, tambah upload suratMemo
-            const suratFile = e.target.suratMemo.files[0];
-            let suratURL = null;
-
-            if (suratFile) {
-                if (suratFile.size > 5 * 1024 * 1024) {
-                    alert("Fail surat terlalu besar! Maksimum 5MB sahaja.");
-                    btn.disabled = false;
-                    btn.innerText = "Sahkan Pendaftaran";
-                    return;
-                }
-                try {
-                    const suratName = `${Date.now()}_${suratFile.name}`;
-                    const suratRef = ref(storage, `surat-memo/${suratName}`);
-                    await uploadBytes(suratRef, suratFile);
-                    suratURL = await getDownloadURL(suratRef);
-                } catch (err) {
-                    alert("Gagal muat naik surat/memo: " + err.message);
-                    btn.disabled = false;
-                    btn.innerText = "Sahkan Pendaftaran";
-                    return;
-                }
-            }
-
-            const formData = {
-                    nama: e.target.nama.value.trim(),
-                    ic: e.target.ic.value.trim(),
-                    tel: e.target.tel.value.trim(),
-                    email: e.target.email.value.trim(),
-                    jawatan_gred: e.target.jawatan_gred.value.trim(),
-                    tempat_bertugas: e.target.tempat_bertugas.value.trim(),
-                    negeri: e.target.negeri.value.trim(),
-                    kategori: e.target.kategori.value.trim(),
-                    cara_bayaran: e.target.cara_bayaran.value.trim(),
-                };
-
-            console.log("Data untuk simpan:", formData);
-
-            try {
-                const collRef = collection(db, 'artifacts', appId, 'public', 'data', 'pendaftaran');
-                const docRef = await addDoc(collRef, formData);
-                console.log("Document berjaya ditambah! ID:", docRef.id);
-
-                document.getElementById('reg-form-container').classList.add('hidden');
-                document.getElementById('success-message').classList.remove('hidden');
-                e.target.reset();
-            } catch (err) {
-                console.error("Ralat simpan data:", err);
-                alert("Ralat pendaftaran: " + err.message);
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "Sahkan Pendaftaran";
-            }
-        };
-
+    try {
+        const collRef = collection(db, 'artifacts', appId, 'public', 'data', 'pendaftaran');
+        await addDoc(collRef, formData);
+        document.getElementById('reg-form-container').classList.add('hidden');
+        document.getElementById('success-message').classList.remove('hidden');
+        e.target.reset();
+    } catch (err) {
+        console.error("Ralat simpan data:", err);
+        alert("Ralat pendaftaran: " + err.message);
+    } finally {
+        btn.disabled = false;
+        btn.innerText = "Sahkan Pendaftaran";
+    }
+};
         function listenToParticipants() {
             const collRef = collection(db, 'artifacts', appId, 'public', 'data', 'pendaftaran');
             onSnapshot(collRef, (snapshot) => {
@@ -164,7 +102,7 @@
             theme: {
                 extend: {
                     colors: {
-                        'brand-blue': '#1e3a8a',
+                        'brand-blue': '#2d5a3d',
                         'brand-gold': '#c5a059',
                         'brand-soft': '#f8fafc',
                         'brand-dark': '#0f172a',
@@ -180,7 +118,7 @@
         .schedule-day { display: none; }
         .schedule-day.active { display: block; animation: fadeIn 0.5s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .tab-btn.active { background-color: #1e3a8a; color: white; border-color: #1e3a8a; }
+        .tab-btn.active { background-color: #2d5a3d; color: white; border-color: #2d5a3d; }
         .faq-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
         .faq-item.active .faq-content { max-height: 400px; }
         .faq-item.active .faq-icon { transform: rotate(180deg); }
@@ -212,7 +150,7 @@
         <div class="flex items-center space-x-4 cursor-pointer" onclick="window.scrollTo({top:0, behavior:'smooth'})">
             <div class="flex items-center gap-3">
                 <img src="Logo TKPM.png" alt="Logo" class="w-14 h-14 object-contain">
-                <div class="text-left font-black text-brand-blue uppercase leading-tight text-[10px]">
+                <div class="text-left font-black text-[#2d5a3d] uppercase leading-tight text-[10px]">
                     <span>Persatuan Pegawai</span><br/>
                     <span>Pembangunan Masyarakat</span><br/>
                     <span class="text-brand-gold">(Perubatan) Malaysia</span>
@@ -227,13 +165,13 @@
                 <span class="w-6 h-0.5 bg-brand-blue block transition-all"></span>
             </button>
         <div class="hidden lg:flex items-center space-x-8 text-xs font-black uppercase tracking-widest text-slate-600">
-            <a href="#penceramah" class="hover:text-brand-blue transition-colors">Penceramah</a>
-            <a href="#aturcara" class="hover:text-brand-blue transition-colors">Aturcara</a>
-            <a href="jawatankuasa.html" target="_blank" class="hover:text-brand-blue transition-colors">Jawatankuasa</a>
+            <a href="#penceramah" class="hover:text-[#2d5a3d] transition-colors">Penceramah</a>
+            <a href="#aturcara" class="hover:text-[#2d5a3d] transition-colors">Aturcara</a>
+            <a href="jawatankuasa.html" target="_blank" class="hover:text-[#2d5a3d] transition-colors">Jawatankuasa</a>
 
             <!-- Dropdown Muat Turun yang lebih stabil -->
             <div class="relative group">
-                <span class="cursor-pointer hover:text-brand-blue transition-colors flex items-center gap-1">
+                <span class="cursor-pointer hover:text-[#2d5a3d] transition-colors flex items-center gap-1">
                     Muat Turun
                     <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-hover:rotate-180"></i>
                 </span>
@@ -246,11 +184,11 @@
                 <div class="bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden">
                     <a href="Files/test.png.png" download 
                         class="block px-6 py-4 text-slate-700 hover:bg-brand-soft transition-colors border-b border-slate-100">
-                    <span class="font-bold text-brand-blue">Slide Penceramah</span>
+                    <span class="font-bold text-[#2d5a3d]">Slide Penceramah</span>
                     </a>
                     <a href="files/slide-penceramah.pdf" download 
                         class="block px-6 py-4 text-slate-700 hover:bg-brand-soft transition-colors border-b border-slate-100">
-                    <span class="font-bold text-brand-blue">Buku Program</span>
+                    <span class="font-bold text-[#2d5a3d]">Buku Program</span>
                     </a>
                 </div>
                 </div>
@@ -258,7 +196,7 @@
 
             <!-- Dropdown Kertas Saintifik -->
 <div class="relative group">
-    <span class="cursor-pointer hover:text-brand-blue transition-colors flex items-center gap-1">
+    <span class="cursor-pointer hover:text-[#2d5a3d] transition-colors flex items-center gap-1">
         Kertas Saintifik
         <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-hover:rotate-180"></i>
     </span>
@@ -269,42 +207,42 @@
         <div class="bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden">
             <a href="https://forms.gle/o9tbTVVyngbu5sLc8" target="_blank"
                 class="block px-6 py-4 text-slate-700 hover:bg-brand-soft transition-colors border-b border-slate-100">
-                <span class="font-bold text-brand-blue">Penyertaan</span>
+                <span class="font-bold text-[#2d5a3d]">Penyertaan</span>
             </a>
             <a href="Poster KS.jpeg" target="_blank"
                 class="block px-6 py-4 text-slate-700 hover:bg-brand-soft transition-colors">
-                <span class="font-bold text-brand-blue">Syarat Pertandingan</span>
+                <span class="font-bold text-[#2d5a3d]">Syarat Pertandingan</span>
             </a>
         </div>
     </div>
 </div>
-            <a href="#lokasi" class="hover:text-brand-blue transition-colors">Lokasi</a>
-            <a href="#daftar" class="bg-brand-blue text-white px-8 py-3 rounded-full hover:bg-slate-800 transition-all">Daftar</a>
+            <a href="#lokasi" class="hover:text-[#2d5a3d] transition-colors">Lokasi</a>
+            <a href="#daftar" class="bg-[#2d5a3d] text-white px-8 py-3 rounded-full hover:bg-[#1a3a2a] transition-all">Daftar</a>
         </div>
     </div>
     <!-- Mobile Menu -->
 <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-slate-200 px-6 py-4 space-y-4">
-    <a href="#penceramah" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">Penceramah</a>
-    <a href="#aturcara" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">Aturcara</a>
-    <a href="jawatankuasa.html" target="_blank" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">Jawatankuasa</a>
+    <a href="#penceramah" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d] py-2">Penceramah</a>
+    <a href="#aturcara" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d] py-2">Aturcara</a>
+    <a href="jawatankuasa.html" target="_blank" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d] py-2">Jawatankuasa</a>
     <div class="relative">
         <div>
-    <button onclick="toggleMobileSubmenu()" class="flex items-center justify-between w-full text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">
+    <button onclick="toggleMobileSubmenu()" class="flex items-center justify-between w-full text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d] py-2">
         Kertas Saintifik
         <i data-lucide="chevron-down" class="w-4 h-4" id="ks-chevron"></i>
     </button>
     <div id="ks-submenu" class="hidden pl-4 space-y-1 border-l-2 border-brand-gold ml-2 mt-1">
-        <a href="https://forms.gle/o9tbTVVyngbu5sLc8" target="_blank" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">↳ Penyertaan</a>
-        <a href="Poster KS.jpeg" target="_blank" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">↳ Syarat Pertandingan</a>
+        <a href="https://forms.gle/o9tbTVVyngbu5sLc8" target="_blank" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d] py-2">↳ Penyertaan</a>
+        <a href="Poster KS.jpeg" target="_blank" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d] py-2">↳ Syarat Pertandingan</a>
     </div>
 </div>
-    <a href="#lokasi" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-brand-blue py-2">Lokasi</a>
-    <a href="#daftar" onclick="toggleMenu()" class="block w-full text-center bg-brand-blue text-white px-8 py-3 rounded-full font-black uppercase text-xs hover:bg-slate-800 transition-all">Daftar</a>
+    <a href="#lokasi" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d]py-2">Lokasi</a>
+    <a href="#daftar" onclick="toggleMenu()" class="block w-full text-center hover:text-[#2d5a3d] text-white px-8 py-3 rounded-full font-black uppercase text-xs hover:bg-slate-800 transition-all">Daftar</a>
 </div>
 </nav>
 
     <!-- Hero -->
-    <section class="pt-48 pb-32 px-6 bg-gradient-to-br from-slate-50 via-blue-50/40 to-slate-100 text-center relative overflow-hidden">
+    <section class="pt-48 pb-32 px-6 bg-gradient-to-br from-slate-50 via-[#eef4f0]/60 to-[#d4e8db]/40 text-center relative overflow-hidden">
         <div class="absolute inset-0 opacity-10 pointer-events-none">
             <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_70%,#c5a05922_0%,transparent_50%)]"></div>
         </div>
@@ -316,7 +254,7 @@
             
             <h1 class="text-4xl md:text-6xl lg:text-7xl font-black text-slate-900 mb-6 leading-tight uppercase tracking-tight">
                 Persidangan Pegawai<br class="md:hidden"> Kerja Sosial Perubatan<br/>
-                <span class="text-brand-blue">Malaysia 2026</span>
+                <span class="text-[#2d5a3d]">Malaysia 2026</span>
             </h1>
             
             <p class="text-lg text-slate-500 font-medium mb-4 max-w-2xl mx-auto">
@@ -337,10 +275,10 @@
             <div id="countdown" class="flex justify-center flex-wrap gap-4 md:gap-8 mb-12"></div>
 
             <div class="flex flex-col sm:flex-row justify-center gap-5 md:gap-8">
-                <a href="#daftar" class="border-2 border-brand-blue text-brand-blue px-10 md:px-14 py-5 rounded-3xl font-black uppercase text-sm md:text-base bg-transparent hover:bg-brand-blue hover:text-white transition-all transform hover:scale-105">
+                <a href="#daftar" class="border-2 border-brand-blue text-[#2d5a3d] px-10 md:px-14 py-5 rounded-3xl font-black uppercase text-sm md:text-base bg-transparent hover:bg-brand-blue hover:text-white transition-all transform hover:scale-105">
                     Daftar Sekarang
                 </a>
-                <a href="Flyer.jpg" target="_blank" class="border-2 border-brand-gold text-brand-gold px-10 md:px-14 py-5 rounded-3xl font-black uppercase text-sm md:text-base hover:bg-brand-gold hover:text-white transition-all">
+                <a href="flyer.pdf" target="_blank" class="border-2 border-brand-gold text-brand-gold px-10 md:px-14 py-5 rounded-3xl font-black uppercase text-sm md:text-base hover:bg-brand-gold hover:text-white transition-all">
                     Muat Turun Flyer
                 </a>
             </div>
@@ -351,7 +289,7 @@
 <section class="py-32 bg-white border-y border-slate-100 px-6">
     <div class="max-w-7xl mx-auto" data-aos="fade-up">
         <div class="text-center mb-16">
-            <h2 class="text-4xl md:text-5xl font-black text-brand-blue uppercase tracking-tight">
+            <h2 class="text-4xl md:text-5xl font-black text-[#2d5a3d] uppercase tracking-tight">
                 Kata Aluan
             </h2>
             <div class="w-24 h-1.5 bg-brand-gold mx-auto mt-6 rounded-full"></div>
@@ -367,7 +305,7 @@
                         <i data-lucide="quote" class="w-8 h-8 fill-current"></i>
                     </div>
                 </div>
-                <h3 class="font-black text-xl text-brand-blue mb-2 text-center">En. Zulhan bin Ambi</h3>
+                <h3 class="font-black text-xl text-[#2d5a3d] mb-2 text-center">En. Zulhan bin Ambi</h3>
                 <p class="text-brand-gold font-bold text-xs uppercase tracking-widest mb-4 text-center">Ketua Profesion Pegawai Kerja Sosial Perubatan, Kementerian Kesihatan Malaysia</p>
                 <p class="text-slate-900 leading-relaxed text-center">
                     Profesion Kerja Sosial Perubatan terus berkembang sebagai tunjang kepada sistem penjagaan kesihatan negara. Melalui persidangan ini, kita bersama-sama memperkasa diri dengan ilmu dan strategi terkini bagi memastikan setiap pesakit mendapat sokongan psikososial yang holistik dan bermakna. Saya berharap semua peserta dapat memanfaatkan sepenuhnya platform ilmu yang berharga ini.
@@ -382,7 +320,7 @@
                         <i data-lucide="quote" class="w-8 h-8 fill-current"></i>
                     </div>
                 </div>
-                <h3 class="font-black text-xl text-brand-blue mb-2 text-center">Tn. Hj. Harolhanam bin Mohamed Wahid</h3>
+                <h3 class="font-black text-xl text-[#2d5a3d] mb-2 text-center">Tn. Hj. Harolhanam bin Mohamed Wahid</h3>
                 <p class="text-brand-gold font-bold text-xs uppercase tracking-widest mb-4 text-center">Presiden Persatuan Pegawai Pembangunan Masyarakat (Perubatan) Malaysia</p>
                 <p class="text-slate-900 leading-relaxed text-center">
                     Persidangan Pegawai Kerja Sosial Perubatan (PKSP) ke 29 merupakan kolaborasi penganjuran yang sangat baik di antara Persatuan Pegawai Pembangunan Masyarakat (Perubatan) Malaysia dengan kerjasama Profesion Pegawai Kerja Sosial Perubatan, Kementerian Kesihatan Malaysia. Persidangan ini diharapkan akan dapat meningkatkan imej profesion dan persatuan di peringkat KKM dan negara melalui pendekatan Teknologi AI dalam amalan Kerja Sosial Perubatan. Selamat Bersidang.
@@ -397,7 +335,7 @@
                         <i data-lucide="quote" class="w-8 h-8 fill-current"></i>
                     </div>
                 </div>
-                <h3 class="font-black text-xl text-brand-blue mb-2 text-center">Pn. Hjh Zailawati binti Mamat</h3>
+                <h3 class="font-black text-xl text-[#2d5a3d] mb-2 text-center">Pn. Hjh Zailawati binti Mamat</h3>
                 <p class="text-brand-gold font-bold text-xs uppercase tracking-widest mb-4 text-center">Pengerusi Persidangan Kali ke-29</p>
                 <p class="text-slate-900 leading-relaxed text-center">
                     Persidangan ini menjadi platform penting bagi Pegawai Kerja Sosial Perubatan untuk berkongsi pengetahuan, pengalaman serta amalan terbaik dalam memperkukuhkan perkhidmatan kerja sosial perubatan di Malaysia. Dalam dunia perubatan yang semakin berkembang dan mencabar, peranan Pegawai Kerja Sosial Perubatan amat signifikan dalam memastikan aspek psikososial pesakit dan keluarga terus diberi perhatian secara menyeluruh dan berkesan.
@@ -517,7 +455,7 @@
 
             <!-- Hari 1 -->
 <div id="day-1" class="schedule-day active space-y-3">
-    <h3 class="text-2xl font-black text-brand-blue flex items-center gap-3 mb-6">
+    <h3 class="text-2xl font-black text-[#2d5a3d] flex items-center gap-3 mb-6">
         <span class="bg-brand-blue text-white px-4 py-2 rounded-xl">2 Ogos 2026 (Ahad)</span>
     </h3>
 
@@ -594,7 +532,7 @@
 
             <!-- Hari 2 -->
 <div id="day-2" class="schedule-day hidden space-y-3">
-    <h3 class="text-2xl font-black text-brand-blue flex items-center gap-3 mb-6">
+    <h3 class="text-2xl font-black text-[#2d5a3d] flex items-center gap-3 mb-6">
         <span class="bg-brand-blue text-white px-4 py-2 rounded-xl">3 Ogos 2026 (Isnin)</span>
     </h3>
 
@@ -625,7 +563,7 @@
     <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
         <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
             <div class="flex gap-4 items-center">
-                <span class="text-xs font-black text-brand-gold w-28 shrink-0">9.15 – 10.00 pg</span>
+                <span class="text-xs font-black text-brand-gold w-28 shrink-0"> 10.45 – 1.00 tgh</span>
                 <span class="font-bold text-brand-dark">Majlis Perasmian Persidangan PKSP Ke-29</span>
             </div>
             <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
@@ -709,7 +647,7 @@
 
             <!-- Hari 3 -->
 <div id="day-3" class="schedule-day hidden space-y-3">
-    <h3 class="text-2xl font-black text-brand-blue flex items-center gap-3 mb-6">
+    <h3 class="text-2xl font-black text-[#2d5a3d] flex items-center gap-3 mb-6">
         <span class="bg-brand-blue text-white px-4 py-2 rounded-xl">4 Ogos 2026 (Selasa)</span>
     </h3>
 
@@ -760,8 +698,8 @@
             <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
         </button>
         <div class="accordion-content px-5 pb-5">
-            <p class="text-slate-600 italic text-sm">Sempadan Digital: Menetapkan Had Etika Penggunaan AI dalam Praktis Kerja Sosial</p>
-            <p class="text-slate-500 text-sm mt-1">Dr. Nor Jana binti Saim • UKM</p>
+            <p class="text-slate-600 italic text-sm">AI, Etika dan Kesejahteraan Sosial: Peranan Pegawai Kerja Sosial Perubatan </p>
+            <p class="text-slate-500 text-sm mt-1">Dr. Teoh Ai Hua • UUM</p>
         </div>
     </div>
 
@@ -815,14 +753,14 @@
             </a>
         </div>
         <div class="p-10 bg-white rounded-[4rem]" data-aos="fade-left">
-            <p class="font-black text-brand-blue text-3xl mb-4 uppercase">Hotel Perdana, Kota Bharu, Kelantan</p>
+            <p class="font-black text-[#2d5a3d] text-3xl mb-4 uppercase">Hotel Perdana, Kota Bharu, Kelantan</p>
             <p class="text-slate-600 leading-relaxed">"Tempat untuk perkongsian ilmu, meningkatkan ukhwah dan kemajuan profesion pegawai kerja sosial perubatan seluruh Malaysia."</p>
         </div>
     </div>
 </section>
 
     <!-- Pendaftaran -->
-    <section id="daftar" class="py-32 bg-brand-dark px-6">
+    <section id="daftar" class="py-32 bg-[#2d5a3d] px-6">
     <div class="max-w-4xl mx-auto bg-white rounded-[5rem] p-10 md:p-16 shadow-2xl" data-aos="flip-up">
             <div id="reg-form-container">
                 <h2 class="text-4xl font-black mb-10 text-center uppercase">Pendaftaran Peserta</h2>
@@ -833,15 +771,15 @@
                     </div>
                     <div class="grid md:grid-cols-3 gap-2 max-w-4xl mx-auto">
                         <div class="bg-white p-6 rounded-2xl shadow-md border border-brand-gold/30">
-                            <p class="text-3xl font-black text-brand-blue">RM200</p>
+                            <p class="text-3xl font-black text-[#2d5a3d]">RM200</p>
                             <p class="text-sm text-slate-600 mt-2">Ahli Persatuan</p>
                         </div>
                         <div class="bg-white p-6 rounded-2xl shadow-md border border-brand-gold/30">
-                            <p class="text-3xl font-black text-brand-blue">RM400</p>
+                            <p class="text-3xl font-black text-[#2d5a3d]">RM400</p>
                             <p class="text-sm text-slate-600 mt-2">Bukan Ahli</p>
                         </div>
                         <div class="bg-white p-6 rounded-2xl shadow-md border border-brand-gold/30">
-                            <p class="text-3xl font-black text-brand-blue">RM200</p>
+                            <p class="text-3xl font-black text-[#2d5a3d]">RM200</p>
                             <p class="text-sm text-slate-600 mt-2">Pelajar</p>
                             <p class="text-xs text-slate-600 mt-2 italic">(Terlibat pada 3&4 Ogos 8.00pg-5.00ptg sahaja)</p>
                         </div>
@@ -869,6 +807,7 @@
                         <option value="" disabled selected>Cara Pembayaran</option>
                         <option value="Bayaran Sendiri">Bayaran Sendiri</option>
                         <option value="Ditanggung oleh Persatuan">Ditanggung oleh Persatuan</option>
+                        <option value="Ditanggung oleh Jabatan">Ditanggung oleh Jabatan</option>
                     </select>
 
                     <select name="negeri" required class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold outline-none">
@@ -908,28 +847,28 @@
 
                     <!-- INPUT BUKTI BAYARAN -->
                     <div class="flex items-start gap-3 mt-6">
-                        <input type="checkbox" id="setuju" required class="mt-1 w-5 h-5 accent-brand-blue">
+                        <input type="checkbox" id="setuju" required class="mt-1 w-5 h-5 accent-[#2d5a3d]">
                         <label for="setuju" class="text-sm text-slate-600">
                             Saya mengaku maklumat di atas adalah benar dan bersetuju dengan 
-                            <a href="#" class="text-brand-blue hover:underline">terma & syarat</a> serta 
-                            <a href="#" class="text-brand-blue hover:underline">polisi privasi</a> persidangan.
+                            <a href="#" class="text-[#2d5a3d] hover:underline">terma & syarat</a> serta 
+                            <a href="#" class="text-[#2d5a3d] hover:underline">polisi privasi</a> persidangan.
                         </label>
                     </div>
 
-                    <button type="submit" class="w-full py-6 bg-brand-blue text-white font-black rounded-3xl uppercase shadow-xl hover:bg-slate-800 transition-all mt-8">Sahkan Pendaftaran</button>
+                    <button type="submit" class="w-full py-6 bg-[#2d5a3d] text-white font-black rounded-3xl uppercase shadow-xl hover:bg-[#1a3a2a] transition-all mt-8">Sahkan Pendaftaran</button>
                 </form>
             </div>
 
             <div id="success-message" class="hidden text-center py-20">
                 <i data-lucide="check-circle" class="w-20 h-20 text-green-500 mx-auto mb-8"></i>
-                <h2 class="text-3xl font-black text-brand-blue mb-4 uppercase">Pendaftaran Berjaya!</h2>
+                <h2 class="text-3xl font-black text-[#2d5a3d] mb-4 uppercase">Pendaftaran Berjaya!</h2>
                 <p class="text-slate-600 mb-8">Terima kasih. Kami akan semak bukti bayaran dan hubungi anda melalui WhatsApp/email.</p>
-                <button onclick="window.location.reload()" class="bg-brand-blue text-white px-10 py-4 rounded-full font-black uppercase">Kembali ke Laman Utama</button>
+                <button onclick="window.location.reload()" class="bg-[#2d5a3d] text-white px-10 py-4 rounded-full font-black uppercase">Kembali ke Laman Utama</button>
             </div>
     </section>
 
     <!-- Footer -->
-<footer class="bg-brand-dark text-white py-16 px-6 border-t-[10px] border-brand-gold">
+<footer class="bg-[#1a3a2a] text-white py-16 px-6 border-t-[10px] border-brand-gold">
     <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-12 text-center md:text-left">
         
         <!-- Kolum 1: Anjuran -->
@@ -988,7 +927,7 @@
             if (diff <= 0) {
                 countdownEl.innerHTML = `
                     <div class="text-center animate-pulse">
-                        <div class="text-5xl md:text-7xl font-black text-brand-blue uppercase tracking-widest mb-6 drop-shadow-lg">
+                        <div class="text-5xl md:text-7xl font-black text-[#2d5a3d] uppercase tracking-widest mb-6 drop-shadow-lg">
                             PERSIDANGAN BERMULAAAA!
                         </div>
                         <div class="text-2xl md:text-4xl font-bold text-brand-gold mb-8">
@@ -996,12 +935,12 @@
                         </div>
                         <div class="flex justify-center gap-6">
                             <div class="bg-white/90 backdrop-blur-md px-10 py-5 rounded-3xl shadow-2xl border border-brand-gold">
-                                <p class="text-brand-blue font-black text-3xl">SELAMAT DATANG!</p>
+                                <p class="text-[#2d5a3d] font-black text-3xl">SELAMAT DATANG!</p>
                                 <p class="text-slate-700 mt-2 text-lg">Mari kita bina masa depan kerja sosial perubatan bersama</p>
                             </div>
                         </div>
                         <div class="mt-10 text-xl text-slate-600">
-                            <a href="#daftar" class="text-brand-blue hover:text-brand-gold font-black underline">
+                            <a href="#daftar" class="text-[#2d5a3d] hover:text-brand-gold font-black underline">
                                 Daftar sekarang kalau belum!
                             </a>
                         </div>
@@ -1017,7 +956,7 @@
 
             const timerBox = (val, label) => `
                 <div class="flex flex-col items-center transform transition-all duration-300 hover:scale-105">
-                    <div class="w-20 h-20 md:w-32 md:h-32 bg-white text-brand-blue rounded-[2.5rem] flex items-center justify-center font-black text-3xl md:text-5xl mb-3 shadow-lg border border-slate-200">
+                    <div class="w-20 h-20 md:w-32 md:h-32 bg-white text-[#2d5a3d] rounded-[2.5rem] flex items-center justify-center font-black text-3xl md:text-5xl mb-3 shadow-lg border border-slate-200">
                         ${String(val).padStart(2, '0')}
                     </div>
                     <span class="text-xs md:text-sm font-black uppercase tracking-widest text-slate-700">${label}</span>
@@ -1048,14 +987,14 @@
 
             // 3. Reset SEMUA tab ke keadaan tak aktif
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active', 'bg-brand-blue', 'text-white');
+                btn.classList.remove('active', 'bg-brand-blue', 'bg-[#2d5a3d]', 'text-white');
                 btn.classList.add('text-slate-600', 'bg-white', 'hover:bg-slate-100');
             });
 
             // 4. Tambah active pada tab yang betul
             const activeBtn = document.querySelector(`.tab-btn[data-day="${day}"]`);
             if (activeBtn) {
-                activeBtn.classList.add('active', 'bg-brand-blue', 'text-white');
+                activeBtn.classList.add('active', 'bg-[#2d5a3d]', 'text-white');
                 activeBtn.classList.remove('text-slate-600', 'bg-white', 'hover:bg-slate-100');
             }
         }
