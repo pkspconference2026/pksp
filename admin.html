@@ -3,99 +3,366 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Senarai Peserta Persidangan 2026</title>
-    
+    <title>Admin – Senarai Peserta PKSP 2026</title>
+
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8f9fa; color: #333; margin: 0; padding: 20px; }
-        .container { max-width: 1400px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-        h1 { color: #1e3a8a; text-align: center; margin-bottom: 30px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background: #1e3a8a; color: white; font-weight: bold; }
-        tr:nth-child(even) { background: #f8f9fa; }
-        tr:hover { background: #e9ecef; }
-        .timestamp { font-size: 0.9em; color: #555; }
-        #loading { text-align: center; font-size: 1.1em; color: #666; margin: 40px 0; }
-        #count { font-weight: bold; color: #c5a059; }
-        #error-message { color: red; font-weight: bold; text-align: center; margin: 20px 0; }
-        #password-container { text-align: center; padding: 100px 20px; max-width: 500px; margin: 0 auto; }
-        #password-container input { padding: 12px; width: 80%; font-size: 1.2em; margin-bottom: 15px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px; }
-        #password-container button { padding: 12px 40px; background: #1e3a8a; color: white; border: none; cursor: pointer; font-size: 1.1em; border-radius: 5px; }
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f4f8;
+            color: #1e293b;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* ── LOGIN ── */
+        #password-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            gap: 12px;
+        }
+        #password-container h2 { color: #1e3a8a; margin-bottom: 8px; }
+        #password-container input {
+            padding: 12px 16px;
+            width: 320px;
+            max-width: 90vw;
+            font-size: 1em;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            outline: none;
+            transition: border 0.2s;
+        }
+        #password-container input:focus { border-color: #1e3a8a; }
+        #password-container button {
+            padding: 12px 40px;
+            background: #1e3a8a;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
         #password-container button:hover { background: #0f172a; }
-        .btn { padding: 8px 16px; margin: 4px; cursor: pointer; font-size: 0.9em; border: none; border-radius: 5px; color: white; transition: all 0.2s; }
+        #login-error { color: #ef4444; font-size: 0.9em; min-height: 20px; }
+
+        /* ── MAIN ── */
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px 28px;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            color: #1e3a8a;
+            text-align: center;
+            margin-bottom: 6px;
+            font-size: 1.5em;
+            line-height: 1.4;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            font-size: 0.95em;
+            margin-bottom: 24px;
+        }
+
+        /* ── STATS BAR ── */
+        .stats-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px 22px;
+            text-align: center;
+            min-width: 130px;
+        }
+        .stat-card .num { font-size: 1.8em; font-weight: 700; }
+        .stat-card .lbl { font-size: 0.78em; color: #64748b; margin-top: 2px; }
+        .stat-jumlah .num { color: #1e3a8a; }
+        .stat-lulus  .num { color: #10b981; }
+        .stat-tolak  .num { color: #ef4444; }
+        .stat-tunggu .num { color: #f59e0b; }
+
+        /* ── TOOLBAR ── */
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .toolbar input[type="text"] {
+            flex: 1;
+            min-width: 200px;
+            padding: 9px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.95em;
+            outline: none;
+            transition: border 0.2s;
+        }
+        .toolbar input[type="text"]:focus { border-color: #1e3a8a; }
+        .toolbar select {
+            padding: 9px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.95em;
+            background: white;
+            cursor: pointer;
+            outline: none;
+        }
+
+        /* ── TABLE ── */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88em;
+            white-space: nowrap;
+        }
+        th {
+            background: #1e3a8a;
+            color: white;
+            padding: 11px 13px;
+            text-align: left;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+        }
+        th:hover { background: #162d6b; }
+        th .sort-icon { margin-left: 4px; opacity: 0.6; font-size: 0.8em; }
+        td {
+            padding: 10px 13px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+            max-width: 200px;
+            white-space: normal;
+            word-break: break-word;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: #f8fafc; }
+        tr:hover td { background: #eff6ff; }
+
+        .timestamp { font-size: 0.85em; color: #64748b; white-space: nowrap; }
+
+        /* ── STATUS BADGE ── */
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .badge-lulus  { background: #d1fae5; color: #065f46; }
+        .badge-tolak  { background: #fee2e2; color: #991b1b; }
+        .badge-tunggu { background: #fef3c7; color: #92400e; }
+
+        /* ── ACTION BUTTONS ── */
+        .btn {
+            padding: 5px 12px;
+            margin: 2px;
+            cursor: pointer;
+            font-size: 0.82em;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
         .btn-lulus { background: #10b981; }
         .btn-lulus:hover { background: #059669; }
         .btn-tolak { background: #ef4444; }
         .btn-tolak:hover { background: #dc2626; }
-        .btn-download { padding: 10px 20px; margin: 10px; background: #c5a059; color: white; border: none; cursor: pointer; font-size: 1em; border-radius: 5px; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* ── BOTTOM BUTTONS ── */
+        .bottom-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 26px;
+        }
+        .btn-download {
+            padding: 10px 22px;
+            background: #c5a059;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95em;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .btn-download:hover { background: #a8863c; }
         .btn-pdf { background: #1e3a8a; }
-        .btn-back { background: #6b7280; color: white; margin-top: 30px; padding: 12px 24px; font-size: 1em; border-radius: 5px; }
-        a { color: #1e3a8a; text-decoration: underline; }
-        a:hover { color: #0f172a; }
-        #status-lulus { color: #10b981; font-weight: bold; }
-        #status-tolak { color: #ef4444; font-weight: bold; }
+        .btn-pdf:hover { background: #162d6b; }
+        .btn-back {
+            padding: 10px 22px;
+            background: #6b7280;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95em;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .btn-back:hover { background: #4b5563; }
+
+        /* ── TOAST ── */
+        #toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 12px 22px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.95em;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 9999;
+        }
+        #toast.show { opacity: 1; }
+        #toast.toast-ok  { background: #10b981; }
+        #toast.toast-err { background: #ef4444; }
+
+        /* ── MISC ── */
+        #loading { text-align: center; padding: 40px; color: #64748b; font-size: 1.05em; }
+        #error-message { color: #ef4444; font-weight: bold; text-align: center; margin: 20px 0; }
+        .empty-row td { text-align: center; color: #94a3b8; padding: 30px; }
+        a { color: #1e3a8a; }
+
+        /* ── PRINT ── */
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; padding: 10px; }
+            .toolbar, .bottom-bar, .btn, #toast { display: none !important; }
+            table { font-size: 0.75em; }
+            .col-tindakan { display: none; }
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 16px 12px; }
+            h1 { font-size: 1.1em; }
+        }
     </style>
 </head>
 <body>
 
+<!-- LOGIN -->
 <div id="password-container">
-    <h2>Masuk Kata Laluan Admin</h2>
-    <input type="password" id="adminPass" placeholder="Kata laluan" autocomplete="off">
-    <br><br>
+    <h2>🔐 Admin PKSP 2026</h2>
+    <input type="password" id="adminPass" placeholder="Masukkan kata laluan" autocomplete="off">
+    <div id="login-error"></div>
     <button id="loginBtn">Masuk</button>
 </div>
 
+<!-- MAIN -->
 <div id="main-content" style="display:none;">
     <div class="container">
         <h1>Senarai Peserta Pendaftaran<br>Persidangan Pegawai Kerja Sosial Perubatan 2026</h1>
-        
-        <p style="text-align:center; font-size:1.1em;">
-            Jumlah peserta terkini: <span id="count">0</span> orang
-        </p>
+        <p class="subtitle">Data dikemaskini secara langsung (real-time)</p>
+
+        <!-- STATS -->
+        <div class="stats-bar">
+            <div class="stat-card stat-jumlah">
+                <div class="num" id="statJumlah">0</div>
+                <div class="lbl">Jumlah Peserta</div>
+            </div>
+            <div class="stat-card stat-lulus">
+                <div class="num" id="statLulus">0</div>
+                <div class="lbl">Bayaran Lulus</div>
+            </div>
+            <div class="stat-card stat-tolak">
+                <div class="num" id="statTolak">0</div>
+                <div class="lbl">Bayaran Ditolak</div>
+            </div>
+            <div class="stat-card stat-tunggu">
+                <div class="num" id="statTunggu">0</div>
+                <div class="lbl">Menunggu Semakan</div>
+            </div>
+        </div>
+
+        <!-- TOOLBAR -->
+        <div class="toolbar">
+            <input type="text" id="searchInput" placeholder="🔍  Cari nama, IC, email, tempat bertugas...">
+            <select id="filterStatus">
+                <option value="">Semua Status</option>
+                <option value="Lulus">Lulus</option>
+                <option value="Tolak">Tolak</option>
+                <option value="Menunggu">Menunggu Semakan</option>
+            </select>
+            <select id="filterNegeri">
+                <option value="">Semua Negeri</option>
+            </select>
+        </div>
 
         <div id="loading">Memuat data peserta...</div>
         <div id="error-message"></div>
 
-        <table id="pesertaTable" style="display:none;">
-            <thead>
-                <tr>
-                    <th>Bil.</th>
-                    <th>Tarikh Daftar</th>
-                    <th>Nama Penuh</th>
-                    <th>No. K/P</th>
-                    <th>No. Telefon</th>
-                    <th>Email</th>
-                    <th>Tempat Bertugas</th>
-                    <th>Jawatan/Gred</th>
-                    <th>Kategori</th>
-                    <th>Cara Bayaran</th>
-                    <th>Negeri</th>          
-                    <th>Status Bayaran</th>
-                    <th>Tindakan</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
-        </table>
-
-        <div style="text-align:center; margin-top:30px;">
-           <button class="btn-download" id="btnCSV">Download CSV</button>
-            <button class="btn-download btn-pdf" id="btnPDF">Download PDF (Print)</button>
+        <div class="table-wrapper">
+            <table id="pesertaTable" style="display:none;">
+                <thead>
+                    <tr>
+                        <th>Bil.</th>
+                        <th data-col="tarikh">Tarikh Daftar <span class="sort-icon">↕</span></th>
+                        <th data-col="nama">Nama Penuh <span class="sort-icon">↕</span></th>
+                        <th>No. K/P</th>
+                        <th>No. Telefon</th>
+                        <th>Email</th>
+                        <th data-col="tempat">Tempat Bertugas <span class="sort-icon">↕</span></th>
+                        <th>Jawatan/Gred</th>
+                        <th data-col="kategori">Kategori <span class="sort-icon">↕</span></th>
+                        <th>Cara Bayaran</th>
+                        <th data-col="negeri">Negeri <span class="sort-icon">↕</span></th>
+                        <th data-col="status">Status Bayaran <span class="sort-icon">↕</span></th>
+                        <th class="col-tindakan">Tindakan</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
         </div>
 
-        <div style="text-align:center; margin-top:30px;">
-            <button class="btn-back" onclick="window.location.href='https://pkspconference2026.github.io/pksp/'">Kembali ke Laman Utama</button>
+        <div class="bottom-bar">
+            <button class="btn-download" id="btnCSV">⬇ Download CSV</button>
+            <button class="btn-download btn-pdf" id="btnPDF">🖨 Print / Save PDF</button>
+            <button class="btn-back" onclick="window.location.href='https://pkspconference2026.github.io/pksp/'">← Kembali ke Laman Utama</button>
         </div>
     </div>
 </div>
 
+<!-- TOAST -->
+<div id="toast"></div>
+
 <script type="module">
-    console.log("Skrip admin LOADED – debug 1");
-
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getFirestore, collection, onSnapshot, query, orderBy, doc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import {
+        getFirestore, collection, onSnapshot, query, orderBy, doc, updateDoc, serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
     import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-
-    console.log("Import Firebase OK – debug 2");
 
     const firebaseConfig = {
         apiKey: "AIzaSyBRKVRVCNW5fQxKcGHGH_lQdrpfBpmGmUU",
@@ -109,166 +376,249 @@
     const ADMIN_PASSWORD = "pksp2026admin";
 
     const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    const db  = getFirestore(app);
     const auth = getAuth(app);
 
-    console.log("Firebase initialized – debug 3");
+    signInAnonymously(auth).catch(err => console.error("Anon sign-in error:", err));
 
-    signInAnonymously(auth)
-        .then(() => console.log("Admin signed in anonymously – read OK"))
-        .catch(err => console.error("Anon sign-in error:", err));
+    // ── TOAST ──
+    function showToast(msg, type = "ok") {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.className = `show toast-${type}`;
+        clearTimeout(t._timer);
+        t._timer = setTimeout(() => { t.className = ""; }, 2800);
+    }
 
-    // Password check
-    document.getElementById('loginBtn').addEventListener('click', () => {
-        console.log("Button Masuk diklik – debug 4");
-        const pass = document.getElementById('adminPass').value.trim();
-        if (pass === ADMIN_PASSWORD) {
-            console.log("Password betul – show content");
-            document.getElementById('password-container').style.display = 'none';
-            document.getElementById('main-content').style.display = 'block';
+    // ── LOGIN ──
+    const loginBtn   = document.getElementById("loginBtn");
+    const adminPass  = document.getElementById("adminPass");
+    const loginError = document.getElementById("login-error");
+
+    function tryLogin() {
+        if (adminPass.value.trim() === ADMIN_PASSWORD) {
+            document.getElementById("password-container").style.display = "none";
+            document.getElementById("main-content").style.display = "block";
             loadData();
         } else {
-            alert('Kata laluan salah!');
+            loginError.textContent = "Kata laluan salah. Cuba lagi.";
+            adminPass.value = "";
+            adminPass.focus();
         }
-    });
+    }
 
+    loginBtn.addEventListener("click", tryLogin);
+    adminPass.addEventListener("keydown", e => { if (e.key === "Enter") tryLogin(); });
+
+    // ── DATA STORE ──
+    let allRows  = [];   // { docId, ts, data }
+    let sortCol  = "tarikh";
+    let sortAsc  = false;
+
+    // ── LOAD DATA ──
     function loadData() {
-        console.log("loadData dipanggil – mulakan query");
-
         const q = query(
             collection(db, "artifacts", "msw-kuantan-2026", "public", "data", "pendaftaran"),
             orderBy("timestamp", "desc")
         );
 
         onSnapshot(q, (snapshot) => {
-            console.log("Snapshot OK! Bilangan peserta:", snapshot.size);
+            allRows = [];
+            const negeriSet = new Set();
 
-            const tableBody = document.getElementById("tableBody");
-            const countEl = document.getElementById("count");
-            const loading = document.getElementById("loading");
-            const table = document.getElementById("pesertaTable");
-            const errorMsg = document.getElementById("error-message");
-
-            tableBody.innerHTML = "";
-            let bil = 1;
-
-            snapshot.forEach((doc) => {
-                const data = doc.data();
-                const ts = data.timestamp ? data.timestamp.seconds * 1000 : null;
-                const tarikh = ts ? new Date(ts).toLocaleString("ms-MY", {day:"2-digit", month:"short", year:"numeric", hour:"2-digit", minute:"2-digit"}) : "—";
-
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${bil++}</td>
-                    <td class="timestamp">${tarikh}</td>
-                    <td>${data.nama || "—"}</td>
-                    <td>${data.ic || "—"}</td>
-                    <td>${data.tel || "—"}</td>
-                    <td>${data.email || "—"}</td>
-                    <td>${data.tempat_bertugas || "—"}</td>
-                    <td>${data.jawatan_gred || "—"}</td>
-                    <td>${data.kategori || "—"}</td>
-                    <td>${data.cara_bayaran || "—"}</td>
-                    <td>${data.negeri || "—"}</td>
-                    <td id="status-${doc.id}" class="${data.statusBayaran === 'Lulus' ? 'text-green-600 font-bold' : data.statusBayaran === 'Tolak' ? 'text-red-600 font-bold' : ''}">
-                        ${data.statusBayaran || "Menunggu semakan"}
-                    </td>
-                    <td>
-                        <button class="btn btn-lulus" data-id="${doc.id}" data-status="Lulus">Lulus</button>
-                        <button class="btn btn-tolak" data-id="${doc.id}" data-status="Tolak">Tolak</button>
-                    </td>
-                `;
-                tableBody.appendChild(row);
+            snapshot.forEach(docSnap => {
+                const d = docSnap.data();
+                const ts = d.timestamp ? d.timestamp.seconds * 1000 : 0;
+                allRows.push({ docId: docSnap.id, ts, data: d });
+                if (d.negeri) negeriSet.add(d.negeri);
             });
 
-            // Attach event listener untuk button Lulus/Tolak selepas table load
-            document.querySelectorAll('.btn-lulus, .btn-tolak').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const docId = btn.dataset.id;
-                    const newStatus = btn.dataset.status;
-                    updateStatus(docId, newStatus);
-                });
+            // Populate negeri filter
+            const filterNegeri = document.getElementById("filterNegeri");
+            const prevNegeri = filterNegeri.value;
+            filterNegeri.innerHTML = '<option value="">Semua Negeri</option>';
+            [...negeriSet].sort().forEach(n => {
+                const opt = document.createElement("option");
+                opt.value = n; opt.textContent = n;
+                if (n === prevNegeri) opt.selected = true;
+                filterNegeri.appendChild(opt);
             });
 
-            countEl.textContent = snapshot.size;
-            loading.style.display = "none";
-            table.style.display = "table";
-            errorMsg.innerHTML = "";
-
-            if (snapshot.size === 0) {
-                errorMsg.innerHTML = "Tiada rekod lagi.";
-            }
-        }, (error) => {
-            console.error("Ralat Firestore:", error);
             document.getElementById("loading").style.display = "none";
-            document.getElementById("error-message").innerHTML = `Ralat: ${error.message} (kod: ${error.code})`;
+            document.getElementById("pesertaTable").style.display = "table";
+            renderTable();
+        }, err => {
+            document.getElementById("loading").style.display = "none";
+            document.getElementById("error-message").innerHTML =
+                `Ralat: ${err.message} (kod: ${err.code})`;
         });
     }
 
-    async function updateStatus(docId, newStatus) {
-        console.log(`Klik ${newStatus} untuk ID: ${docId}`);
+    // ── RENDER ──
+    function renderTable() {
+        const search       = document.getElementById("searchInput").value.toLowerCase();
+        const filterStatus = document.getElementById("filterStatus").value;
+        const filterNegeri = document.getElementById("filterNegeri").value;
 
-        if (!confirm(`Anda pasti nak ${newStatus.toLowerCase()} bayaran peserta ini?`)) return;
+        let rows = allRows.filter(r => {
+            const d = r.data;
+            const statusVal = d.statusBayaran || "Menunggu Semakan";
 
-        try {
-            const docRef = doc(db, "artifacts", "msw-kuantan-2026", "public", "data", "pendaftaran", docId);
-            await updateDoc(docRef, {
-                statusBayaran: newStatus,
-                updatedAt: serverTimestamp()
-            });
-            console.log(`Status berjaya diupdate ke ${newStatus}`);
-
-            // Update UI terus
-            const statusCell = document.getElementById(`status-${docId}`);
-            if (statusCell) {
-                statusCell.innerText = newStatus;
-                statusCell.className = newStatus === 'Lulus' ? 'text-green-600 font-bold' : newStatus === 'Tolak' ? 'text-red-600 font-bold' : '';
+            // Status filter
+            if (filterStatus) {
+                if (filterStatus === "Menunggu" && statusVal !== "Menunggu Semakan") return false;
+                if (filterStatus === "Lulus"    && statusVal !== "Lulus")            return false;
+                if (filterStatus === "Tolak"    && statusVal !== "Tolak")            return false;
             }
+            // Negeri filter
+            if (filterNegeri && d.negeri !== filterNegeri) return false;
+            // Search
+            if (search) {
+                const haystack = [d.nama, d.ic, d.email, d.tel, d.tempat_bertugas, d.jawatan_gred]
+                    .map(v => (v || "").toLowerCase()).join(" ");
+                if (!haystack.includes(search)) return false;
+            }
+            return true;
+        });
 
-            alert(`Status bayaran berjaya diubah ke "${newStatus}"!`);
-        } catch (err) {
-            console.error("Ralat update status:", err);
-            alert("Gagal update status: " + err.message);
-        }
-    }
+        // Sort
+        rows.sort((a, b) => {
+            let va, vb;
+            switch(sortCol) {
+                case "tarikh":   va = a.ts; vb = b.ts; break;
+                case "nama":     va = (a.data.nama || "").toLowerCase(); vb = (b.data.nama || "").toLowerCase(); break;
+                case "tempat":   va = (a.data.tempat_bertugas || "").toLowerCase(); vb = (b.data.tempat_bertugas || "").toLowerCase(); break;
+                case "kategori": va = (a.data.kategori || "").toLowerCase(); vb = (b.data.kategori || "").toLowerCase(); break;
+                case "negeri":   va = (a.data.negeri || "").toLowerCase(); vb = (b.data.negeri || "").toLowerCase(); break;
+                case "status":   va = (a.data.statusBayaran || "").toLowerCase(); vb = (b.data.statusBayaran || "").toLowerCase(); break;
+                default:         va = a.ts; vb = b.ts;
+            }
+            if (va < vb) return sortAsc ? -1 : 1;
+            if (va > vb) return sortAsc ?  1 : -1;
+            return 0;
+        });
 
-    // DOWNLOAD CSV
-    function downloadCSV() {
-        console.log("Download CSV ditekan");
+        // Stats (dari allRows, bukan filtered)
+        let nLulus = 0, nTolak = 0, nTunggu = 0;
+        allRows.forEach(r => {
+            const s = r.data.statusBayaran || "";
+            if (s === "Lulus") nLulus++;
+            else if (s === "Tolak") nTolak++;
+            else nTunggu++;
+        });
+        document.getElementById("statJumlah").textContent = allRows.length;
+        document.getElementById("statLulus").textContent  = nLulus;
+        document.getElementById("statTolak").textContent  = nTolak;
+        document.getElementById("statTunggu").textContent = nTunggu;
 
-        const table = document.getElementById('pesertaTable');
-        if (!table || table.style.display === 'none') {
-            alert("Table peserta belum load!");
+        // Build table
+        const tbody = document.getElementById("tableBody");
+        tbody.innerHTML = "";
+
+        if (rows.length === 0) {
+            tbody.innerHTML = `<tr class="empty-row"><td colspan="13">Tiada rekod yang sepadan.</td></tr>`;
             return;
         }
 
-        let csv = [];
-        const rows = table.querySelectorAll('tr');
-        rows.forEach(row => {
-            const cols = row.querySelectorAll('td, th');
-            const rowData = Array.from(cols).map(col => `"${col.innerText.replace(/"/g, '""')}"`);
-            csv.push(rowData.join(','));
+        rows.forEach((r, i) => {
+            const d  = r.data;
+            const ts = r.ts ? new Date(r.ts).toLocaleString("ms-MY", {
+                day:"2-digit", month:"short", year:"numeric", hour:"2-digit", minute:"2-digit"
+            }) : "—";
+
+            const statusVal   = d.statusBayaran || "Menunggu Semakan";
+            const badgeClass  = statusVal === "Lulus" ? "badge-lulus"
+                              : statusVal === "Tolak" ? "badge-tolak"
+                              : "badge-tunggu";
+
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${i + 1}</td>
+                <td class="timestamp">${ts}</td>
+                <td>${d.nama || "—"}</td>
+                <td>${d.ic || "—"}</td>
+                <td>${d.tel || "—"}</td>
+                <td>${d.email ? `<a href="mailto:${d.email}">${d.email}</a>` : "—"}</td>
+                <td>${d.tempat_bertugas || "—"}</td>
+                <td>${d.jawatan_gred || "—"}</td>
+                <td>${d.kategori || "—"}</td>
+                <td>${d.cara_bayaran || "—"}</td>
+                <td>${d.negeri || "—"}</td>
+                <td><span class="badge ${badgeClass}">${statusVal}</span></td>
+                <td class="col-tindakan">
+                    <button class="btn btn-lulus" data-id="${r.docId}" data-status="Lulus"
+                        ${statusVal === "Lulus" ? "disabled" : ""}>✓ Lulus</button>
+                    <button class="btn btn-tolak" data-id="${r.docId}" data-status="Tolak"
+                        ${statusVal === "Tolak" ? "disabled" : ""}>✗ Tolak</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
         });
 
-        const csvContent = "\uFEFF" + csv.join('\n');
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'Senarai_Peserta_Pendaftaran.csv';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        // Attach action listeners
+        tbody.querySelectorAll(".btn-lulus, .btn-tolak").forEach(btn => {
+            btn.addEventListener("click", () => updateStatus(btn.dataset.id, btn.dataset.status));
+        });
     }
 
-    // DOWNLOAD PDF (print)
-    function downloadPDF() {
-        console.log("Download PDF ditekan");
-        alert("Buka dialog print. Pilih 'Save as PDF' di printer.");
-        window.print();
+    // ── UPDATE STATUS ──
+    async function updateStatus(docId, newStatus) {
+        if (!confirm(`Anda pasti nak ${newStatus.toLowerCase()} bayaran peserta ini?`)) return;
+        try {
+            const ref = doc(db, "artifacts", "msw-kuantan-2026", "public", "data", "pendaftaran", docId);
+            await updateDoc(ref, { statusBayaran: newStatus, updatedAt: serverTimestamp() });
+            showToast(`Status berjaya diubah ke "${newStatus}"`, "ok");
+        } catch (err) {
+            console.error("Ralat update status:", err);
+            showToast("Gagal update status: " + err.message, "err");
+        }
     }
-    
-    document.getElementById('btnCSV').addEventListener('click', downloadCSV);
-    document.getElementById('btnPDF').addEventListener('click', downloadPDF);
+
+    // ── SORT ──
+    document.querySelectorAll("th[data-col]").forEach(th => {
+        th.addEventListener("click", () => {
+            const col = th.dataset.col;
+            if (sortCol === col) sortAsc = !sortAsc;
+            else { sortCol = col; sortAsc = true; }
+            // Update icons
+            document.querySelectorAll("th[data-col] .sort-icon").forEach(ic => ic.textContent = "↕");
+            th.querySelector(".sort-icon").textContent = sortAsc ? "↑" : "↓";
+            renderTable();
+        });
+    });
+
+    // ── FILTERS ──
+    document.getElementById("searchInput").addEventListener("input", renderTable);
+    document.getElementById("filterStatus").addEventListener("change", renderTable);
+    document.getElementById("filterNegeri").addEventListener("change", renderTable);
+
+    // ── CSV (tanpa kolum Tindakan) ──
+    document.getElementById("btnCSV").addEventListener("click", () => {
+        const headers = ["Bil.", "Tarikh Daftar", "Nama Penuh", "No. K/P", "No. Telefon",
+                         "Email", "Tempat Bertugas", "Jawatan/Gred", "Kategori",
+                         "Cara Bayaran", "Negeri", "Status Bayaran"];
+
+        const rows = [headers];
+        document.querySelectorAll("#tableBody tr:not(.empty-row)").forEach((tr, i) => {
+            const cells = tr.querySelectorAll("td");
+            // Ambil semua td kecuali yang terakhir (Tindakan)
+            const rowData = Array.from(cells).slice(0, -1).map(td => `"${td.innerText.replace(/"/g, '""')}"`);
+            rows.push(rowData);
+        });
+
+        const blob = new Blob(["\uFEFF" + rows.map(r => r.join(",")).join("\n")],
+                              { type: "text/csv;charset=utf-8;" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "Senarai_Peserta_PKSP2026.csv";
+        a.click();
+    });
+
+    // ── PDF ──
+    document.getElementById("btnPDF").addEventListener("click", () => {
+        alert("Dialog print akan dibuka. Pilih 'Save as PDF' untuk simpan sebagai PDF.");
+        window.print();
+    });
 </script>
 
 </body>
