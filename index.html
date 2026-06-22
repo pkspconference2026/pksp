@@ -3,10 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Persidangan Pegawai Kerja Sosial Perubatan Malaysia 2026</title>
-    
+    <title>Persidangan Pegawai Kerja Sosial Perubatan Malaysia 2026 (PKSP 2026)</title>
+
+    <meta name="description" content="Persidangan Pegawai Kerja Sosial Perubatan Malaysia Ke-29 (PKSP 2026) — 'Memperkasakan Perkhidmatan Kerja Sosial Perubatan Melalui Sinergi Digital dan Kecerdasan Buatan (AI)'. 2–4 Ogos 2026, Hotel Perdana, Kota Bharu, Kelantan.">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / WhatsApp / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Persidangan Pegawai Kerja Sosial Perubatan Malaysia 2026 (PKSP 2026)">
+    <meta property="og:description" content="2–4 Ogos 2026 • Hotel Perdana, Kota Bharu, Kelantan. Sinergi Digital dan Kecerdasan Buatan (AI) dalam Kerja Sosial Perubatan.">
+    <meta property="og:image" content="og-image.jpg">
+    <meta property="og:locale" content="ms_MY">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Persidangan Pegawai Kerja Sosial Perubatan Malaysia 2026">
+    <meta name="twitter:description" content="2–4 Ogos 2026 • Hotel Perdana, Kota Bharu, Kelantan.">
+    <meta name="twitter:image" content="og-image.jpg">
+
+    <link rel="icon" type="image/png" href="Logo TKPM.png">
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@0.469.0"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <script type="module">
@@ -159,7 +177,7 @@
         </div>
 
 <!-- Hamburger Button -->
-            <button id="hamburger" class="lg:hidden flex flex-col gap-1.5 p-2" onclick="toggleMenu()">
+            <button id="hamburger" class="lg:hidden flex flex-col gap-1.5 p-2" onclick="toggleMenu()" aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="mobile-menu">
                 <span class="w-6 h-0.5 bg-brand-blue block transition-all"></span>
                 <span class="w-6 h-0.5 bg-brand-blue block transition-all"></span>
                 <span class="w-6 h-0.5 bg-brand-blue block transition-all"></span>
@@ -167,7 +185,7 @@
         <div class="hidden lg:flex items-center space-x-8 text-xs font-black uppercase tracking-widest text-slate-600">
             <a href="#penceramah" class="hover:text-[#2d5a3d] transition-colors">Penceramah</a>
             <a href="#aturcara" class="hover:text-[#2d5a3d] transition-colors">Aturcara</a>
-            <a href="jawatankuasa.html" target="_blank" class="hover:text-[#2d5a3d] transition-colors">Jawatankuasa</a>
+            <a href="jawatankuasa.html" target="_blank" rel="noopener noreferrer" class="hover:text-[#2d5a3d] transition-colors">Jawatankuasa</a>
 
             <!-- Dropdown Muat Turun yang lebih stabil -->
             <div class="relative group">
@@ -205,15 +223,15 @@
 
     <div class="absolute right-0 top-full pt-3 w-72 z-50 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-150">
         <div class="bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden">
-            <a href="https://forms.gle/o9tbTVVyngbu5sLc8" target="_blank"
+            <a href="https://forms.gle/o9tbTVVyngbu5sLc8" target="_blank" rel="noopener noreferrer"
                 class="block px-6 py-4 text-slate-700 hover:bg-brand-soft transition-colors border-b border-slate-100">
                 <span class="font-bold text-[#2d5a3d]">Penyertaan</span>
             </a>
-            <a href="Poster KS.jpeg" target="_blank"
+            <a href="Poster KS.jpeg" target="_blank" rel="noopener noreferrer"
                 class="block px-6 py-4 text-slate-700 hover:bg-brand-soft transition-colors border-b border-slate-100">
                 <span class="font-bold text-[#2d5a3d]">Syarat Pertandingan</span>
             </a>
-            <a href="Pembentang KS.png" target="_blank"
+            <a href="Pembentang KS.png" target="_blank" rel="noopener noreferrer"
                 class="block px-6 py-4 text-slate-700 hover:bg-brand-soft transition-colors">
                 <span class="font-bold text-[#2d5a3d]">Pembentang</span>
             </a>
@@ -228,7 +246,7 @@
 <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-slate-200 px-6 py-4 space-y-4">
     <a href="#penceramah" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d] py-2">Penceramah</a>
     <a href="#aturcara" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d] py-2">Aturcara</a>
-    <a href="jawatankuasa.html" target="_blank" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d] py-2">Jawatankuasa</a>
+    <a href="jawatankuasa.html" target="_blank" rel="noopener noreferrer" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d] py-2">Jawatankuasa</a>
     <div class="relative">
         <div>
     <button onclick="toggleMobileSubmenu()" class="flex items-center justify-between w-full text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d] py-2">
@@ -236,9 +254,9 @@
         <i data-lucide="chevron-down" class="w-4 h-4" id="ks-chevron"></i>
     </button>
     <div id="ks-submenu" class="hidden pl-4 space-y-1 border-l-2 border-brand-gold ml-2 mt-1">
-        <a href="https://forms.gle/o9tbTVVyngbu5sLc8" target="_blank" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d] py-2">↳ Penyertaan</a>
-        <a href="Poster KS.jpeg" target="_blank" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d] py-2">↳ Syarat Pertandingan</a>
-        <a href="Pembentang KS.png" target="_blank" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d] py-2">↳ Pembentang</a>
+        <a href="https://forms.gle/o9tbTVVyngbu5sLc8" target="_blank" rel="noopener noreferrer" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d] py-2">↳ Penyertaan</a>
+        <a href="Poster KS.jpeg" target="_blank" rel="noopener noreferrer" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d] py-2">↳ Syarat Pertandingan</a>
+        <a href="Pembentang KS.png" target="_blank" rel="noopener noreferrer" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d] py-2">↳ Pembentang</a>
     </div>
 </div>
     <a href="#lokasi" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d]py-2">Lokasi</a>
@@ -283,7 +301,7 @@
                 <a href="#daftar" class="border-2 border-brand-blue text-[#2d5a3d] px-10 md:px-14 py-5 rounded-3xl font-black uppercase text-sm md:text-base bg-transparent hover:bg-brand-blue hover:text-white transition-all transform hover:scale-105">
                     Daftar Sekarang
                 </a>
-                <a href="flyer.pdf" target="_blank" class="border-2 border-brand-gold text-brand-gold px-10 md:px-14 py-5 rounded-3xl font-black uppercase text-sm md:text-base hover:bg-brand-gold hover:text-white transition-all">
+                <a href="flyer.pdf" target="_blank" rel="noopener noreferrer" class="border-2 border-brand-gold text-brand-gold px-10 md:px-14 py-5 rounded-3xl font-black uppercase text-sm md:text-base hover:bg-brand-gold hover:text-white transition-all">
                     Muat Turun Flyer
                 </a>
             </div>
@@ -305,7 +323,7 @@
             <!-- 1. Ketua Profesion -->
             <div class="flex flex-col items-center">
                 <div class="relative mb-8">
-                    <img src="En.Zulhan.jpg" alt="En. Zulhan bin Ambi" class="w-56 h-56 rounded-full object-cover border-[12px] border-white shadow-2xl hover-zoom">
+                    <img loading="lazy" src="En.Zulhan.jpg" alt="En. Zulhan bin Ambi" class="w-56 h-56 rounded-full object-cover border-[12px] border-white shadow-2xl hover-zoom">
                     <div class="absolute -bottom-6 -right-6 bg-brand-blue p-5 rounded-[2rem] text-white shadow-2xl">
                         <i data-lucide="quote" class="w-8 h-8 fill-current"></i>
                     </div>
@@ -320,7 +338,7 @@
             <!-- 2. Presiden Persatuan -->
             <div class="flex flex-col items-center">
                 <div class="relative mb-8">
-                    <img src="Presiden Persatuan.jpg" alt="Presiden" class="w-56 h-56 rounded-full object-cover border-[12px] border-white shadow-2xl hover-zoom">
+                    <img loading="lazy" src="Presiden Persatuan.jpg" alt="Presiden" class="w-56 h-56 rounded-full object-cover border-[12px] border-white shadow-2xl hover-zoom">
                     <div class="absolute -bottom-6 -right-6 bg-brand-blue p-5 rounded-[2rem] text-white shadow-2xl">
                         <i data-lucide="quote" class="w-8 h-8 fill-current"></i>
                     </div>
@@ -335,7 +353,7 @@
             <!-- 3. Pengerusi Persidangan -->
             <div class="flex flex-col items-center">
                 <div class="relative mb-8">
-                    <img src="P.Zaila.jpg" alt="Pengerusi Persidangan" class="w-56 h-56 rounded-full object-cover border-[12px] border-white shadow-2xl hover-zoom">
+                    <img loading="lazy" src="P.Zaila.jpg" alt="Pengerusi Persidangan" class="w-56 h-56 rounded-full object-cover border-[12px] border-white shadow-2xl hover-zoom">
                     <div class="absolute -bottom-6 -right-6 bg-brand-gold p-5 rounded-[2rem] text-white shadow-2xl">
                         <i data-lucide="quote" class="w-8 h-8 fill-current"></i>
                     </div>
@@ -365,7 +383,7 @@
             <!-- Speaker 1 -->
             <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group">
                 <div class="h-72 overflow-hidden">
-                    <img src="Dr Mohd Azman.jpeg" alt="Dato' Dr Mohd Azman" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
+                    <img loading="lazy" src="Dr Mohd Azman.jpeg" alt="Dato' Dr Mohd Azman" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
                 </div>
                 <div class="p-8 text-center">
                     <h3 class="font-black text-xl text-slate-900 mb-1">YBhg. Dato' Dr Mohd Azman bin Yacob</h3>
@@ -378,7 +396,7 @@
             <!-- Speaker 2 -->
             <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group">
                 <div class="h-72 overflow-hidden">
-                    <img src="Prof. Lokman.png" alt="Prof. Dr. Lukman" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
+                    <img loading="lazy" src="Prof. Lokman.png" alt="Prof. Dr. Lukman" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
                 </div>
                 <div class="p-8 text-center">
                     <h3 class="font-black text-xl text-slate-900 mb-1">Prof. Dr. Lukman @ Zawawi bin Mohamad</h3>
@@ -391,7 +409,7 @@
             <!-- Speaker 3 -->
             <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group">
                 <div class="h-72 overflow-hidden">
-                    <img src="Prof. Huzili.png" alt="Prof. Dr. Huzili" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
+                    <img loading="lazy" src="Prof. Huzili.png" alt="Prof. Dr. Huzili" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
                 </div>
                 <div class="p-8 text-center">
                     <h3 class="font-black text-xl text-slate-900 mb-1">Prof. Dr. Huzili Hussin</h3>
@@ -409,7 +427,7 @@
             <!-- Speaker 4 -->
             <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group">
                 <div class="h-72 overflow-hidden">
-                    <img src="Dr. Wan Munira.jpeg" alt="Dr. Wan Munira" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
+                    <img loading="lazy" src="Dr. Wan Munira.jpeg" alt="Dr. Wan Munira" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
                 </div>
                 <div class="p-8 text-center">
                     <h3 class="font-black text-xl text-slate-900 mb-1">Dr. Wan Munira binti Wan Jaafar</h3>
@@ -422,7 +440,7 @@
             <!-- Speaker 5 -->
             <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group">
                 <div class="h-72 overflow-hidden">
-                    <img src="Dr. Teoh.png" alt="Dr. Teoh" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
+                    <img loading="lazy" src="Dr. Teoh.png" alt="Dr. Teoh" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
                 </div>
                 <div class="p-8 text-center">
                     <h3 class="font-black text-xl text-slate-900 mb-1">Dr. Teoh Ai Hua</h3>
@@ -747,7 +765,7 @@
     <h2 class="text-4xl font-black mb-10 text-center uppercase">Lokasi</h2>
     <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
         <div data-aos="fade-right">
-            <a href="https://www.google.com/maps?q=6.120821186256682,102.24102479754707" target="_blank" class="block h-[450px] rounded-[3rem] overflow-hidden border-[10px] border-white shadow-2xl">
+            <a href="https://www.google.com/maps?q=6.120821186256682,102.24102479754707" target="_blank" rel="noopener noreferrer" class="block h-[450px] rounded-[3rem] overflow-hidden border-[10px] border-white shadow-2xl">
                 <iframe 
                     class="w-full h-full border-0 pointer-events-none" 
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1667.9489058649467!2d102.24102479754707!3d6.120821186256682!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31b6afc4c037b419%3A0x7d0cb70b45409aa7!2sPerdana%20Kota%20Bharu!5e0!3m2!1sen!2smy!4v1776666242258!5m2!1sen!2smy" 
@@ -792,30 +810,30 @@
                 </div>
 
                 <form onsubmit="handleRegistration(event)" class="space-y-6">
-                    <input name="nama" required type="text" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="Nama Penuh">
+                    <input name="nama" required type="text" aria-label="Nama Penuh" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="Nama Penuh">
                     <div class="grid md:grid-cols-3 gap-6">
-                    <input name="ic" required type="text" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="No. K/P (tanpa '-')">
-                    <input name="tel" required type="tel" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="No. Telefon">
-                    <input name="email" required type="email" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="Email">
+                    <input name="ic" required type="text" aria-label="No. Kad Pengenalan" inputmode="numeric" pattern="[0-9]{12}" minlength="12" maxlength="12" title="Masukkan 12 digit No. K/P tanpa simbol '-'" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="No. K/P (12 digit, tanpa '-')">
+                    <input name="tel" required type="tel" aria-label="No. Telefon" inputmode="numeric" pattern="[0-9]{9,11}" title="Masukkan No. Telefon tanpa simbol '-' (cth: 0123456789)" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="No. Telefon (tanpa '-')">
+                    <input name="email" required type="email" aria-label="Alamat Email" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="Email">
                 </div>
-                    <input name="tempat_bertugas" required type="text" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="Hospital / Jabatan / Institusi">
-                    <input name="jawatan_gred" required type="text" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="Jawatan & Gred (cth: Pegawai Kerja Sosial Perubatan S9)">
+                    <input name="tempat_bertugas" required type="text" aria-label="Hospital, Jabatan atau Institusi" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="Hospital / Jabatan / Institusi">
+                    <input name="jawatan_gred" required type="text" aria-label="Jawatan dan Gred" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="Jawatan & Gred (cth: Pegawai Kerja Sosial Perubatan S9)">
                     
-                    <select name="kategori" required class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold outline-none">
+                    <select name="kategori" required aria-label="Kategori Peserta" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold outline-none">
                         <option value="" disabled selected>Kategori Peserta</option>
                         <option value="Ahli TKPM">Ahli Persatuan</option>
                         <option value="Bukan Ahli">Bukan Ahli</option>
-                        <option value="Bukan Ahli">Pelajar</option>
+                        <option value="Pelajar">Pelajar</option>
                     </select>
 
-                    <select name="cara_bayaran" required class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold outline-none">
+                    <select name="cara_bayaran" required aria-label="Cara Pembayaran" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold outline-none">
                         <option value="" disabled selected>Cara Pembayaran</option>
                         <option value="Bayaran Sendiri">Bayaran Sendiri</option>
                         <option value="Ditanggung oleh Persatuan">Ditanggung oleh Persatuan</option>
                         <option value="Ditanggung oleh Jabatan">Ditanggung oleh Jabatan</option>
                     </select>
 
-                    <select name="negeri" required class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold outline-none">
+                    <select name="negeri" required aria-label="Pilih Negeri atau Wilayah" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold outline-none">
                         <option value="" disabled selected>Pilih Negeri / Wilayah</option>
     
                      <optgroup label="Zon Utara">
@@ -892,15 +910,15 @@
             <h4 class="font-black uppercase tracking-widest mb-6 text-brand-gold">Anjuran Bersama</h4>
             <div class="flex flex-col gap-4">
                 <div class="flex items-center gap-3">
-                    <img src="Jata Negara.png" alt="KKM" class="w-10 h-10 object-contain shrink-0">
+                    <img loading="lazy" src="Jata Negara.png" alt="KKM" class="w-10 h-10 object-contain shrink-0">
                     <p class="text-xs opacity-80 leading-tight">Kementerian Kesihatan Malaysia</p>
                 </div>
                 <div class="flex items-center gap-3">
-                    <img src="Jata Negara.png" alt="KPT" class="w-10 h-10 object-contain shrink-0">
+                    <img loading="lazy" src="Jata Negara.png" alt="KPT" class="w-10 h-10 object-contain shrink-0">
                     <p class="text-xs opacity-80 leading-tight">Kementerian Pendidikan Tinggi</p>
                 </div>
                 <div class="flex items-center gap-3">
-                    <img src="Logo TKPM.png" alt="PPPM(P)M" class="w-10 h-10 object-contain shrink-0">
+                    <img loading="lazy" src="Logo TKPM.png" alt="PPPM(P)M" class="w-10 h-10 object-contain shrink-0">
                     <p class="text-xs opacity-80 leading-tight">Persatuan Pegawai Pembangunan Masyarakat (Perubatan) Malaysia</p>
                 </div>
             </div>
@@ -1049,7 +1067,9 @@
     }
 function toggleMenu() {
     const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('hamburger');
     menu.classList.toggle('hidden');
+    btn.setAttribute('aria-expanded', !menu.classList.contains('hidden'));
 }
 function toggleMobileSubmenu() {
     const sub = document.getElementById('ks-submenu');
