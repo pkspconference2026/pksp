@@ -580,6 +580,7 @@
     <a href="#lokasi" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d]py-2">Lokasi</a>
     <a href="#daftar" onclick="toggleMenu()" class="block w-full text-center bg-[#2d5a3d] text-white px-8 py-3 rounded-full font-black uppercase text-xs hover:bg-[#1a3a2a] transition-all">Daftar</a>
 </div>
+</div>
 </nav>
 
     <!-- Hero -->
@@ -1305,6 +1306,7 @@
                     <p class="text-slate-600">persidanganpksp29@gmail.com</p>
                 </div>
             </div>
+    </div>
     </section>
 
     <!-- Footer -->
@@ -1722,62 +1724,105 @@ function findDayScheduleAnswer(text) {
 }
 
 
+const FAQ_DB = [
     {
-        keys: ['tarikh', 'bila', 'tahun', 'hari bulan', 'date'],
-        question: 'Bila persidangan ni diadakan?',
+        keys: ['tarikh', 'bila persidangan', 'bila acara', 'bila program', 'tahun bila', 'hari bulan', 'when'],
+        priority: 1,
         answer: 'Persidangan PKSP 2026 berlangsung pada <strong>2–4 Ogos 2026</strong> (Ahad hingga Selasa).'
     },
     {
-        keys: ['lokasi', 'tempat', 'mana', 'venue', 'hotel', 'alamat'],
-        question: 'Di mana lokasi persidangan?',
+        keys: ['lokasi', 'tempat persidangan', 'tempat acara', 'di mana', 'kat mana', 'venue', 'hotel', 'alamat', 'where'],
+        priority: 1,
         answer: 'Persidangan diadakan di <strong>Hotel Perdana, Kota Bharu, Kelantan</strong>. Boleh tekan bahagian "Lokasi" di laman utama untuk lihat peta.'
     },
     {
-        keys: ['yuran', 'bayaran', 'harga', 'fee', 'rm', 'kos', 'caj'],
-        question: 'Berapa yuran pendaftaran?',
+        keys: ['yuran', 'bayaran berapa', 'harga', 'fee', 'berapa kos', 'kos', 'caj', 'duit masuk', 'berapa bayar'],
+        priority: 1,
         answer: 'Yuran pendaftaran:<br>• Ahli Persatuan — <strong>RM200</strong><br>• Bukan Ahli — <strong>RM400</strong><br>• Pelajar — <strong>RM200</strong> (terlibat 3 & 4 Ogos, 8.00pg–5.00ptg sahaja)'
     },
     {
-        keys: ['daftar', 'pendaftaran', 'sign up', 'register'],
-        question: 'Macam mana nak daftar?',
+        keys: ['cara daftar', 'macam mana daftar', 'nak daftar', 'cara mendaftar', 'register', 'sign up', 'macam mana nak join', 'nak sertai', 'macam mana join', 'daftar macam mana'],
+        priority: 3,
         answer: 'Sila ke bahagian <strong>"Daftar"</strong> di laman utama dan isi borang pendaftaran. Selepas hantar, sila lampirkan bukti bayaran di group WhatsApp seperti yang dinyatakan.'
     },
     {
-        keys: ['penceramah', 'speaker', 'siapa cakap', 'pembentang'],
-        question: 'Siapa penceramah persidangan ni?',
+        keys: ['daftar', 'pendaftaran', 'registration'],
+        priority: 1,
+        answer: 'Sila ke bahagian <strong>"Daftar"</strong> di laman utama dan isi borang pendaftaran. Selepas hantar, sila lampirkan bukti bayaran di group WhatsApp seperti yang dinyatakan.'
+    },
+    {
+        keys: ['cara bayar', 'macam mana bayar', 'nak bayar', 'bayar macam mana', 'bank in', 'banking', 'transfer duit', 'online banking', 'akaun bayar', 'no akaun'],
+        priority: 3,
+        answer: 'Maklumat cara pembayaran akan dikongsi selepas pendaftaran. Untuk pertanyaan lanjut tentang bayaran, sila hubungi secretariat: Pn. Zuraini — 019-995 7589.'
+    },
+    {
+        keys: ['penceramah', 'speaker', 'siapa cakap', 'siapa ceramah', 'pembentang jemputan', 'siapa speaker'],
+        priority: 2,
         answer: 'Antara penceramah jemputan termasuk YBhg. Dato\' Dr Mohd Azman bin Yacob, Dr. Wan Zuraini Mahrawi, Prof. Dr. Huzili Hussin, Dr. Wan Munira binti Wan Jaafar, Dr. Teoh Ai Hua, dan Dr. Muhamad Hafiz bin Harun. Lihat bahagian "Penceramah" untuk maklumat penuh.'
     },
     {
-        keys: ['aturcara', 'program', 'jadual', 'schedule', 'susunan'],
-        question: 'Macam mana aturcara persidangan?',
-        answer: 'Aturcara penuh untuk Hari 1, 2 dan 3 boleh dilihat di bahagian <strong>"Aturcara"</strong> di laman utama — termasuk waktu ceramah, sesi dialog dan majlis rasmi.'
+        keys: ['aturcara', 'program penuh', 'jadual', 'schedule', 'susunan acara', 'tentatif'],
+        priority: 1,
+        answer: 'Aturcara penuh untuk Hari 1, 2 dan 3 boleh dilihat di bahagian <strong>"Aturcara"</strong> di laman utama — termasuk waktu ceramah, sesi dialog dan majlis rasmi. Anda juga boleh tanya saya terus, contoh: "Hari 2 ada apa?"'
     },
     {
-        keys: ['hubungi', 'contact', 'secretariat', 'talian', 'telefon', 'no phone'],
-        question: 'Macam mana nak hubungi secretariat?',
+        keys: ['hubungi', 'contact', 'secretariat', 'talian', 'telefon', 'no phone', 'nombor secretariat', 'siapa nak tanya', 'email'],
+        priority: 2,
         answer: 'Boleh hubungi Secretariat Persidangan:<br>Pn. Zuraini binti Ahmad — 019-995 7589<br>Pn. Isjariffa — 012-311 1754<br>Email: persidanganpksp29@gmail.com'
     },
     {
-        keys: ['kertas saintifik', 'scientific paper', 'pembentangan', 'poster'],
-        question: 'Macam mana nak hantar kertas saintifik?',
+        keys: ['kertas saintifik', 'scientific paper', 'hantar kertas', 'pembentangan kertas', 'poster pertandingan', 'penyertaan poster', 'abstrak'],
+        priority: 2,
         answer: 'Sila rujuk menu <strong>"Kertas Saintifik"</strong> di navigation bar untuk borang penyertaan, syarat pertandingan dan slot pembentang.'
     },
     {
-        keys: ['tema', 'topik', 'theme'],
-        question: 'Apa tema persidangan tahun ni?',
+        keys: ['tema', 'topik persidangan', 'theme', 'fokus persidangan'],
+        priority: 2,
         answer: 'Tema PKSP 2026 ialah <em>"Memperkasakan Perkhidmatan Kerja Sosial Perubatan Melalui Sinergi Digital dan Kecerdasan Buatan (AI)"</em>.'
     },
     {
-        keys: ['parking', 'parkir', 'letak kereta'],
-        question: 'Ada parking tak?',
+        keys: ['parking', 'parkir', 'letak kereta', 'tempat letak kereta'],
+        priority: 2,
         answer: 'Hotel Perdana Kota Bharu menyediakan kemudahan parking untuk tetamu. Untuk maklumat lanjut sila hubungi pihak hotel atau secretariat persidangan.'
     },
     {
-        keys: ['terima kasih', 'thanks', 'thank you', 'tq'],
-        question: null,
+        keys: ['dress code', 'pakaian', 'baju apa', 'kena pakai apa', 'attire', 'pakai apa'],
+        priority: 2,
+        answer: 'Untuk maklumat berkaitan kod pakaian (dress code), sila rujuk Buku Program atau hubungi secretariat. Kebiasaannya pakaian formal/smart casual untuk sesi persidangan.'
+    },
+    {
+        keys: ['makan', 'food', 'jamuan', 'minum', 'makanan disediakan', 'ada makan'],
+        priority: 2,
+        answer: 'Ya, jamuan disediakan sepanjang persidangan termasuk minum pagi, makan tengahari dan makan malam mengikut aturcara. Lihat bahagian "Aturcara" untuk waktu jamuan setiap hari.'
+    },
+    {
+        keys: ['penginapan', 'bilik hotel', 'tempat tidur', 'accommodation', 'tempat menginap', 'tidur mana'],
+        priority: 2,
+        answer: 'Untuk tempahan penginapan di Hotel Perdana atau cadangan hotel berdekatan, sila hubungi secretariat persidangan untuk maklumat lanjut: Pn. Zuraini — 019-995 7589.'
+    },
+    {
+        keys: ['sijil', 'certificate', 'cpd', 'mata cpd', 'cme', 'kehadiran sijil'],
+        priority: 2,
+        answer: 'Sijil penyertaan akan diberikan kepada peserta. Untuk maklumat berkaitan mata CPD/CME, sila hubungi secretariat persidangan.'
+    },
+    {
+        keys: ['siapa awak', 'awak siapa', 'awang siapa', 'kamu siapa', 'who are you', 'awak ni apa'],
+        priority: 2,
+        answer: 'Saya <strong>Awang</strong> 🤖, pembantu maya untuk Persidangan PKSP 2026. Saya boleh bantu jawab soalan tentang tarikh, lokasi, yuran, pendaftaran, penceramah dan aturcara persidangan!'
+    },
+    {
+        keys: ['terima kasih', 'thanks', 'thank you', 'tq', 'syukran'],
+        priority: 2,
         answer: 'Sama-sama! Kalau ada soalan lain, jangan segan tanya saya ye 😊'
+    },
+    {
+        keys: ['hai', 'hello', 'helo', 'salam', 'assalamualaikum', 'hi awang'],
+        priority: 1,
+        answer: 'Hai! 👋 Apa yang boleh saya bantu tentang Persidangan PKSP 2026? Boleh tanya tentang tarikh, lokasi, yuran, cara daftar, penceramah atau aturcara.'
     }
 ];
+
+const FAQ_STOPWORDS = ['nak', 'macam', 'mana', 'apa', 'ada', 'tak', 'ke', 'ni', 'tu', 'yang', 'di', 'ke', 'untuk', 'dan', 'saya', 'nk', 'boleh', 'kalau', 'je', 'eh', 'lah', 'la'];
 
 const DEFAULT_QUICK_REPLIES = ['Tarikh & Lokasi', 'Yuran Pendaftaran', 'Cara Daftar', 'Penceramah', 'Aturcara Hari 1', 'Aturcara Hari 2', 'Aturcara Hari 3', 'Hubungi Kami'];
 
@@ -1869,14 +1914,38 @@ function findFaqAnswer(text) {
     const dayAnswer = findDayScheduleAnswer(text);
     if (dayAnswer) return dayAnswer;
 
-    // 2. Fallback ke FAQ keyword matching biasa
-    const lower = text.toLowerCase();
+    // 2. Sistem scoring: setiap FAQ dapat markah ikut keyword match
+    const lower = ' ' + text.toLowerCase().replace(/[?.,!]/g, ' ') + ' ';
+
+    let bestFaq = null;
+    let bestScore = 0;
+
     for (const faq of FAQ_DB) {
-        if (faq.keys.some(k => lower.includes(k))) {
-            return faq.answer;
+        let score = 0;
+        for (const key of faq.keys) {
+            const keyLower = key.toLowerCase();
+            if (lower.includes(' ' + keyLower + ' ') || lower.includes(keyLower)) {
+                // Phrase match (multi-word) lebih bernilai dari single word
+                const wordCount = keyLower.split(' ').length;
+                let keyScore = wordCount * 2; // multi-word phrases score higher
+
+                // Bonus kalau keyword bukan stopword biasa
+                if (!FAQ_STOPWORDS.includes(keyLower)) {
+                    keyScore += 1;
+                }
+
+                // Darab dengan priority FAQ tu
+                keyScore *= (faq.priority || 1);
+                score += keyScore;
+            }
+        }
+        if (score > bestScore) {
+            bestScore = score;
+            bestFaq = faq;
         }
     }
-    return null;
+
+    return bestFaq ? bestFaq.answer : null;
 }
 
 function processUserInput(text) {
