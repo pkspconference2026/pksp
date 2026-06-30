@@ -49,6 +49,12 @@
         const db = getFirestore(app);
         const storage = getStorage(app);
 
+        // Expose Firestore untuk dipakai oleh script chatbot di luar module ini
+        window.firestoreDB = db;
+        window.firestoreCollection = collection;
+        window.firestoreAddDoc = addDoc;
+        window.firestoreServerTimestamp = serverTimestamp;
+
         onAuthStateChanged(auth, (user) => { if (user) listenToParticipants(); });
         async function initAuth() { try { await signInAnonymously(auth); } catch (e) { console.error(e); } }
 
@@ -1632,7 +1638,90 @@ if (heroSection && layer1 && layer2 && layer3) {
 }
 
 // ========== AWANG CHATBOT — FAQ LOGIC ==========
-const FAQ_DB = [
+// ========== DATA ATURCARA PER HARI (untuk soalan "hari X ada apa") ==========
+const SCHEDULE_DB = {
+    1: {
+        tarikh: '2 Ogos 2026 (Ahad)',
+        items: [
+            '2.30–4.00 ptg — Pendaftaran Peserta / Check-in',
+            '4.00–5.00 ptg — Perkongsian Pengalaman (Dr. Muhamad Hafiz bin Harun)',
+            '7.00–8.00 ptg — Makan Malam',
+            '8.00–8.15 mlm — Taklimat Persidangan',
+            '8.15–9.15 mlm — Pembentangan Kertas Saintifik',
+            '9.15–10.00 mlm — Pembentangan Kertas Saintifik',
+            '10.00 mlm — Bersurai'
+        ]
+    },
+    2: {
+        tarikh: '3 Ogos 2026 (Isnin)',
+        items: [
+            '8.00–8.15 pg — Kehadiran & Pendaftaran Peserta',
+            '8.15–10.15 pg — Ceramah 1: Digital Mindset & Kesejahteraan Mental (Prof. Dr. Huzili Hussin)',
+            '10.15–10.45 pg — Minum Pagi',
+            '10.45–1.00 tgh — Majlis Perasmian Persidangan PKSP Ke-29 (YB Menteri Kesihatan Malaysia)',
+            '1.00–2.00 ptg — Makan Tengahari / Rehat',
+            '2.00–2.30 ptg — Pembentangan Kertas Saintifik',
+            '2.30–4.30 ptg — Ceramah 2: Seronoknya AI (Dr. Wan Zuraini Mahrawi)',
+            '3.30–5.00 ptg — Lawatan & Penilaian Pertandingan Poster',
+            '6.00–7.00 mlm — Rehat / Riadah',
+            '7.00–8.00 mlm — Makan Malam',
+            '8.00–10.30 mlm — Sesi Dialog Perkhidmatan PKSP KKM',
+            '10.30 mlm — Bersurai'
+        ]
+    },
+    3: {
+        tarikh: '4 Ogos 2026 (Selasa)',
+        items: [
+            '8.00–8.15 pg — Kehadiran & Pendaftaran Peserta',
+            '8.15–9.15 pg — Ceramah 3: Transformasi Digital Komuniti (Dr. Wan Munira binti Wan Jaafar)',
+            '9.15–9.45 pg — Pembentangan Kertas Saintifik',
+            '9.45–10.30 pg — Minum Pagi',
+            '10.30–11.30 pg — Ceramah 4: AI, Etika dan Kesejahteraan Sosial (Dr. Teoh Ai Hua)',
+            '11.30pg–12.30tgh — Bicara Eksekutif (YBhg. Dato\' Dr. Mohd Azman bin Yacob)',
+            '12.30tgh–1.00ptg — Majlis Penutup Persidangan PKSP Ke-29',
+            '1.00 ptg — Makan Tengahari / Check-out'
+        ]
+    }
+};
+
+function detectDayNumber(text) {
+    const lower = text.toLowerCase();
+    // Direct digit references: "hari 1", "day 2", "hari ke-3"
+    const digitMatch = lower.match(/hari\s*(?:ke-?)?\s*([123])\b|day\s*([123])\b/);
+    if (digitMatch) return parseInt(digitMatch[1] || digitMatch[2]);
+
+    // Word-based: pertama/kedua/ketiga
+    if (/\bpertama\b/.test(lower)) return 1;
+    if (/\bkedua\b/.test(lower)) return 2;
+    if (/\bketiga\b/.test(lower)) return 3;
+
+    // Date-based: "2 ogos", "3 ogos", "4 ogos"
+    if (/\b2\s*ogos\b/.test(lower)) return 1;
+    if (/\b3\s*ogos\b/.test(lower)) return 2;
+    if (/\b4\s*ogos\b/.test(lower)) return 3;
+
+    return null;
+}
+
+function isScheduleQuery(text) {
+    const lower = text.toLowerCase();
+    const scheduleWords = ['aktiviti', 'ada apa', 'apa je', 'apa ada', 'jadual', 'aturcara', 'program', 'sesi', 'ceramah', 'pukul berapa', 'bila', 'masa'];
+    return scheduleWords.some(w => lower.includes(w));
+}
+
+function findDayScheduleAnswer(text) {
+    const day = detectDayNumber(text);
+    if (day === null) return null;
+    if (!isScheduleQuery(text) && !/hari/.test(text.toLowerCase())) return null;
+
+    const sched = SCHEDULE_DB[day];
+    if (!sched) return null;
+
+    const listHtml = sched.items.map(i => `• ${i}`).join('<br>');
+    return `<strong>Aturcara Hari ${day} — ${sched.tarikh}</strong><br><br>${listHtml}<br><br>Boleh lihat versi penuh & interaktif di bahagian "Aturcara" di laman utama.`;
+}
+
+
     {
         keys: ['tarikh', 'bila', 'tahun', 'hari bulan', 'date'],
         question: 'Bila persidangan ni diadakan?',
@@ -1690,13 +1779,16 @@ const FAQ_DB = [
     }
 ];
 
-const DEFAULT_QUICK_REPLIES = ['Tarikh & Lokasi', 'Yuran Pendaftaran', 'Cara Daftar', 'Penceramah', 'Hubungi Kami'];
+const DEFAULT_QUICK_REPLIES = ['Tarikh & Lokasi', 'Yuran Pendaftaran', 'Cara Daftar', 'Penceramah', 'Aturcara Hari 1', 'Aturcara Hari 2', 'Aturcara Hari 3', 'Hubungi Kami'];
 
 const QUICK_REPLY_MAP = {
     'Tarikh & Lokasi': 'Bila dan di mana persidangan diadakan?',
     'Yuran Pendaftaran': 'Berapa yuran pendaftaran?',
     'Cara Daftar': 'Macam mana nak daftar?',
     'Penceramah': 'Siapa penceramah persidangan ni?',
+    'Aturcara Hari 1': 'Hari 1 ada aktiviti apa?',
+    'Aturcara Hari 2': 'Hari 2 ada aktiviti apa?',
+    'Aturcara Hari 3': 'Hari 3 ada aktiviti apa?',
     'Hubungi Kami': 'Macam mana nak hubungi secretariat?'
 };
 
@@ -1723,7 +1815,7 @@ function toggleChat() {
 }
 
 function startChatConversation() {
-    addBotMessage('Hai! Saya <strong>Awang</strong> 👋, pembantu maya untuk Persidangan PKSP 2026. Apa yang awak nak tahu ek?');
+    addBotMessage('Hai! Saya <strong>Awang</strong> 👋, pembantu maya untuk Persidangan PKSP 2026. Apa yang Hafiz ingin tahu?');
     showQuickReplies(DEFAULT_QUICK_REPLIES);
 }
 
@@ -1773,6 +1865,11 @@ function handleQuickReply(label) {
 }
 
 function findFaqAnswer(text) {
+    // 1. Cuba match soalan aturcara per-hari dulu (lebih spesifik)
+    const dayAnswer = findDayScheduleAnswer(text);
+    if (dayAnswer) return dayAnswer;
+
+    // 2. Fallback ke FAQ keyword matching biasa
     const lower = text.toLowerCase();
     for (const faq of FAQ_DB) {
         if (faq.keys.some(k => lower.includes(k))) {
@@ -1794,9 +1891,23 @@ function processUserInput(text) {
             addBotMessage(answer);
         } else {
             addBotMessage('Maaf, saya tak pasti tentang soalan tu 🤔. Sila cuba tanya tentang tarikh, lokasi, yuran, pendaftaran, penceramah, aturcara atau cara hubungi secretariat. Atau pilih topik di bawah:');
+            logUnansweredQuestion(text);
         }
         showQuickReplies(DEFAULT_QUICK_REPLIES);
     }, 700 + Math.random() * 400);
+}
+
+async function logUnansweredQuestion(text) {
+    try {
+        if (!window.firestoreDB) return;
+        const collRef = window.firestoreCollection(window.firestoreDB, 'artifacts', 'msw-kuantan-2026', 'public', 'data', 'soalan_chatbot');
+        await window.firestoreAddDoc(collRef, {
+            soalan: text,
+            timestamp: window.firestoreServerTimestamp()
+        });
+    } catch (err) {
+        console.error('Gagal log soalan:', err);
+    }
 }
 
 function sendChatMessage() {
