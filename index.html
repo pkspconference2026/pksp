@@ -235,6 +235,227 @@
         .accordion-item.active .accordion-content { max-height: 200px; }
         .accordion-item.active .accordion-icon { transform: rotate(180deg); }
         .accordion-icon { transition: transform 0.3s ease; }
+
+        /* ========== AWANG CHATBOT AVATAR (floating full-body, waving hand) ========== */
+        #awang-avatar-wrap {
+            position: fixed;
+            bottom: 0;
+            right: 14px;
+            z-index: 200;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #awang-figure {
+            position: relative;
+            width: 110px;
+            animation: awangFloat 3.2s ease-in-out infinite;
+        }
+        #awang-img-base {
+            width: 100%;
+            display: block;
+            filter: drop-shadow(0 10px 18px rgba(0,0,0,0.35));
+        }
+        @keyframes awangFloat {
+            0%, 100% { transform: translateY(0); }
+            50%      { transform: translateY(-8px); }
+        }
+        #awang-name-tag {
+            background: #2d5a3d;
+            color: white;
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 4px 12px;
+            border-radius: 999px;
+            margin-bottom: 4px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            white-space: nowrap;
+        }
+        #awang-avatar-wrap:hover #awang-name-tag,
+        #awang-avatar-wrap.has-pulsed #awang-name-tag {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        #awang-avatar-wrap.open #awang-figure { animation: none; transform: translateY(-4px); }
+
+        #chat-badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #c5a059;
+            color: white;
+            font-size: 11px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+            animation: badgePop 2.5s ease-in-out infinite;
+        }
+        @keyframes badgePop {
+            0%, 100% { transform: scale(1); }
+            50%      { transform: scale(1.15); }
+        }
+        #awang-avatar-wrap.open #chat-badge { display: none; }
+
+        #chat-window {
+            position: fixed;
+            bottom: 150px;
+            right: 24px;
+            width: 340px;
+            max-width: calc(100vw - 32px);
+            height: 460px;
+            max-height: calc(100vh - 220px);
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+            z-index: 199;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px) scale(0.96);
+            pointer-events: none;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+        #chat-window.open {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+        #chat-header {
+            background: linear-gradient(135deg, #2d5a3d, #1a3a2a);
+            padding: 16px 18px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        #chat-header img {
+            width: 38px; height: 38px; border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            object-fit: cover; object-position: top;
+            flex-shrink: 0;
+        }
+        #chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #f8fafc;
+        }
+        .chat-msg {
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: 16px;
+            font-size: 13px;
+            line-height: 1.5;
+            animation: chatMsgIn 0.25s ease;
+        }
+        @keyframes chatMsgIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        .chat-msg.bot {
+            background: white;
+            color: #1e293b;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        .chat-msg.user {
+            background: #2d5a3d;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+            font-weight: 600;
+        }
+        .chat-quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 0 16px 14px;
+            background: #f8fafc;
+            flex-shrink: 0;
+        }
+        .chat-quick-btn {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 7px 12px;
+            border-radius: 999px;
+            border: 1.5px solid #2d5a3d;
+            color: #2d5a3d;
+            background: white;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+        }
+        .chat-quick-btn:hover { background: #2d5a3d; color: white; }
+        #chat-input-row {
+            display: flex;
+            gap: 8px;
+            padding: 12px;
+            border-top: 1px solid #e2e8f0;
+            background: white;
+            flex-shrink: 0;
+        }
+        #chat-input {
+            flex: 1;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 999px;
+            padding: 10px 16px;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+        #chat-input:focus { border-color: #2d5a3d; }
+        #chat-send {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #2d5a3d;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: background 0.2s ease;
+        }
+        #chat-send:hover { background: #1a3a2a; }
+        .chat-typing {
+            display: flex;
+            gap: 4px;
+            padding: 10px 14px;
+            background: white;
+            border-radius: 16px;
+            align-self: flex-start;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        .chat-typing span {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: #94a3b8;
+            animation: chatTypingDot 1.2s infinite;
+        }
+        .chat-typing span:nth-child(2) { animation-delay: 0.2s; }
+        .chat-typing span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes chatTypingDot { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-4px); opacity: 1; } }
+
+        @media (max-width: 420px) {
+            #chat-window { right: 16px; bottom: 140px; width: calc(100vw - 32px); }
+            #awang-avatar-wrap { right: 10px; }
+            #awang-img { width: 88px; }
+        }
     </style>
 </head>
 <div id="scroll-progress"></div>
@@ -757,7 +978,7 @@
             <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
         </button>
         <div class="accordion-content px-5 pb-5">
-            <p class="text-slate-500 text-sm"></p>
+            <p class="text-slate-500 text-sm">YB Datuk Seri Dr. Haji Dzulkefly bin Ahmad • Menteri Kesihatan Malaysia (KKM)</p>
         </div>
     </div>
 
@@ -1068,7 +1289,7 @@
             <div id="closed-message" class="hidden text-center py-20">
                 <i data-lucide="calendar-x" class="w-20 h-20 text-brand-gold mx-auto mb-8"></i>
                 <h2 class="text-3xl font-black text-[#2d5a3d] mb-4 uppercase">Pendaftaran Telah Ditutup</h2>
-                <p class="text-slate-600 mb-8 max-w-xl mx-auto">Mohon maaf, tempoh pendaftaran online untuk persidangan ini telah tamat. Sekiranya anda masih ingin menyertai, sila hubungi terus Sekretariat Persidangan:</p>
+                <p class="text-slate-600 mb-8 max-w-xl mx-auto">Mohon maaf, tempoh pendaftaran online untuk persidangan ini telah tamat. Sekiranya anda masih ingin menyertai, sila hubungi terus Secretariat Persidangan:</p>
                 <div class="inline-block bg-brand-soft rounded-3xl p-8 text-left">
                     <p class="font-bold text-[#2d5a3d] mb-2">Pn. Zuraini binti Ahmad</p>
                     <p class="text-slate-600 mb-4">019-995 7589</p>
@@ -1106,7 +1327,7 @@
         <!-- Kolum 2: Hubungi Kami -->
         <div>
             <h4 class="font-black uppercase tracking-widest mb-6 text-brand-gold">Hubungi Kami</h4>
-            <p class="text-sm opacity-80 mb-2">Sekretariat:</p>
+            <p class="text-sm opacity-80 mb-2">Secretariat:</p>
            <p class="text-sm opacity-80 mb-2">Pn. Zuraini binti Ahmad: 019-995 7589</p>
             <p class="text-sm opacity-80 mb-2">Pn. Isjariffa binti Hj. Ishak @ Abu Bakar: 012-311 1754</p>
             <p class="text-sm opacity-80 mb-2">Email: persidanganpksp29@gmail.com</p>
@@ -1125,12 +1346,39 @@
 
 </footer>
 
+<!-- ========== AWANG CHATBOT WIDGET ========== -->
+<div id="awang-avatar-wrap" onclick="toggleChat()">
+    <div id="awang-name-tag">Tanya Awang 👋</div>
+    <div id="awang-figure">
+        <img id="awang-img-base" src="Awang Avatar.png" alt="Awang - Pembantu Maya PKSP 2026">
+        <span id="chat-badge">1</span>
+    </div>
+</div>
+
+<div id="chat-window">
+    <div id="chat-header">
+        <img src="Awang Avatar.png" alt="Awang">
+        <div>
+            <p class="font-black text-sm">Awang</p>
+            <p class="text-[11px] opacity-75">Pembantu Maya PKSP 2026</p>
+        </div>
+    </div>
+    <div id="chat-messages"></div>
+    <div id="chat-quick-replies"></div>
+    <div id="chat-input-row">
+        <input type="text" id="chat-input" placeholder="Taip soalan anda..." onkeypress="if(event.key==='Enter') sendChatMessage()">
+        <div id="chat-send" onclick="sendChatMessage()">
+            <i data-lucide="send" class="w-4 h-4"></i>
+        </div>
+    </div>
+</div>
+
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         // ====== SUIS PENDAFTARAN ======
-        // Tukar kepada false untuk TUTUP pendaftaran (paparkan mesej "Pendaftaran Telah Ditutup" + maklumat sekretariat).
+        // Tukar kepada false untuk TUTUP pendaftaran (paparkan mesej "Pendaftaran Telah Ditutup" + maklumat secretariat).
         // Tukar kepada true untuk BUKA semula pendaftaran.
-        const PENDAFTARAN_DIBUKA = false;
+        const PENDAFTARAN_DIBUKA = true;
 
         function semakStatusPendaftaran() {
             if (!PENDAFTARAN_DIBUKA) {
@@ -1381,6 +1629,182 @@ if (heroSection && layer1 && layer2 && layer3) {
             layer3.style.transform = 'scale(1.10) translate(0,0)';
         }, 900);
     });
+}
+
+// ========== AWANG CHATBOT — FAQ LOGIC ==========
+const FAQ_DB = [
+    {
+        keys: ['tarikh', 'bila', 'tahun', 'hari bulan', 'date'],
+        question: 'Bila persidangan ni diadakan?',
+        answer: 'Persidangan PKSP 2026 berlangsung pada <strong>2–4 Ogos 2026</strong> (Ahad hingga Selasa).'
+    },
+    {
+        keys: ['lokasi', 'tempat', 'mana', 'venue', 'hotel', 'alamat'],
+        question: 'Di mana lokasi persidangan?',
+        answer: 'Persidangan diadakan di <strong>Hotel Perdana, Kota Bharu, Kelantan</strong>. Boleh tekan bahagian "Lokasi" di laman utama untuk lihat peta.'
+    },
+    {
+        keys: ['yuran', 'bayaran', 'harga', 'fee', 'rm', 'kos', 'caj'],
+        question: 'Berapa yuran pendaftaran?',
+        answer: 'Yuran pendaftaran:<br>• Ahli Persatuan — <strong>RM200</strong><br>• Bukan Ahli — <strong>RM400</strong><br>• Pelajar — <strong>RM200</strong> (terlibat 3 & 4 Ogos, 8.00pg–5.00ptg sahaja)'
+    },
+    {
+        keys: ['daftar', 'pendaftaran', 'sign up', 'register'],
+        question: 'Macam mana nak daftar?',
+        answer: 'Sila ke bahagian <strong>"Daftar"</strong> di laman utama dan isi borang pendaftaran. Selepas hantar, sila lampirkan bukti bayaran di group WhatsApp seperti yang dinyatakan.'
+    },
+    {
+        keys: ['penceramah', 'speaker', 'siapa cakap', 'pembentang'],
+        question: 'Siapa penceramah persidangan ni?',
+        answer: 'Antara penceramah jemputan termasuk YBhg. Dato\' Dr Mohd Azman bin Yacob, Dr. Wan Zuraini Mahrawi, Prof. Dr. Huzili Hussin, Dr. Wan Munira binti Wan Jaafar, Dr. Teoh Ai Hua, dan Dr. Muhamad Hafiz bin Harun. Lihat bahagian "Penceramah" untuk maklumat penuh.'
+    },
+    {
+        keys: ['aturcara', 'program', 'jadual', 'schedule', 'susunan'],
+        question: 'Macam mana aturcara persidangan?',
+        answer: 'Aturcara penuh untuk Hari 1, 2 dan 3 boleh dilihat di bahagian <strong>"Aturcara"</strong> di laman utama — termasuk waktu ceramah, sesi dialog dan majlis rasmi.'
+    },
+    {
+        keys: ['hubungi', 'contact', 'secretariat', 'talian', 'telefon', 'no phone'],
+        question: 'Macam mana nak hubungi secretariat?',
+        answer: 'Boleh hubungi Secretariat Persidangan:<br>Pn. Zuraini binti Ahmad — 019-995 7589<br>Pn. Isjariffa — 012-311 1754<br>Email: persidanganpksp29@gmail.com'
+    },
+    {
+        keys: ['kertas saintifik', 'scientific paper', 'pembentangan', 'poster'],
+        question: 'Macam mana nak hantar kertas saintifik?',
+        answer: 'Sila rujuk menu <strong>"Kertas Saintifik"</strong> di navigation bar untuk borang penyertaan, syarat pertandingan dan slot pembentang.'
+    },
+    {
+        keys: ['tema', 'topik', 'theme'],
+        question: 'Apa tema persidangan tahun ni?',
+        answer: 'Tema PKSP 2026 ialah <em>"Memperkasakan Perkhidmatan Kerja Sosial Perubatan Melalui Sinergi Digital dan Kecerdasan Buatan (AI)"</em>.'
+    },
+    {
+        keys: ['parking', 'parkir', 'letak kereta'],
+        question: 'Ada parking tak?',
+        answer: 'Hotel Perdana Kota Bharu menyediakan kemudahan parking untuk tetamu. Untuk maklumat lanjut sila hubungi pihak hotel atau secretariat persidangan.'
+    },
+    {
+        keys: ['terima kasih', 'thanks', 'thank you', 'tq'],
+        question: null,
+        answer: 'Sama-sama! Kalau ada soalan lain, jangan segan tanya saya ye 😊'
+    }
+];
+
+const DEFAULT_QUICK_REPLIES = ['Tarikh & Lokasi', 'Yuran Pendaftaran', 'Cara Daftar', 'Penceramah', 'Hubungi Kami'];
+
+const QUICK_REPLY_MAP = {
+    'Tarikh & Lokasi': 'Bila dan di mana persidangan diadakan?',
+    'Yuran Pendaftaran': 'Berapa yuran pendaftaran?',
+    'Cara Daftar': 'Macam mana nak daftar?',
+    'Penceramah': 'Siapa penceramah persidangan ni?',
+    'Hubungi Kami': 'Macam mana nak hubungi secretariat?'
+};
+
+let chatStarted = false;
+let chatHistory = [];
+
+function toggleChat() {
+    const wrap = document.getElementById('awang-avatar-wrap');
+    const win = document.getElementById('chat-window');
+    const isOpen = win.classList.contains('open');
+
+    if (isOpen) {
+        win.classList.remove('open');
+        wrap.classList.remove('open');
+    } else {
+        win.classList.add('open');
+        wrap.classList.add('open');
+        document.getElementById('chat-badge').style.display = 'none';
+        if (!chatStarted) {
+            chatStarted = true;
+            startChatConversation();
+        }
+    }
+}
+
+function startChatConversation() {
+    addBotMessage('Hai! Saya <strong>Awang</strong> 👋, pembantu maya untuk Persidangan PKSP 2026. Apa yang Hafiz ingin tahu?');
+    showQuickReplies(DEFAULT_QUICK_REPLIES);
+}
+
+function addBotMessage(html) {
+    const messagesEl = document.getElementById('chat-messages');
+    const div = document.createElement('div');
+    div.className = 'chat-msg bot';
+    div.innerHTML = html;
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function addUserMessage(text) {
+    const messagesEl = document.getElementById('chat-messages');
+    const div = document.createElement('div');
+    div.className = 'chat-msg user';
+    div.textContent = text;
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function showTyping() {
+    const messagesEl = document.getElementById('chat-messages');
+    const div = document.createElement('div');
+    div.className = 'chat-typing';
+    div.id = 'typing-indicator';
+    div.innerHTML = '<span></span><span></span><span></span>';
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function removeTyping() {
+    const el = document.getElementById('typing-indicator');
+    if (el) el.remove();
+}
+
+function showQuickReplies(options) {
+    const qrEl = document.getElementById('chat-quick-replies');
+    qrEl.innerHTML = options.map(opt =>
+        `<button class="chat-quick-btn" onclick="handleQuickReply('${opt.replace(/'/g, "\\'")}')">${opt}</button>`
+    ).join('');
+}
+
+function handleQuickReply(label) {
+    const question = QUICK_REPLY_MAP[label] || label;
+    processUserInput(question);
+}
+
+function findFaqAnswer(text) {
+    const lower = text.toLowerCase();
+    for (const faq of FAQ_DB) {
+        if (faq.keys.some(k => lower.includes(k))) {
+            return faq.answer;
+        }
+    }
+    return null;
+}
+
+function processUserInput(text) {
+    addUserMessage(text);
+    document.getElementById('chat-quick-replies').innerHTML = '';
+    showTyping();
+
+    setTimeout(() => {
+        removeTyping();
+        const answer = findFaqAnswer(text);
+        if (answer) {
+            addBotMessage(answer);
+        } else {
+            addBotMessage('Maaf, saya tak pasti tentang soalan tu 🤔. Sila cuba tanya tentang tarikh, lokasi, yuran, pendaftaran, penceramah, aturcara atau cara hubungi secretariat. Atau pilih topik di bawah:');
+        }
+        showQuickReplies(DEFAULT_QUICK_REPLIES);
+    }, 700 + Math.random() * 400);
+}
+
+function sendChatMessage() {
+    const input = document.getElementById('chat-input');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    processUserInput(text);
 }
     </script>
 </body>
