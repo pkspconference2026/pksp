@@ -133,10 +133,99 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
         body { font-family: 'Inter', 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
+
+        /* ========== 1. PROGRESS BAR ========== */
+        #scroll-progress {
+            position: fixed;
+            top: 0; left: 0;
+            height: 3px;
+            width: 0%;
+            background: linear-gradient(90deg, #2d5a3d, #c5a059);
+            z-index: 9999;
+            transition: width 0.1s linear;
+        }
+
+        /* ========== 2. NAVBAR SHRINK ON SCROLL ========== */
+        nav { transition: all 0.3s ease; }
+        nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+        nav.scrolled .nav-inner { height: 56px !important; }
+        nav.scrolled .nav-logo { width: 38px !important; height: 38px !important; }
+        nav.scrolled .nav-title { font-size: 8px !important; }
+
+        /* ========== 3. SCHEDULE TAB SLIDE TRANSITION ========== */
         .schedule-day { display: none; }
-        .schedule-day.active { display: block; animation: fadeIn 0.5s ease-out; }
+        .schedule-day.active { display: block; }
+        .schedule-day.slide-in-right { animation: slideInRight 0.35s cubic-bezier(0.4,0,0.2,1); }
+        .schedule-day.slide-in-left  { animation: slideInLeft  0.35s cubic-bezier(0.4,0,0.2,1); }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(40px);  } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideInLeft  { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: translateX(0); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ========== 4. TAB BUTTON ========== */
         .tab-btn.active { background-color: #2d5a3d; color: white; border-color: #2d5a3d; }
+        .tab-btn { transition: all 0.25s ease; }
+
+        /* ========== 5. FLOATING BUTTONS BOUNCE ========== */
+        .float-btn {
+            animation: floatBounce 3s ease-in-out infinite;
+        }
+        .float-btn:nth-child(2) {
+            animation-delay: 1.5s;
+        }
+        @keyframes floatBounce {
+            0%, 100% { transform: translateY(0px); }
+            50%       { transform: translateY(-6px); }
+        }
+
+        /* ========== 6. COUNTDOWN PULSE ========== */
+        .timer-box {
+            transition: transform 0.15s ease;
+        }
+        .timer-box.pop {
+            animation: timerPop 0.25s ease;
+        }
+        @keyframes timerPop {
+            0%   { transform: scale(1); }
+            40%  { transform: scale(1.12); }
+            100% { transform: scale(1); }
+        }
+
+        /* ========== 7. SPEAKER HOVER OVERLAY ========== */
+        .speaker-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(45,90,61,0.92) 0%, rgba(45,90,61,0.4) 60%, transparent 100%);
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.35s ease, transform 0.35s ease;
+            display: flex;
+            align-items: flex-end;
+            padding: 1.25rem;
+        }
+        .speaker-card:hover .speaker-overlay {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .speaker-overlay-text {
+            color: white;
+            font-size: 0.78rem;
+            font-weight: 700;
+            line-height: 1.4;
+            font-style: italic;
+        }
+
+        /* ========== 8. SPEAKER CARD STAGGER AOS ========== */
+        .speaker-row [data-aos] { opacity: 0; }
+
+        /* ========== 9. HERO PARALLAX ========== */
+        .hero-parallax-bg {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            will-change: transform;
+        }
+
+        /* ========== OTHER EXISTING STYLES ========== */
         .faq-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
         .faq-item.active .faq-content { max-height: 400px; }
         .faq-item.active .faq-icon { transform: rotate(180deg); }
@@ -148,27 +237,29 @@
         .accordion-icon { transition: transform 0.3s ease; }
     </style>
 </head>
+<div id="scroll-progress"></div>
+
 <body class="bg-brand-soft text-brand-dark">
 
     <!-- Side Floating Buttons -->
     <div class="fixed right-0 top-1/2 -translate-y-1/2 z-[100] flex flex-col gap-1 items-end">
-        <a href="#aturcara" class="bg-brand-blue text-white px-3 py-7 rounded-l-2xl shadow-xl flex flex-col items-center gap-2 border-l border-white/20 hover:pr-8 transition-all group">
+        <a href="#aturcara" class="float-btn bg-brand-blue text-white px-3 py-7 rounded-l-2xl shadow-xl flex flex-col items-center gap-2 border-l border-white/20 hover:pr-8 transition-all group">
             <i data-lucide="calendar-days" class="w-5 h-5 group-hover:scale-110"></i>
             <span style="writing-mode: vertical-rl; text-orientation: mixed;" class="text-[10px] font-black uppercase tracking-widest">Aturcara</span>
         </a>
-        <a href="#daftar" class="bg-brand-gold text-white px-3 py-7 rounded-l-2xl shadow-xl flex flex-col items-center gap-2 border-l border-white/20 hover:pr-8 transition-all group">
+        <a href="#daftar" class="float-btn bg-brand-gold text-white px-3 py-7 rounded-l-2xl shadow-xl flex flex-col items-center gap-2 border-l border-white/20 hover:pr-8 transition-all group">
             <i data-lucide="edit-3" class="w-5 h-5 group-hover:scale-110"></i>
             <span style="writing-mode: vertical-rl; text-orientation: mixed;" class="text-[10px] font-black uppercase tracking-widest">Daftar</span>
         </a>
     </div>
 
 <!-- Navbar -->
-<nav class="fixed w-full bg-white/95 backdrop-blur-md z-50 border-b border-slate-200 shadow-sm">
-    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+<nav id="main-nav" class="fixed w-full bg-white/95 backdrop-blur-md z-50 border-b border-slate-200 shadow-sm">
+    <div id="nav-inner" class="nav-inner max-w-7xl mx-auto px-6 h-20 flex items-center justify-between" style="transition: height 0.3s ease;">
         <div class="flex items-center space-x-4 cursor-pointer" onclick="window.scrollTo({top:0, behavior:'smooth'})">
             <div class="flex items-center gap-3">
-                <img src="Logo TKPM.png" alt="Logo" class="w-14 h-14 object-contain">
-                <div class="text-left font-black text-[#2d5a3d] uppercase leading-tight text-[10px]">
+                <img src="Logo TKPM.png" alt="Logo" class="nav-logo w-14 h-14 object-contain" style="transition: all 0.3s ease;">
+                <div class="nav-title text-left font-black text-[#2d5a3d] uppercase leading-tight text-[10px]" style="transition: font-size 0.3s ease;">
                     <span>Persatuan Pegawai</span><br/>
                     <span>Pembangunan Masyarakat</span><br/>
                     <span class="text-brand-gold">(Perubatan) Malaysia</span>
@@ -265,26 +356,75 @@
 </nav>
 
     <!-- Hero -->
-    <section class="pt-48 pb-32 px-6 bg-gradient-to-br from-slate-50 via-[#eef4f0]/60 to-[#d4e8db]/40 text-center relative overflow-hidden">
-        <div class="absolute inset-0 opacity-10 pointer-events-none">
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_70%,#c5a05922_0%,transparent_50%)]"></div>
+    <section id="hero" class="pt-48 pb-32 px-6 text-center relative overflow-hidden" style="background: #0d1f14;">
+
+        <!-- Layer 0: Base dark green gradient (static) -->
+        <div class="absolute inset-0" style="background: radial-gradient(ellipse at 60% 40%, #1a3a22 0%, #0d1f14 70%);"></div>
+
+        <!-- Layer 1: SVG geometric pattern (slowest parallax) -->
+        <div id="hero-layer-1" class="absolute inset-0 pointer-events-none" style="will-change: transform; transform: scale(1.08);">
+            <svg class="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+                <defs>
+                    <pattern id="hexGrid" x="0" y="0" width="80" height="92" patternUnits="userSpaceOnUse">
+                        <polygon points="40,4 76,24 76,68 40,88 4,68 4,24" fill="none" stroke="#2d5a3d" stroke-width="0.8" opacity="0.5"/>
+                    </pattern>
+                    <pattern id="dotGrid" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                        <circle cx="20" cy="20" r="1.2" fill="#c5a059" opacity="0.25"/>
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#hexGrid)"/>
+                <rect width="100%" height="100%" fill="url(#dotGrid)"/>
+            </svg>
         </div>
+
+        <!-- Layer 2: Floating geometric shapes (medium parallax) -->
+        <div id="hero-layer-2" class="absolute inset-0 pointer-events-none" style="will-change: transform; transform: scale(1.06);">
+            <!-- Large ring top-right -->
+            <div class="absolute" style="top:-80px; right:-60px; width:420px; height:420px; border-radius:50%; border: 1.5px solid rgba(197,160,89,0.18);"></div>
+            <div class="absolute" style="top:-30px; right:-10px; width:280px; height:280px; border-radius:50%; border: 1px solid rgba(197,160,89,0.12);"></div>
+            <!-- Bottom-left triangle accent -->
+            <svg class="absolute" style="bottom:40px; left:60px; opacity:0.12;" width="180" height="156" viewBox="0 0 180 156">
+                <polygon points="90,4 176,152 4,152" fill="none" stroke="#c5a059" stroke-width="1.5"/>
+                <polygon points="90,30 155,138 25,138" fill="none" stroke="#c5a059" stroke-width="0.8"/>
+            </svg>
+            <!-- Top-left diamond -->
+            <svg class="absolute" style="top:100px; left:80px; opacity:0.1;" width="100" height="100" viewBox="0 0 100 100">
+                <polygon points="50,4 96,50 50,96 4,50" fill="none" stroke="#c5a059" stroke-width="1.2"/>
+            </svg>
+            <!-- Mid-right lines -->
+            <svg class="absolute" style="right:120px; top:35%; opacity:0.08;" width="120" height="120" viewBox="0 0 120 120">
+                <line x1="0" y1="60" x2="120" y2="60" stroke="#c5a059" stroke-width="1"/>
+                <line x1="60" y1="0" x2="60" y2="120" stroke="#c5a059" stroke-width="1"/>
+                <circle cx="60" cy="60" r="30" fill="none" stroke="#c5a059" stroke-width="0.8"/>
+                <circle cx="60" cy="60" r="55" fill="none" stroke="#c5a059" stroke-width="0.5"/>
+            </svg>
+        </div>
+
+        <!-- Layer 3: Glowing orbs (fastest parallax) -->
+        <div id="hero-layer-3" class="absolute inset-0 pointer-events-none" style="will-change: transform; transform: scale(1.1);">
+            <div class="absolute" style="top:15%; left:8%; width:320px; height:320px; border-radius:50%; background: radial-gradient(circle, rgba(45,90,61,0.35) 0%, transparent 70%); filter: blur(40px);"></div>
+            <div class="absolute" style="bottom:10%; right:10%; width:260px; height:260px; border-radius:50%; background: radial-gradient(circle, rgba(197,160,89,0.2) 0%, transparent 70%); filter: blur(50px);"></div>
+            <div class="absolute" style="top:50%; left:50%; transform:translate(-50%,-50%); width:500px; height:500px; border-radius:50%; background: radial-gradient(circle, rgba(45,90,61,0.12) 0%, transparent 65%); filter: blur(60px);"></div>
+        </div>
+
+        <!-- Dark overlay to ensure text readability -->
+        <div class="absolute inset-0 pointer-events-none" style="background: linear-gradient(to bottom, rgba(13,31,20,0.45) 0%, rgba(13,31,20,0.25) 50%, rgba(13,31,20,0.55) 100%);"></div>
         
         <div class="max-w-7xl mx-auto relative z-10" data-aos="fade-up">
-            <div class="inline-flex items-center px-6 py-2 mb-8 text-xs font-black tracking-[0.3em] text-brand-gold uppercase bg-white/80 backdrop-blur-sm border border-slate-200 rounded-full shadow-sm">
+            <div class="inline-flex items-center px-6 py-2 mb-8 text-xs font-black tracking-[0.3em] text-brand-gold uppercase bg-white/10 backdrop-blur-sm border border-white/20 rounded-full shadow-sm">
                 Edisi Kebangsaan • 2–4 Ogos 2026
             </div>
             
-            <h1 class="text-4xl md:text-6xl lg:text-7xl font-black text-slate-900 mb-6 leading-tight uppercase tracking-tight">
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-black text-white mb-6 leading-tight uppercase tracking-tight">
                 Persidangan Pegawai<br class="md:hidden"> Kerja Sosial Perubatan<br/>
-                <span class="text-[#2d5a3d]">Malaysia 2026</span>
+                <span class="text-brand-gold">Malaysia 2026</span>
             </h1>
             
-            <p class="text-lg text-slate-500 font-medium mb-4 max-w-2xl mx-auto">
+            <p class="text-lg text-white/70 font-medium mb-4 max-w-2xl mx-auto">
                 "Memperkasakan Perkhidmatan Kerja Sosial Perubatan Melalui Sinergi Digital dan Kecerdasan Buatan (AI)"
             </p>
             
-            <div class="flex flex-col sm:flex-row justify-center items-center gap-4 md:gap-8 mb-10 text-lg font-semibold text-slate-600">
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-4 md:gap-8 mb-10 text-lg font-semibold text-white/80">
                 <div class="flex items-center gap-3">
                     <i data-lucide="calendar" class="w-6 h-6 text-brand-gold"></i>
                     <span>2-4 Ogos 2026</span>
@@ -298,7 +438,7 @@
             <div id="countdown" class="flex justify-center flex-wrap gap-4 md:gap-8 mb-12"></div>
 
             <div class="flex flex-col sm:flex-row justify-center gap-5 md:gap-8">
-                <a href="#daftar" class="border-2 border-brand-blue text-[#2d5a3d] px-10 md:px-14 py-5 rounded-3xl font-black uppercase text-sm md:text-base bg-transparent hover:bg-brand-blue hover:text-white transition-all transform hover:scale-105">
+                <a href="#daftar" class="border-2 border-white text-white px-10 md:px-14 py-5 rounded-3xl font-black uppercase text-sm md:text-base bg-transparent hover:bg-white hover:text-[#2d5a3d] transition-all transform hover:scale-105">
                     Daftar Sekarang
                 </a>
                 <a href="flyer.pdf" target="_blank" rel="noopener noreferrer" class="border-2 border-brand-gold text-brand-gold px-10 md:px-14 py-5 rounded-3xl font-black uppercase text-sm md:text-base hover:bg-brand-gold hover:text-white transition-all">
@@ -371,95 +511,107 @@
 
     <!-- Penceramah -->
 <section id="penceramah" class="py-32 bg-white px-6 border-t border-slate-100">
-    <div class="max-w-7xl mx-auto" data-aos="fade-up">
-        <div class="text-center mb-20">
+    <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-20" data-aos="fade-up">
             <h2 class="text-4xl md:text-5xl font-black text-slate-900 uppercase tracking-tight">Barisan Penceramah Jemputan</h2>
             <div class="w-24 h-1.5 bg-brand-gold mx-auto mt-6 rounded-full"></div>
         </div>
 
         <!-- Row 1: 3 card -->
-        <div class="grid md:grid-cols-3 gap-6 mb-6">
+        <div class="speaker-row grid md:grid-cols-3 gap-6 mb-6">
 
             <!-- Speaker 1 -->
-            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group">
-                <div class="h-72 overflow-hidden">
+            <div class="speaker-card bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group" data-aos="fade-up" data-aos-delay="0">
+                <div class="h-72 overflow-hidden relative">
                     <img loading="lazy" src="Dr Mohd Azman.jpeg" alt="Dato' Dr Mohd Azman" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
+                    <div class="speaker-overlay">
+                        <p class="speaker-overlay-text">"Hala Tuju dan Pemerkasaan Profesion Pegawai Kerja Sosial Perubatan di Malaysia"</p>
+                    </div>
                 </div>
-                <div class="p-8 text-center">
-                    <h3 class="font-black text-xl text-slate-900 mb-1">YBhg. Dato' Dr Mohd Azman bin Yacob</h3>
-                    <p class="text-brand-gold font-bold text-xs uppercase tracking-wide mb-1">Pengarah Kesihatan Negeri Kelantan</p>
-                    <p class="text-slate-400 text-xs mb-4">Kesihatan Awam • Pengurusan Kesihatan • Dasar Perubatan</p>
-                    <p class="text-slate-600 text-sm leading-relaxed italic">"Hala Tuju dan Pemerkasaan Profesion Pegawai Kerja Sosial Perubatan di Malaysia"</p>
+                <div class="p-7 text-center">
+                    <h3 class="font-black text-lg text-slate-900 mb-1.5">YBhg. Dato' Dr Mohd Azman bin Yacob</h3>
+                    <p class="text-brand-gold font-bold text-xs uppercase tracking-wide mb-2">Pengarah Kesihatan Negeri Kelantan</p>
+                    <p class="text-slate-400 text-xs">Kesihatan Awam • Pengurusan Kesihatan • Dasar Perubatan</p>
                 </div>
             </div>
 
             <!-- Speaker 2 -->
-            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group">
-                <div class="h-72 overflow-hidden">
+            <div class="speaker-card bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group" data-aos="fade-up" data-aos-delay="100">
+                <div class="h-72 overflow-hidden relative">
                     <img loading="lazy" src="Dr. Wan Zuraini.jpeg" alt="Dr. Wan Zuraini Mahrawi" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
+                    <div class="speaker-overlay">
+                        <p class="speaker-overlay-text">"Seronoknya AI: Pengurusan Kes Pesakit Lebih Pantas, Tepat dan Pintar"</p>
+                    </div>
                 </div>
-                <div class="p-8 text-center">
-                    <h3 class="font-black text-xl text-slate-900 mb-1">Dr. Wan Zuraini Mahrawi</h3>
-                    <p class="text-brand-gold font-bold text-xs uppercase tracking-wide mb-1">Ketua Unit Pengurusan Risiko Pesakit & Surveilan Klinikal, Institut Kanser Negara</p>
-                    <p class="text-slate-400 text-xs mb-4">Pengurusan Risiko Pesakit • Surveilan Klinikal • AI dalam Penjagaan Kesihatan</p>
-                    <p class="text-slate-600 text-sm leading-relaxed italic">"Seronoknya AI: Pengurusan Kes Pesakit Lebih Pantas, Tepat dan Pintar"</p>
+                <div class="p-7 text-center">
+                    <h3 class="font-black text-lg text-slate-900 mb-1.5">Dr. Wan Zuraini Mahrawi</h3>
+                    <p class="text-brand-gold font-bold text-xs uppercase tracking-wide mb-2">Ketua Unit Pengurusan Risiko Pesakit & Surveilan Klinikal, Institut Kanser Negara</p>
+                    <p class="text-slate-400 text-xs">Pengurusan Risiko Pesakit • Surveilan Klinikal • AI dalam Penjagaan Kesihatan</p>
                 </div>
             </div>
 
             <!-- Speaker 3 -->
-            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group">
-                <div class="h-72 overflow-hidden">
+            <div class="speaker-card bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group" data-aos="fade-up" data-aos-delay="200">
+                <div class="h-72 overflow-hidden relative">
                     <img loading="lazy" src="Prof. Huzili.png" alt="Prof. Dr. Huzili" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
+                    <div class="speaker-overlay">
+                        <p class="speaker-overlay-text">"Resiliensi Minda Digital: Memperkasakan Kesejahteraan Psikologi Pegawai Kerja Sosial di Alaf Kecerdasan Buatan"</p>
+                    </div>
                 </div>
-                <div class="p-8 text-center">
-                    <h3 class="font-black text-xl text-slate-900 mb-1">Prof. Dr. Huzili Hussin</h3>
-                    <p class="text-brand-gold font-bold text-xs uppercase tracking-wide mb-1">Universiti Malaysia Kelantan (UMK)</p>
-                    <p class="text-slate-400 text-xs mb-4">Kaunseling & Psikologi Organisasi</p>
-                    <p class="text-slate-600 text-sm leading-relaxed italic">"Resiliensi Minda Digital: Memperkasakan Kesejahteraan Psikologi Pegawai Kerja Sosial di Alaf Kecerdasan Buatan"</p>
+                <div class="p-7 text-center">
+                    <h3 class="font-black text-lg text-slate-900 mb-1.5">Prof. Dr. Huzili Hussin</h3>
+                    <p class="text-brand-gold font-bold text-xs uppercase tracking-wide mb-2">Universiti Malaysia Kelantan (UMK)</p>
+                    <p class="text-slate-400 text-xs">Kaunseling & Psikologi Organisasi</p>
                 </div>
             </div>
 
         </div> <!-- ← PENUTUP Row 1 yang betul -->
 
         <!-- Row 2: 3 card -->
-        <div class="grid md:grid-cols-3 gap-6">
+        <div class="speaker-row grid md:grid-cols-3 gap-6">
 
             <!-- Speaker 4 -->
-            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group">
-                <div class="h-72 overflow-hidden">
+            <div class="speaker-card bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group" data-aos="fade-up" data-aos-delay="0">
+                <div class="h-72 overflow-hidden relative">
                     <img loading="lazy" src="Dr. Wan Munira.jpeg" alt="Dr. Wan Munira" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
+                    <div class="speaker-overlay">
+                        <p class="speaker-overlay-text">"Sinergi Digital Komuniti: Mentransformasi Intervensi Kerja Sosial Perubatan Melalui Aplikasi Kecerdasan Buatan (AI)"</p>
+                    </div>
                 </div>
-                <div class="p-8 text-center">
-                    <h3 class="font-black text-xl text-slate-900 mb-1">Dr. Wan Munira binti Wan Jaafar</h3>
-                    <p class="text-brand-gold font-bold text-xs uppercase tracking-wide mb-1">Universiti Putra Malaysia (UPM)</p>
-                    <p class="text-slate-400 text-xs mb-4">Pembangunan Komuniti • Masyarakat Digital • Kajian Gender</p>
-                    <p class="text-slate-600 text-sm leading-relaxed italic">"Sinergi Digital Komuniti: Mentransformasi Intervensi Kerja Sosial Perubatan Melalui Aplikasi Kecerdasan Buatan (AI)"</p>
+                <div class="p-7 text-center">
+                    <h3 class="font-black text-lg text-slate-900 mb-1.5">Dr. Wan Munira binti Wan Jaafar</h3>
+                    <p class="text-brand-gold font-bold text-xs uppercase tracking-wide mb-2">Universiti Putra Malaysia (UPM)</p>
+                    <p class="text-slate-400 text-xs">Pembangunan Komuniti • Masyarakat Digital • Kajian Gender</p>
                 </div>
             </div>
 
             <!-- Speaker 5 -->
-            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group">
-                <div class="h-72 overflow-hidden">
+            <div class="speaker-card bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group" data-aos="fade-up" data-aos-delay="100">
+                <div class="h-72 overflow-hidden relative">
                     <img loading="lazy" src="Dr. Teoh.png" alt="Dr. Teoh" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
+                    <div class="speaker-overlay">
+                        <p class="speaker-overlay-text">"AI, Etika Dan Kesejahteraan Sosial: Peranan Pegawai Kerja Sosial Perubatan"</p>
+                    </div>
                 </div>
-                <div class="p-8 text-center">
-                    <h3 class="font-black text-xl text-slate-900 mb-1">Dr. Teoh Ai Hua</h3>
-                    <p class="text-brand-gold font-bold text-xs uppercase tracking-wide mb-1">Universiti Utara Malaysia (UUM)</p>
-                    <p class="text-slate-400 text-xs mb-4">Kerja Sosial • Kebajikan Sosial • Pengurusan Kes • Nilai & Etika Kerja Sosial</p>
-                    <p class="text-slate-600 text-sm leading-relaxed italic">"AI, Etika Dan Kesejahteraan Sosial: Peranan Pegawai Kerja Sosial Perubatan"</p>
+                <div class="p-7 text-center">
+                    <h3 class="font-black text-lg text-slate-900 mb-1.5">Dr. Teoh Ai Hua</h3>
+                    <p class="text-brand-gold font-bold text-xs uppercase tracking-wide mb-2">Universiti Utara Malaysia (UUM)</p>
+                    <p class="text-slate-400 text-xs">Kerja Sosial • Kebajikan Sosial • Pengurusan Kes • Nilai & Etika Kerja Sosial</p>
                 </div>
             </div>
 
             <!-- Speaker 6 -->
-            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group">
-                <div class="h-72 overflow-hidden">
+            <div class="speaker-card bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group" data-aos="fade-up" data-aos-delay="200">
+                <div class="h-72 overflow-hidden relative">
                     <img loading="lazy" src="Dr. Hafiz.png" alt="Dr. Muhamad Hafiz bin Harun" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
+                    <div class="speaker-overlay">
+                        <p class="speaker-overlay-text">"Pengurusan Rumah Generasiku Sayang Jabatan Kesihatan Negeri Kelantan"</p>
+                    </div>
                 </div>
-                <div class="p-8 text-center">
-                    <h3 class="font-black text-xl text-slate-900 mb-1">Dr. Muhamad Hafiz bin Harun</h3>
-                    <p class="text-brand-gold font-bold text-xs uppercase tracking-wide mb-1">Pakar Perubatan Kesihatan Awam, PKD Tumpat, Kelantan</p>
-                    <p class="text-slate-400 text-xs mb-4">Kesihatan Awam • Pengurusan Kesihatan Komuniti</p>
-                    <p class="text-slate-600 text-sm leading-relaxed italic">"Pengurusan Rumah Generasiku Sayang Jabatan Kesihatan Negeri Kelantan"</p>
+                <div class="p-7 text-center">
+                    <h3 class="font-black text-lg text-slate-900 mb-1.5">Dr. Muhamad Hafiz bin Harun</h3>
+                    <p class="text-brand-gold font-bold text-xs uppercase tracking-wide mb-2">Pakar Perubatan Kesihatan Awam, PKD Tumpat, Kelantan</p>
+                    <p class="text-slate-400 text-xs">Kesihatan Awam • Pengurusan Kesihatan Komuniti</p>
                 </div>
             </div>
 
@@ -993,6 +1145,7 @@
         AOS.init({ duration: 800, once: true });
         semakStatusPendaftaran();
 
+        let prevSecs = -1;
         function updateTimer() {
             const target = new Date("August 02, 2026 14:30:00").getTime();
             const now = new Date().getTime();
@@ -1030,35 +1183,59 @@
             const mins = Math.max(0, Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)));
             const secs = Math.max(0, Math.floor((diff % (1000 * 60)) / 1000));
 
-            const timerBox = (val, label) => `
+            const timerBox = (val, label, id) => `
                 <div class="flex flex-col items-center transform transition-all duration-300 hover:scale-105">
-                    <div class="w-20 h-20 md:w-32 md:h-32 bg-white text-[#2d5a3d] rounded-[2.5rem] flex items-center justify-center font-black text-3xl md:text-5xl mb-3 shadow-lg border border-slate-200">
+                    <div id="timer-${id}" class="timer-box w-20 h-20 md:w-32 md:h-32 rounded-[2.5rem] flex items-center justify-center font-black text-3xl md:text-5xl mb-3" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2); color: #fff; box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
                         ${String(val).padStart(2, '0')}
                     </div>
-                    <span class="text-xs md:text-sm font-black uppercase tracking-widest text-slate-700">${label}</span>
+                    <span class="text-xs md:text-sm font-black uppercase tracking-widest" style="color: rgba(255,255,255,0.7);">${label}</span>
                 </div>`;
 
             countdownEl.innerHTML = 
-                timerBox(days, 'Hari') + 
-                timerBox(hours, 'Jam') + 
-                timerBox(mins, 'Minit') + 
-                timerBox(secs, 'Saat');
+                timerBox(days, 'Hari', 'days') + 
+                timerBox(hours, 'Jam', 'hours') + 
+                timerBox(mins, 'Minit', 'mins') + 
+                timerBox(secs, 'Saat', 'secs');
+
+            // Pulse animation bila second bertukar
+            if (secs !== prevSecs) {
+                prevSecs = secs;
+                const secsEl = document.getElementById('timer-secs');
+                const minsEl = document.getElementById('timer-mins');
+                if (secsEl) {
+                    secsEl.classList.remove('pop');
+                    void secsEl.offsetWidth;
+                    secsEl.classList.add('pop');
+                }
+                // Pulse minit bila secs = 0
+                if (secs === 0 && minsEl) {
+                    minsEl.classList.remove('pop');
+                    void minsEl.offsetWidth;
+                    minsEl.classList.add('pop');
+                }
+            }
         }
         setInterval(updateTimer, 1000);
         updateTimer();
 
+        let currentDay = 1;
         function switchTab(day) {
+            const direction = parseInt(day) > currentDay ? 'right' : 'left';
+            currentDay = parseInt(day);
+
             // 1. Sembunyikan SEMUA hari dulu
             document.querySelectorAll('.schedule-day').forEach(el => {
-                el.classList.remove('active');
+                el.classList.remove('active', 'slide-in-right', 'slide-in-left');
                 el.classList.add('hidden');
             });
 
-            // 2. Tunjuk hari yang dipilih
+            // 2. Tunjuk hari yang dipilih dengan slide direction
             const selectedDay = document.getElementById('day-' + day);
             if (selectedDay) {
                 selectedDay.classList.add('active');
                 selectedDay.classList.remove('hidden');
+                void selectedDay.offsetWidth; // force reflow
+                selectedDay.classList.add(direction === 'right' ? 'slide-in-right' : 'slide-in-left');
             }
 
             // 3. Reset SEMUA tab ke keadaan tak aktif
@@ -1133,6 +1310,77 @@ function toggleAccordion(btn) {
     if (!isActive) item.classList.add('active');
     
     lucide.createIcons();
+}
+
+// ========== SCROLL PROGRESS BAR ==========
+window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    document.getElementById('scroll-progress').style.width = pct + '%';
+
+    // ========== NAVBAR SHRINK ==========
+    const nav = document.getElementById('main-nav');
+    const navInner = document.getElementById('nav-inner');
+    const navLogo = nav.querySelector('.nav-logo');
+    const navTitle = nav.querySelector('.nav-title');
+    if (scrollTop > 60) {
+        nav.classList.add('scrolled');
+        navInner.style.height = '56px';
+        navLogo.style.width = '36px';
+        navLogo.style.height = '36px';
+        navTitle.style.fontSize = '8px';
+    } else {
+        nav.classList.remove('scrolled');
+        navInner.style.height = '80px';
+        navLogo.style.width = '56px';
+        navLogo.style.height = '56px';
+        navTitle.style.fontSize = '10px';
+    }
+}, { passive: true });
+
+// ========== HERO MULTI-LAYER PARALLAX ==========
+const heroSection = document.getElementById('hero');
+const layer1 = document.getElementById('hero-layer-1');
+const layer2 = document.getElementById('hero-layer-2');
+const layer3 = document.getElementById('hero-layer-3');
+
+if (heroSection && layer1 && layer2 && layer3) {
+    let targetX = 0, targetY = 0;
+    let currentX = 0, currentY = 0;
+    let rafId = null;
+
+    function animateLayers() {
+        // Smooth lerp towards target
+        currentX += (targetX - currentX) * 0.06;
+        currentY += (targetY - currentY) * 0.06;
+
+        // Each layer moves at different speed — depth effect
+        layer1.style.transform = `scale(1.08) translate(${currentX * 6}px, ${currentY * 4}px)`;
+        layer2.style.transform = `scale(1.06) translate(${currentX * 14}px, ${currentY * 10}px)`;
+        layer3.style.transform = `scale(1.10) translate(${currentX * 22}px, ${currentY * 16}px)`;
+
+        rafId = requestAnimationFrame(animateLayers);
+    }
+
+    heroSection.addEventListener('mousemove', (e) => {
+        const rect = heroSection.getBoundingClientRect();
+        targetX = (e.clientX - rect.left) / rect.width - 0.5;
+        targetY = (e.clientY - rect.top)  / rect.height - 0.5;
+        if (!rafId) rafId = requestAnimationFrame(animateLayers);
+    });
+
+    heroSection.addEventListener('mouseleave', () => {
+        targetX = 0;
+        targetY = 0;
+        // Let lerp settle, then cancel
+        setTimeout(() => {
+            if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+            layer1.style.transform = 'scale(1.08) translate(0,0)';
+            layer2.style.transform = 'scale(1.06) translate(0,0)';
+            layer3.style.transform = 'scale(1.10) translate(0,0)';
+        }, 900);
+    });
 }
     </script>
 </body>
