@@ -43,6 +43,7 @@
         };
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'msw-kuantan-2026';
+        window._appId = appId;
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
@@ -464,9 +465,9 @@
         }
     </style>
 </head>
-<div id="scroll-progress"></div>
 
 <body class="bg-brand-soft text-brand-dark">
+<div id="scroll-progress"></div>
 
     <!-- Side Floating Buttons -->
     <div class="fixed right-0 top-1/2 -translate-y-1/2 z-[100] flex flex-col gap-1 items-end">
@@ -1374,7 +1375,7 @@
     <div id="chat-messages"></div>
     <div id="chat-quick-replies"></div>
     <div id="chat-input-row">
-        <input type="text" id="chat-input" placeholder="Taip soalan anda..." onkeypress="if(event.key==='Enter') sendChatMessage()">
+        <input type="text" id="chat-input" placeholder="Taip soalan anda..." onkeydown="if(event.key==='Enter') sendChatMessage()">
         <div id="chat-send" onclick="sendChatMessage()">
             <i data-lucide="send" class="w-4 h-4"></i>
         </div>
@@ -2051,7 +2052,7 @@ function processUserInput(text) {
 async function logUnansweredQuestion(text) {
     try {
         if (!window.firestoreDB) return;
-        const collRef = window.firestoreCollection(window.firestoreDB, 'artifacts', 'msw-kuantan-2026', 'public', 'data', 'soalan_chatbot');
+        const collRef = window.firestoreCollection(window.firestoreDB, 'artifacts', window._appId || 'msw-kuantan-2026', 'public', 'data', 'soalan_chatbot');
         await window.firestoreAddDoc(collRef, {
             soalan: text,
             timestamp: window.firestoreServerTimestamp()
