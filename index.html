@@ -1909,16 +1909,13 @@ const FAQ_DB = [
 
 const FAQ_STOPWORDS = ['nak', 'macam', 'mana', 'apa', 'ada', 'tak', 'ke', 'ni', 'tu', 'yang', 'di', 'ke', 'untuk', 'dan', 'saya', 'nk', 'boleh', 'kalau', 'je', 'eh', 'lah', 'la'];
 
-const DEFAULT_QUICK_REPLIES = ['Tarikh & Lokasi', 'Yuran Pendaftaran', 'Cara Daftar', 'Penceramah', 'Aturcara Hari 1', 'Aturcara Hari 2', 'Aturcara Hari 3', 'Hubungi Kami'];
+const DEFAULT_QUICK_REPLIES = ['Tarikh & Lokasi', 'Yuran Pendaftaran', 'Cara Daftar', 'Penceramah', 'Hubungi Kami'];
 
 const QUICK_REPLY_MAP = {
     'Tarikh & Lokasi': 'Bila dan di mana persidangan diadakan?',
     'Yuran Pendaftaran': 'Berapa yuran pendaftaran?',
     'Cara Daftar': 'Macam mana nak daftar?',
     'Penceramah': 'Siapa penceramah persidangan ni?',
-    'Aturcara Hari 1': 'Hari 1 ada aktiviti apa?',
-    'Aturcara Hari 2': 'Hari 2 ada aktiviti apa?',
-    'Aturcara Hari 3': 'Hari 3 ada aktiviti apa?',
     'Hubungi Kami': 'Macam mana nak hubungi secretariat?'
 };
 
@@ -1945,7 +1942,7 @@ function toggleChat() {
 }
 
 function startChatConversation() {
-    addBotMessage('Hai! Saya <strong>Awang</strong> 👋, pembantu maya untuk Persidangan PKSP 2026. Apa yang Hafiz ingin tahu?');
+    addBotMessage('Hai! Saya <strong>Awang</strong> 👋, pembantu maya untuk Persidangan PKSP 2026. Apa yang awak nak tahu?');
     showQuickReplies(DEFAULT_QUICK_REPLIES);
 }
 
