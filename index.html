@@ -43,6 +43,7 @@
         };
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'msw-kuantan-2026';
+        window._appId = appId;
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
@@ -464,9 +465,9 @@
         }
     </style>
 </head>
-<div id="scroll-progress"></div>
 
 <body class="bg-brand-soft text-brand-dark">
+<div id="scroll-progress"></div>
 
     <!-- Side Floating Buttons -->
     <div class="fixed right-0 top-1/2 -translate-y-1/2 z-[100] flex flex-col gap-1 items-end">
@@ -758,8 +759,8 @@
                 </div>
                 <div class="p-7 text-center">
                     <h3 class="font-black text-lg text-slate-900 mb-1.5">YBhg. Dato' Dr Mohd Azman bin Yacob</h3>
-                    <p class="text-brand-gold font-bold text-xs uppercase tracking-wide mb-2">Pengarah Kesihatan Negeri Kelantan</p>
-                    <p class="text-slate-400 text-xs">Kesihatan Awam • Pengurusan Kesihatan • Dasar Perubatan</p>
+                    <p class="text-brand-gold font-bold text-xs uppercase tracking-wide mb-2">Timbalan Ketua Pengarah Kesihatan (Perubatan)</p>
+                    <p class="text-slate-400 text-xs">Kementerian Kesihatan Malaysia</p>
                 </div>
             </div>
 
@@ -985,7 +986,7 @@
             <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
         </button>
         <div class="accordion-content px-5 pb-5">
-            <p class="text-slate-500 text-sm">YB Datuk Seri Dr. Haji Dzulkefly bin Ahmad • Menteri Kesihatan Malaysia (KKM)</p>
+            <p class="text-slate-500 text-sm">YBhg. Datuk Seri Hj. Hasnol Zam Zam bin Hj. Ahmad • Ketua Setiausaha • Kementerian Kesihatan Malaysia</p>
         </div>
     </div>
 
@@ -1129,7 +1130,7 @@
         </button>
         <div class="accordion-content px-5 pb-5">
             <p class="text-slate-600 italic text-sm">Hala Tuju dan Pemerkasaan Profesion Pegawai Kerja Sosial Perubatan di Malaysia: Kini dan Masa Depan</p>
-            <p class="text-slate-500 text-sm mt-1">YBhg. Dato' Dr. Mohd Azman bin Yacob • Pengarah Kesihatan Negeri Kelantan</p>
+            <p class="text-slate-500 text-sm mt-1">YBhg. Dato' Dr. Mohd Azman bin Yacob • Timbalan Ketua Pengarah Kesihatan (Perubatan) KKM</p>
         </div>
     </div>
 
@@ -1142,7 +1143,7 @@
             <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
         </button>
         <div class="accordion-content px-5 pb-5">
-            <p class="text-slate-500 text-sm">YBhg. Dato' Dr. Mohd Azman bin Yacob • Pengarah Kesihatan Negeri Kelantan</p>
+            <p class="text-slate-500 text-sm">YBhg. Dato' Dr. Mohd Azman bin Yacob • Timbalan Ketua Pengarah Kesihatan (Perubatan) KKM</p>
         </div>
     </div>
 <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex gap-4 items-center">
@@ -1374,7 +1375,7 @@
     <div id="chat-messages"></div>
     <div id="chat-quick-replies"></div>
     <div id="chat-input-row">
-        <input type="text" id="chat-input" placeholder="Taip soalan anda..." onkeypress="if(event.key==='Enter') sendChatMessage()">
+        <input type="text" id="chat-input" placeholder="Taip soalan anda..." onkeydown="if(event.key==='Enter') sendChatMessage()">
         <div id="chat-send" onclick="sendChatMessage()">
             <i data-lucide="send" class="w-4 h-4"></i>
         </div>
@@ -1386,7 +1387,7 @@
         // ====== SUIS PENDAFTARAN ======
         // Tukar kepada false untuk TUTUP pendaftaran (paparkan mesej "Pendaftaran Telah Ditutup" + maklumat secretariat).
         // Tukar kepada true untuk BUKA semula pendaftaran.
-        const PENDAFTARAN_DIBUKA = true;
+        const PENDAFTARAN_DIBUKA = false;
 
         function semakStatusPendaftaran() {
             if (!PENDAFTARAN_DIBUKA) {
@@ -2051,7 +2052,7 @@ function processUserInput(text) {
 async function logUnansweredQuestion(text) {
     try {
         if (!window.firestoreDB) return;
-        const collRef = window.firestoreCollection(window.firestoreDB, 'artifacts', 'msw-kuantan-2026', 'public', 'data', 'soalan_chatbot');
+        const collRef = window.firestoreCollection(window.firestoreDB, 'artifacts', window._appId || 'msw-kuantan-2026', 'public', 'data', 'soalan_chatbot');
         await window.firestoreAddDoc(collRef, {
             soalan: text,
             timestamp: window.firestoreServerTimestamp()
