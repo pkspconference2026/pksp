@@ -1,0 +1,17 @@
+rules_version = '2';
+
+// PKSP Ke-29 — Persidangan tamat 4 Ogos 2026.
+//
+// Sama seperti firestore.rules: semua akses klien ke Cloud Storage
+// ditutup. Fail yang dimuat naik peserta (resit, abstrak) kekal wujud
+// dan masih boleh dimuat turun melalui Firebase Console atau gsutil.
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+
+  }
+}

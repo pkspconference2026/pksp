@@ -1,0 +1,28 @@
+rules_version = '2';
+
+// PKSP Ke-29 — Persidangan tamat 4 Ogos 2026.
+//
+// Laman pendaftaran (index.html lama) dan admin.html telah dibuang, dan
+// laman web kini hanya halaman arkib statik tanpa Firebase. Rules ini
+// menutup SEMUA akses klien ke Firestore supaya salinan HTML lama yang
+// masih tersimpan di mana-mana tidak boleh lagi baca atau tulis data
+// peserta.
+//
+// Data KEKAL wujud dan masih boleh diakses melalui Firebase Console,
+// gcloud/firebase CLI, dan Admin SDK — rules ini TIDAK menyekat jalan
+// tersebut. Jadi export data masih boleh dibuat bila-bila masa.
+//
+// Koleksi yang terlibat (untuk rujukan bila export):
+//   artifacts/msw-kuantan-2026/public/data/pendaftaran
+//   artifacts/msw-kuantan-2026/public/data/soalan_chatbot
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Tolak semua baca dan tulis dari klien (web, mobile, anonymous auth).
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+  }
+}
