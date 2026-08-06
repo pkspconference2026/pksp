@@ -3,2067 +3,339 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Persidangan Pegawai Kerja Sosial Perubatan Malaysia 2026 (PKSP 2026)</title>
+    <title>PKSP 2026 — Persidangan Telah Tamat | Arkib</title>
 
-    <meta name="description" content="Persidangan Pegawai Kerja Sosial Perubatan Malaysia Ke-29 (PKSP 2026) — 'Memperkasakan Perkhidmatan Kerja Sosial Perubatan Melalui Sinergi Digital dan Kecerdasan Buatan (AI)'. 2–4 Ogos 2026, Hotel Perdana, Kota Bharu, Kelantan.">
+    <meta name="description" content="Arkib Persidangan Pegawai Kerja Sosial Perubatan Malaysia Ke-29 (PKSP 2026), 2–4 Ogos 2026, Hotel Perdana, Kota Bharu, Kelantan. Persidangan telah tamat. Buku program dan bahan rasmi boleh dimuat turun di sini.">
     <meta name="robots" content="index, follow">
 
-    <!-- Open Graph / WhatsApp / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Persidangan Pegawai Kerja Sosial Perubatan Malaysia 2026 (PKSP 2026)">
-    <meta property="og:description" content="2–4 Ogos 2026 • Hotel Perdana, Kota Bharu, Kelantan. Sinergi Digital dan Kecerdasan Buatan (AI) dalam Kerja Sosial Perubatan.">
+    <meta property="og:title" content="PKSP 2026 — Persidangan Telah Tamat">
+    <meta property="og:description" content="Persidangan Pegawai Kerja Sosial Perubatan Malaysia Ke-29 telah berlangsung pada 2–4 Ogos 2026 di Hotel Perdana, Kota Bharu. Terima kasih kepada semua peserta.">
     <meta property="og:image" content="og-image.jpg">
     <meta property="og:locale" content="ms_MY">
 
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Persidangan Pegawai Kerja Sosial Perubatan Malaysia 2026">
-    <meta name="twitter:description" content="2–4 Ogos 2026 • Hotel Perdana, Kota Bharu, Kelantan.">
+    <meta name="twitter:title" content="PKSP 2026 — Persidangan Telah Tamat">
+    <meta name="twitter:description" content="Arkib rasmi PKSP Ke-29, 2–4 Ogos 2026, Hotel Perdana, Kota Bharu.">
     <meta name="twitter:image" content="og-image.jpg">
 
     <link rel="icon" type="image/png" href="Logo TKPM.png">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@0.469.0"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyBRKVRVCNW5fQxKcGHGH_lQdrpfBpmGmUU",
-            authDomain: "pkspconference.firebaseapp.com",
-            projectId: "pkspconference",
-            storageBucket: "pkspconference.firebasestorage.app",
-            messagingSenderId: "643373687923",
-            appId: "1:643373687923:web:0aa25f76f9080e3d1df606"
-        };
-
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'msw-kuantan-2026';
-        window._appId = appId;
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const storage = getStorage(app);
-
-        // Expose Firestore untuk dipakai oleh script chatbot di luar module ini
-        window.firestoreDB = db;
-        window.firestoreCollection = collection;
-        window.firestoreAddDoc = addDoc;
-        window.firestoreServerTimestamp = serverTimestamp;
-
-        onAuthStateChanged(auth, (user) => { if (user) listenToParticipants(); });
-        async function initAuth() { try { await signInAnonymously(auth); } catch (e) { console.error(e); } }
-
-        window.handleRegistration = async (e) => {
-    e.preventDefault();
-    const btn = e.target.querySelector('button');
-    btn.disabled = true;
-    btn.innerText = "Memproses...";
-
-    if (!e.target.setuju.checked) {
-        alert("Sila tandakan persetujuan terma & syarat.");
-        btn.disabled = false;
-        btn.innerText = "Sahkan Pendaftaran";
-        return;
-    }
-
-    const formData = {
-        nama: e.target.nama.value.trim(),
-        ic: e.target.ic.value.trim(),
-        tel: e.target.tel.value.trim(),
-        email: e.target.email.value.trim(),
-        jawatan_gred: e.target.jawatan_gred.value.trim(),
-        tempat_bertugas: e.target.tempat_bertugas.value.trim(),
-        negeri: e.target.negeri.value.trim(),
-        kategori: e.target.kategori.value.trim(),
-        cara_bayaran: e.target.cara_bayaran.value.trim(),
-        timestamp: serverTimestamp()
-    };
-
-    try {
-        const collRef = collection(db, 'artifacts', appId, 'public', 'data', 'pendaftaran');
-        await addDoc(collRef, formData);
-        document.getElementById('reg-form-container').classList.add('hidden');
-        document.getElementById('success-message').classList.remove('hidden');
-        e.target.reset();
-    } catch (err) {
-        console.error("Ralat simpan data:", err);
-        alert("Ralat pendaftaran: " + err.message);
-    } finally {
-        btn.disabled = false;
-        btn.innerText = "Sahkan Pendaftaran";
-    }
-};
-        function listenToParticipants() {
-            const collRef = collection(db, 'artifacts', appId, 'public', 'data', 'pendaftaran');
-            onSnapshot(collRef, (snapshot) => {
-                const list = [];
-                snapshot.forEach(doc => list.push(doc.data()));
-                list.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
-                const container = document.getElementById('admin-list');
-                const countEl = document.getElementById('participant-count');
-                if (container) {
-                    countEl.innerText = list.length;
-                    container.innerHTML = list.map((p, i) => `
-                        <tr class="border-b border-slate-100 text-brand-dark text-[10px] uppercase font-bold">
-                            <td class="p-4">${list.length - i}</td>
-                            <td class="p-4">${p.nama}</td>
-                            <td class="p-4">${p.tempat_bertugas}</td>
-                            <td class="p-4 text-brand-gold">${p.negeri}</td>
-                        </tr>`).join('');
-                }
-            });
-        }
-        initAuth();
-    </script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'brand-blue': '#2d5a3d',
-                        'brand-gold': '#c5a059',
-                        'brand-soft': '#f8fafc',
-                        'brand-dark': '#0f172a',
-                    }
-                }
-            }
-        }
-    </script>
-
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
-        body { font-family: 'Inter', 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
 
-        /* ========== 1. PROGRESS BAR ========== */
-        #scroll-progress {
-            position: fixed;
-            top: 0; left: 0;
-            height: 3px;
-            width: 0%;
-            background: linear-gradient(90deg, #2d5a3d, #c5a059);
-            z-index: 9999;
-            transition: width 0.1s linear;
+        :root {
+            --green: #2d5a3d;
+            --green-dark: #1a3a2a;
+            --green-deep: #0d1f14;
+            --gold: #c5a059;
         }
 
-        /* ========== 2. NAVBAR SHRINK ON SCROLL ========== */
-        nav { transition: all 0.3s ease; }
-        nav.scrolled { box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
-        nav.scrolled .nav-inner { height: 56px !important; }
-        nav.scrolled .nav-logo { width: 38px !important; height: 38px !important; }
-        nav.scrolled .nav-title { font-size: 8px !important; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* ========== 3. SCHEDULE TAB SLIDE TRANSITION ========== */
-        .schedule-day { display: none; }
-        .schedule-day.active { display: block; }
-        .schedule-day.slide-in-right { animation: slideInRight 0.35s cubic-bezier(0.4,0,0.2,1); }
-        .schedule-day.slide-in-left  { animation: slideInLeft  0.35s cubic-bezier(0.4,0,0.2,1); }
-        @keyframes slideInRight { from { opacity: 0; transform: translateX(40px);  } to { opacity: 1; transform: translateX(0); } }
-        @keyframes slideInLeft  { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* ========== 4. TAB BUTTON ========== */
-        .tab-btn.active { background-color: #2d5a3d; color: white; border-color: #2d5a3d; }
-        .tab-btn { transition: all 0.25s ease; }
-
-        /* ========== 5. FLOATING BUTTONS BOUNCE ========== */
-        .float-btn {
-            animation: floatBounce 3s ease-in-out infinite;
-        }
-        .float-btn:nth-child(2) {
-            animation-delay: 1.5s;
-        }
-        @keyframes floatBounce {
-            0%, 100% { transform: translateY(0px); }
-            50%       { transform: translateY(-6px); }
-        }
-
-        /* ========== 6. COUNTDOWN PULSE ========== */
-        .timer-box {
-            transition: transform 0.15s ease;
-        }
-        .timer-box.pop {
-            animation: timerPop 0.25s ease;
-        }
-        @keyframes timerPop {
-            0%   { transform: scale(1); }
-            40%  { transform: scale(1.12); }
-            100% { transform: scale(1); }
-        }
-
-        /* ========== 7. SPEAKER HOVER OVERLAY ========== */
-        .speaker-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to top, rgba(45,90,61,0.92) 0%, rgba(45,90,61,0.4) 60%, transparent 100%);
-            opacity: 0;
-            transform: translateY(8px);
-            transition: opacity 0.35s ease, transform 0.35s ease;
-            display: flex;
-            align-items: flex-end;
-            padding: 1.25rem;
-        }
-        .speaker-card:hover .speaker-overlay {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .speaker-overlay-text {
-            color: white;
-            font-size: 0.78rem;
-            font-weight: 700;
-            line-height: 1.4;
-            font-style: italic;
-        }
-
-        /* ========== 8. SPEAKER CARD STAGGER AOS ========== */
-        .speaker-row [data-aos] { opacity: 0; }
-
-        /* ========== 9. HERO PARALLAX ========== */
-        .hero-parallax-bg {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            will-change: transform;
-        }
-
-        /* ========== OTHER EXISTING STYLES ========== */
-        .faq-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
-        .faq-item.active .faq-content { max-height: 400px; }
-        .faq-item.active .faq-icon { transform: rotate(180deg); }
-        .hover-zoom { transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
-        .hover-zoom:hover { transform: scale(1.05); }
-        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
-        .accordion-item.active .accordion-content { max-height: 200px; }
-        .accordion-item.active .accordion-icon { transform: rotate(180deg); }
-        .accordion-icon { transition: transform 0.3s ease; }
-
-        /* ========== AWANG CHATBOT AVATAR (floating full-body, waving hand) ========== */
-        #awang-avatar-wrap {
-            position: fixed;
-            bottom: 0;
-            right: 14px;
-            z-index: 200;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        #awang-figure {
-            position: relative;
-            width: 110px;
-            animation: awangFloat 3.2s ease-in-out infinite;
-        }
-        #awang-img-base {
-            width: 100%;
-            display: block;
-            filter: drop-shadow(0 10px 18px rgba(0,0,0,0.35));
-        }
-        @keyframes awangFloat {
-            0%, 100% { transform: translateY(0); }
-            50%      { transform: translateY(-8px); }
-        }
-        #awang-name-tag {
-            background: #2d5a3d;
-            color: white;
-            font-size: 10px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            padding: 4px 12px;
-            border-radius: 999px;
-            margin-bottom: 4px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-            opacity: 0;
-            transform: translateY(6px);
-            transition: opacity 0.25s ease, transform 0.25s ease;
-            white-space: nowrap;
-        }
-        #awang-avatar-wrap:hover #awang-name-tag,
-        #awang-avatar-wrap.has-pulsed #awang-name-tag {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        #awang-avatar-wrap.open #awang-figure { animation: none; transform: translateY(-4px); }
-
-        #chat-badge {
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: #c5a059;
-            color: white;
-            font-size: 11px;
-            font-weight: 900;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid white;
-            animation: badgePop 2.5s ease-in-out infinite;
-        }
-        @keyframes badgePop {
-            0%, 100% { transform: scale(1); }
-            50%      { transform: scale(1.15); }
-        }
-        #awang-avatar-wrap.open #chat-badge { display: none; }
-
-        #chat-window {
-            position: fixed;
-            bottom: 150px;
-            right: 24px;
-            width: 340px;
-            max-width: calc(100vw - 32px);
-            height: 460px;
-            max-height: calc(100vh - 220px);
-            background: white;
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-            z-index: 199;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            opacity: 0;
-            transform: translateY(20px) scale(0.96);
-            pointer-events: none;
-            transition: opacity 0.25s ease, transform 0.25s ease;
-        }
-        #chat-window.open {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            pointer-events: auto;
-        }
-        #chat-header {
-            background: linear-gradient(135deg, #2d5a3d, #1a3a2a);
-            padding: 16px 18px;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-shrink: 0;
-        }
-        #chat-header img {
-            width: 38px; height: 38px; border-radius: 50%;
-            background: rgba(255,255,255,0.15);
-            object-fit: cover; object-position: top;
-            flex-shrink: 0;
-        }
-        #chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        body {
+            font-family: 'Inter', 'Plus Jakarta Sans', system-ui, sans-serif;
+            color: #0f172a;
             background: #f8fafc;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
-        .chat-msg {
-            max-width: 85%;
-            padding: 10px 14px;
-            border-radius: 16px;
-            font-size: 13px;
-            line-height: 1.5;
-            animation: chatMsgIn 0.25s ease;
+
+        .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+        /* ---------- Hero ---------- */
+        .hero {
+            background:
+                radial-gradient(circle at 15% 20%, rgba(45,90,61,0.55) 0%, transparent 60%),
+                radial-gradient(circle at 85% 80%, rgba(197,160,89,0.28) 0%, transparent 60%),
+                linear-gradient(160deg, var(--green-deep) 0%, var(--green-dark) 100%);
+            color: #fff;
+            text-align: center;
+            padding: 96px 24px 88px;
+            border-bottom: 10px solid var(--gold);
         }
-        @keyframes chatMsgIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-        .chat-msg.bot {
-            background: white;
-            color: #1e293b;
-            align-self: flex-start;
-            border-bottom-left-radius: 4px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+
+        .hero img.crest { width: 76px; height: 76px; object-fit: contain; margin-bottom: 28px; }
+
+        .badge {
+            display: inline-block;
+            padding: 9px 22px;
+            margin-bottom: 26px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--gold);
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 999px;
         }
-        .chat-msg.user {
-            background: #2d5a3d;
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 4px;
-            font-weight: 600;
+
+        .hero h1 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: clamp(1.9rem, 5.2vw, 3.4rem);
+            font-weight: 800;
+            line-height: 1.15;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            margin-bottom: 22px;
         }
-        .chat-quick-replies {
+
+        .hero h1 span { color: var(--gold); }
+
+        .hero .tema {
+            max-width: 640px;
+            margin: 0 auto 30px;
+            font-size: 1.02rem;
+            font-style: italic;
+            color: rgba(255,255,255,0.78);
+        }
+
+        .meta {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
-            padding: 0 16px 14px;
-            background: #f8fafc;
-            flex-shrink: 0;
-        }
-        .chat-quick-btn {
-            font-size: 11px;
-            font-weight: 700;
-            padding: 7px 12px;
-            border-radius: 999px;
-            border: 1.5px solid #2d5a3d;
-            color: #2d5a3d;
-            background: white;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            white-space: nowrap;
-        }
-        .chat-quick-btn:hover { background: #2d5a3d; color: white; }
-        #chat-input-row {
-            display: flex;
-            gap: 8px;
-            padding: 12px;
-            border-top: 1px solid #e2e8f0;
-            background: white;
-            flex-shrink: 0;
-        }
-        #chat-input {
-            flex: 1;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 999px;
-            padding: 10px 16px;
-            font-size: 13px;
-            outline: none;
-            transition: border-color 0.2s ease;
-        }
-        #chat-input:focus { border-color: #2d5a3d; }
-        #chat-send {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background: #2d5a3d;
-            color: white;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            cursor: pointer;
-            flex-shrink: 0;
-            transition: background 0.2s ease;
+            gap: 12px 34px;
+            font-size: 0.96rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.85);
         }
-        #chat-send:hover { background: #1a3a2a; }
-        .chat-typing {
-            display: flex;
-            gap: 4px;
-            padding: 10px 14px;
-            background: white;
-            border-radius: 16px;
-            align-self: flex-start;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-        }
-        .chat-typing span {
-            width: 6px; height: 6px;
-            border-radius: 50%;
-            background: #94a3b8;
-            animation: chatTypingDot 1.2s infinite;
-        }
-        .chat-typing span:nth-child(2) { animation-delay: 0.2s; }
-        .chat-typing span:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes chatTypingDot { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-4px); opacity: 1; } }
 
-        @media (max-width: 420px) {
-            #chat-window { right: 16px; bottom: 140px; width: calc(100vw - 32px); }
-            #awang-avatar-wrap { right: 10px; }
-            #awang-img { width: 88px; }
+        .meta span::before { content: "•"; color: var(--gold); margin-right: 10px; }
+
+        /* ---------- Notis ---------- */
+        .notis {
+            background: #fff;
+            border-left: 6px solid var(--gold);
+            border-radius: 14px;
+            padding: 30px 34px;
+            margin: -46px auto 0;
+            max-width: 860px;
+            position: relative;
+            box-shadow: 0 18px 45px rgba(15,23,42,0.10);
+        }
+
+        .notis h2 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.12rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--green);
+            margin-bottom: 10px;
+        }
+
+        .notis p { color: #475569; font-size: 0.97rem; }
+        .notis p + p { margin-top: 10px; }
+
+        /* ---------- Seksyen ---------- */
+        section.blok { padding: 74px 0 10px; }
+
+        .tajuk {
+            text-align: center;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: clamp(1.5rem, 3.4vw, 2.1rem);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+            color: var(--green);
+        }
+
+        .garis { width: 88px; height: 5px; background: var(--gold); border-radius: 99px; margin: 18px auto 44px; }
+
+        .kad-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 22px;
+        }
+
+        a.kad {
+            display: block;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 28px 26px;
+            text-decoration: none;
+            color: inherit;
+            transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+        }
+
+        a.kad:hover, a.kad:focus-visible {
+            transform: translateY(-4px);
+            border-color: var(--gold);
+            box-shadow: 0 14px 32px rgba(15,23,42,0.10);
+            outline: none;
+        }
+
+        a.kad h3 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.02rem;
+            font-weight: 800;
+            color: var(--green);
+            margin-bottom: 8px;
+        }
+
+        a.kad p { font-size: 0.9rem; color: #64748b; }
+
+        a.kad .jenis {
+            display: inline-block;
+            margin-top: 16px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--gold);
+        }
+
+        /* ---------- Footer ---------- */
+        footer {
+            margin-top: 84px;
+            background: var(--green-dark);
+            color: #fff;
+            border-top: 10px solid var(--gold);
+            padding: 62px 0 34px;
+        }
+
+        .foot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 44px;
+        }
+
+        footer h4 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+
+        .anjur { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+        .anjur img { width: 38px; height: 38px; object-fit: contain; flex-shrink: 0; }
+        .anjur p { font-size: 0.76rem; opacity: 0.8; line-height: 1.35; }
+
+        footer p.baris { font-size: 0.88rem; opacity: 0.8; margin-bottom: 8px; }
+        footer a { color: var(--gold); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+
+        .hakcipta {
+            text-align: center;
+            margin-top: 46px;
+            font-size: 0.82rem;
+            opacity: 0.55;
+        }
+
+        @media (max-width: 640px) {
+            .hero { padding: 68px 20px 64px; }
+            .notis { padding: 26px 24px; }
+            section.blok { padding: 56px 0 6px; }
         }
     </style>
 </head>
+<body>
 
-<body class="bg-brand-soft text-brand-dark">
-<div id="scroll-progress"></div>
-
-    <!-- Side Floating Buttons -->
-    <div class="fixed right-0 top-1/2 -translate-y-1/2 z-[100] flex flex-col gap-1 items-end">
-        <a href="#aturcara" class="float-btn bg-brand-blue text-white px-3 py-7 rounded-l-2xl shadow-xl flex flex-col items-center gap-2 border-l border-white/20 hover:pr-8 transition-all group">
-            <i data-lucide="calendar-days" class="w-5 h-5 group-hover:scale-110"></i>
-            <span style="writing-mode: vertical-rl; text-orientation: mixed;" class="text-[10px] font-black uppercase tracking-widest">Aturcara</span>
-        </a>
-        <a href="#daftar" class="float-btn bg-brand-gold text-white px-3 py-7 rounded-l-2xl shadow-xl flex flex-col items-center gap-2 border-l border-white/20 hover:pr-8 transition-all group">
-            <i data-lucide="edit-3" class="w-5 h-5 group-hover:scale-110"></i>
-            <span style="writing-mode: vertical-rl; text-orientation: mixed;" class="text-[10px] font-black uppercase tracking-widest">Daftar</span>
-        </a>
-    </div>
-
-<!-- Navbar -->
-<nav id="main-nav" class="fixed w-full bg-white/95 backdrop-blur-md z-50 border-b border-slate-200 shadow-sm">
-    <div id="nav-inner" class="nav-inner max-w-7xl mx-auto px-6 h-20 flex items-center justify-between" style="transition: height 0.3s ease;">
-        <div class="flex items-center space-x-4 cursor-pointer" onclick="window.scrollTo({top:0, behavior:'smooth'})">
-            <div class="flex items-center gap-3">
-                <img src="Logo TKPM.png" alt="Logo" class="nav-logo w-14 h-14 object-contain" style="transition: all 0.3s ease;">
-                <div class="nav-title text-left font-black text-[#2d5a3d] uppercase leading-tight text-[10px]" style="transition: font-size 0.3s ease;">
-                    <span>Persatuan Pegawai</span><br/>
-                    <span>Pembangunan Masyarakat</span><br/>
-                    <span class="text-brand-gold">(Perubatan) Malaysia</span>
-                </div>
-            </div>
+    <header class="hero">
+        <img class="crest" src="Logo TKPM.png" alt="Logo Persatuan Pegawai Pembangunan Masyarakat (Perubatan) Malaysia">
+        <div class="badge">Edisi Ke-29 • Telah Tamat</div>
+        <h1>
+            Persidangan Pegawai Kerja Sosial Perubatan<br>
+            <span>Malaysia Ke-29</span>
+        </h1>
+        <p class="tema">
+            "Memperkasakan Perkhidmatan Kerja Sosial Perubatan Melalui Sinergi Digital dan Kecerdasan Buatan (AI)"
+        </p>
+        <div class="meta">
+            <span>2–4 Ogos 2026</span>
+            <span>Hotel Perdana, Kota Bharu, Kelantan</span>
         </div>
+    </header>
 
-<!-- Hamburger Button -->
-            <button id="hamburger" class="lg:hidden flex flex-col gap-1.5 p-2" onclick="toggleMenu()" aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="mobile-menu">
-                <span class="w-6 h-0.5 bg-brand-blue block transition-all"></span>
-                <span class="w-6 h-0.5 bg-brand-blue block transition-all"></span>
-                <span class="w-6 h-0.5 bg-brand-blue block transition-all"></span>
-            </button>
-        <div class="hidden lg:flex items-center space-x-8 text-xs font-black uppercase tracking-widest text-slate-600">
-            <a href="#penceramah" class="hover:text-[#2d5a3d] transition-colors">Penceramah</a>
-            <a href="#aturcara" class="hover:text-[#2d5a3d] transition-colors">Aturcara</a>
-            <a href="jawatankuasa.html" target="_blank" rel="noopener noreferrer" class="hover:text-[#2d5a3d] transition-colors">Jawatankuasa</a>
-
-            <!-- Dropdown Muat Turun yang lebih stabil -->
-            <div class="relative group">
-                <span class="cursor-pointer hover:text-[#2d5a3d] transition-colors flex items-center gap-1">
-                    Muat Turun
-                    <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-hover:rotate-180"></i>
-                </span>
-
-                <!-- Bridge invisible supaya hover tak putus bila gerak mouse ke dropdown -->
-                <div class="absolute right-0 top-full h-3 w-72"></div>
-
-                <!-- Dropdown content -->
-                <div class="absolute right-0 top-full pt-3 w-72 z-50 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-150">
-                <div class="bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden">
-                    <a href="Files/test.png.png" download 
-                        class="block px-6 py-4 text-slate-700 hover:bg-brand-soft transition-colors border-b border-slate-100">
-                    <span class="font-bold text-[#2d5a3d]">Slide Penceramah</span>
-                    </a>
-                    <a href="Files/bukup.pdf" download 
-                        class="block px-6 py-4 text-slate-700 hover:bg-brand-soft transition-colors border-b border-slate-100">
-                    <span class="font-bold text-[#2d5a3d]">Buku Program</span>
-                    </a>
-                    <a href="https://pkspconference2026.github.io/Daftar/sijil.html"
-                        class="block px-6 py-4 text-slate-700 hover:bg-brand-soft transition-colors">
-                    <span class="font-bold text-[#2d5a3d]">Sijil Penyertaan</span>
-                    </a>
-                </div>
-                </div>
-            </div>
-
-            <!-- Dropdown Kertas Saintifik -->
-<div class="relative group">
-    <span class="cursor-pointer hover:text-[#2d5a3d] transition-colors flex items-center gap-1">
-        Kertas Saintifik
-        <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-hover:rotate-180"></i>
-    </span>
-
-    <div class="absolute right-0 top-full h-3 w-72"></div>
-
-    <div class="absolute right-0 top-full pt-3 w-72 z-50 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-150">
-        <div class="bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden">
-            <a href="https://forms.gle/o9tbTVVyngbu5sLc8" target="_blank" rel="noopener noreferrer"
-                class="block px-6 py-4 text-slate-700 hover:bg-brand-soft transition-colors border-b border-slate-100">
-                <span class="font-bold text-[#2d5a3d]">Penyertaan</span>
-            </a>
-            <a href="Poster KS.jpeg" target="_blank" rel="noopener noreferrer"
-                class="block px-6 py-4 text-slate-700 hover:bg-brand-soft transition-colors border-b border-slate-100">
-                <span class="font-bold text-[#2d5a3d]">Syarat Pertandingan</span>
-            </a>
-            <a href="Pembentang KS.png" target="_blank" rel="noopener noreferrer"
-                class="block px-6 py-4 text-slate-700 hover:bg-brand-soft transition-colors">
-                <span class="font-bold text-[#2d5a3d]">Pembentang</span>
-            </a>
-        </div>
-    </div>
-</div>
-            <a href="#lokasi" class="hover:text-[#2d5a3d] transition-colors">Lokasi</a>
-            <a href="#daftar" class="bg-[#2d5a3d] text-white px-8 py-3 rounded-full hover:bg-[#1a3a2a] transition-all">Daftar</a>
-        </div>
-    </div>
-    <!-- Mobile Menu -->
-<div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-slate-200 px-6 py-4 space-y-4">
-    <a href="#penceramah" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d] py-2">Penceramah</a>
-    <a href="#aturcara" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d] py-2">Aturcara</a>
-    <a href="jawatankuasa.html" target="_blank" rel="noopener noreferrer" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d] py-2">Jawatankuasa</a>
-    <a href="https://pkspconference2026.github.io/Daftar/sijil.html" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d] py-2">Sijil Penyertaan</a>
-    <div class="relative">
-        <div>
-    <button onclick="toggleMobileSubmenu()" class="flex items-center justify-between w-full text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d] py-2">
-        Kertas Saintifik
-        <i data-lucide="chevron-down" class="w-4 h-4" id="ks-chevron"></i>
-    </button>
-    <div id="ks-submenu" class="hidden pl-4 space-y-1 border-l-2 border-brand-gold ml-2 mt-1">
-        <a href="https://forms.gle/o9tbTVVyngbu5sLc8" target="_blank" rel="noopener noreferrer" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d] py-2">↳ Penyertaan</a>
-        <a href="Poster KS.jpeg" target="_blank" rel="noopener noreferrer" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d] py-2">↳ Syarat Pertandingan</a>
-        <a href="Pembentang KS.png" target="_blank" rel="noopener noreferrer" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d] py-2">↳ Pembentang</a>
-    </div>
-</div>
-    <a href="#lokasi" onclick="toggleMenu()" class="block text-xs font-black uppercase tracking-widest text-slate-600 hover:text-[#2d5a3d]py-2">Lokasi</a>
-    <a href="#daftar" onclick="toggleMenu()" class="block w-full text-center bg-[#2d5a3d] text-white px-8 py-3 rounded-full font-black uppercase text-xs hover:bg-[#1a3a2a] transition-all">Daftar</a>
-</div>
-</div>
-</nav>
-
-    <!-- Hero -->
-    <section id="hero" class="pt-48 pb-32 px-6 text-center relative overflow-hidden" style="background: #0d1f14;">
-
-        <!-- Layer 0: Base dark green gradient (static) -->
-        <div class="absolute inset-0" style="background: radial-gradient(ellipse at 60% 40%, #1a3a22 0%, #0d1f14 70%);"></div>
-
-        <!-- Layer 1: SVG geometric pattern (slowest parallax) -->
-        <div id="hero-layer-1" class="absolute inset-0 pointer-events-none" style="will-change: transform; transform: scale(1.08);">
-            <svg class="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-                <defs>
-                    <pattern id="hexGrid" x="0" y="0" width="80" height="92" patternUnits="userSpaceOnUse">
-                        <polygon points="40,4 76,24 76,68 40,88 4,68 4,24" fill="none" stroke="#2d5a3d" stroke-width="0.8" opacity="0.5"/>
-                    </pattern>
-                    <pattern id="dotGrid" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-                        <circle cx="20" cy="20" r="1.2" fill="#c5a059" opacity="0.25"/>
-                    </pattern>
-                </defs>
-                <rect width="100%" height="100%" fill="url(#hexGrid)"/>
-                <rect width="100%" height="100%" fill="url(#dotGrid)"/>
-            </svg>
-        </div>
-
-        <!-- Layer 2: Floating geometric shapes (medium parallax) -->
-        <div id="hero-layer-2" class="absolute inset-0 pointer-events-none" style="will-change: transform; transform: scale(1.06);">
-            <!-- Large ring top-right -->
-            <div class="absolute" style="top:-80px; right:-60px; width:420px; height:420px; border-radius:50%; border: 1.5px solid rgba(197,160,89,0.18);"></div>
-            <div class="absolute" style="top:-30px; right:-10px; width:280px; height:280px; border-radius:50%; border: 1px solid rgba(197,160,89,0.12);"></div>
-            <!-- Bottom-left triangle accent -->
-            <svg class="absolute" style="bottom:40px; left:60px; opacity:0.12;" width="180" height="156" viewBox="0 0 180 156">
-                <polygon points="90,4 176,152 4,152" fill="none" stroke="#c5a059" stroke-width="1.5"/>
-                <polygon points="90,30 155,138 25,138" fill="none" stroke="#c5a059" stroke-width="0.8"/>
-            </svg>
-            <!-- Top-left diamond -->
-            <svg class="absolute" style="top:100px; left:80px; opacity:0.1;" width="100" height="100" viewBox="0 0 100 100">
-                <polygon points="50,4 96,50 50,96 4,50" fill="none" stroke="#c5a059" stroke-width="1.2"/>
-            </svg>
-            <!-- Mid-right lines -->
-            <svg class="absolute" style="right:120px; top:35%; opacity:0.08;" width="120" height="120" viewBox="0 0 120 120">
-                <line x1="0" y1="60" x2="120" y2="60" stroke="#c5a059" stroke-width="1"/>
-                <line x1="60" y1="0" x2="60" y2="120" stroke="#c5a059" stroke-width="1"/>
-                <circle cx="60" cy="60" r="30" fill="none" stroke="#c5a059" stroke-width="0.8"/>
-                <circle cx="60" cy="60" r="55" fill="none" stroke="#c5a059" stroke-width="0.5"/>
-            </svg>
-        </div>
-
-        <!-- Layer 3: Glowing orbs (fastest parallax) -->
-        <div id="hero-layer-3" class="absolute inset-0 pointer-events-none" style="will-change: transform; transform: scale(1.1);">
-            <div class="absolute" style="top:15%; left:8%; width:320px; height:320px; border-radius:50%; background: radial-gradient(circle, rgba(45,90,61,0.35) 0%, transparent 70%); filter: blur(40px);"></div>
-            <div class="absolute" style="bottom:10%; right:10%; width:260px; height:260px; border-radius:50%; background: radial-gradient(circle, rgba(197,160,89,0.2) 0%, transparent 70%); filter: blur(50px);"></div>
-            <div class="absolute" style="top:50%; left:50%; transform:translate(-50%,-50%); width:500px; height:500px; border-radius:50%; background: radial-gradient(circle, rgba(45,90,61,0.12) 0%, transparent 65%); filter: blur(60px);"></div>
-        </div>
-
-        <!-- Dark overlay to ensure text readability -->
-        <div class="absolute inset-0 pointer-events-none" style="background: linear-gradient(to bottom, rgba(13,31,20,0.45) 0%, rgba(13,31,20,0.25) 50%, rgba(13,31,20,0.55) 100%);"></div>
-        
-        <div class="max-w-7xl mx-auto relative z-10" data-aos="fade-up">
-            <div class="inline-flex items-center px-6 py-2 mb-8 text-xs font-black tracking-[0.3em] text-brand-gold uppercase bg-white/10 backdrop-blur-sm border border-white/20 rounded-full shadow-sm">
-                Edisi Kebangsaan • 2–4 Ogos 2026
-            </div>
-            
-            <h1 class="text-4xl md:text-6xl lg:text-7xl font-black text-white mb-6 leading-tight uppercase tracking-tight">
-                Persidangan Pegawai<br class="md:hidden"> Kerja Sosial Perubatan<br/>
-                <span class="text-brand-gold">Malaysia KE-29</span>
-            </h1>
-            
-            <p class="text-lg text-white/70 font-medium mb-4 max-w-2xl mx-auto">
-                "Memperkasakan Perkhidmatan Kerja Sosial Perubatan Melalui Sinergi Digital dan Kecerdasan Buatan (AI)"
+    <div class="wrap">
+        <div class="notis">
+            <h2>Persidangan telah berlangsung</h2>
+            <p>
+                PKSP Ke-29 telah selesai pada 4 Ogos 2026. Pendaftaran peserta dan penghantaran
+                kertas kerja telah ditutup, dan tiada lagi urusan pendaftaran dikendalikan melalui laman ini.
             </p>
-            
-            <div class="flex flex-col sm:flex-row justify-center items-center gap-4 md:gap-8 mb-10 text-lg font-semibold text-white/80">
-                <div class="flex items-center gap-3">
-                    <i data-lucide="calendar" class="w-6 h-6 text-brand-gold"></i>
-                    <span>2-4 Ogos 2026</span>
-                </div>
-                <div class="flex items-center gap-3">
-                    <i data-lucide="map-pin" class="w-6 h-6 text-brand-gold"></i>
-                    <span>Hotel Perdana, Kota Bharu, Kelantan</span>
-                </div>
-            </div>
+            <p>
+                Halaman ini dikekalkan sebagai arkib rasmi persidangan. Terima kasih kepada semua peserta,
+                penceramah, ahli jawatankuasa dan pihak penaja atas sokongan yang diberikan.
+            </p>
+        </div>
 
-            <div id="countdown" class="flex justify-center flex-wrap gap-4 md:gap-8 mb-12"></div>
+        <section class="blok">
+            <h2 class="tajuk">Arkib Persidangan</h2>
+            <div class="garis"></div>
 
-            <div class="flex flex-col sm:flex-row justify-center gap-5 md:gap-8">
-                <a href="#daftar" class="border-2 border-white text-white px-10 md:px-14 py-5 rounded-3xl font-black uppercase text-sm md:text-base bg-transparent hover:bg-white hover:text-[#2d5a3d] transition-all transform hover:scale-105">
-                    Daftar Sekarang
+            <div class="kad-grid">
+                <a class="kad" href="Files/bukup.pdf">
+                    <h3>Buku Program</h3>
+                    <p>Aturcara penuh, sinopsis sesi dan maklumat penceramah PKSP Ke-29.</p>
+                    <span class="jenis">PDF · Muat turun</span>
                 </a>
-                <a href="flyer.pdf" target="_blank" rel="noopener noreferrer" class="border-2 border-brand-gold text-brand-gold px-10 md:px-14 py-5 rounded-3xl font-black uppercase text-sm md:text-base hover:bg-brand-gold hover:text-white transition-all">
-                    Muat Turun Flyer
+
+                <a class="kad" href="flyer.pdf">
+                    <h3>Flyer Rasmi</h3>
+                    <p>Risalah promosi persidangan beserta tema, tarikh dan lokasi.</p>
+                    <span class="jenis">PDF · Muat turun</span>
+                </a>
+
+                <a class="kad" href="jawatankuasa.html">
+                    <h3>Ahli Jawatankuasa</h3>
+                    <p>Senarai penuh jawatankuasa penganjur dan biro-biro pelaksana.</p>
+                    <span class="jenis">Halaman</span>
+                </a>
+
+                <a class="kad" href="Poster%20KS.jpeg">
+                    <h3>Poster Kertas Kerja</h3>
+                    <p>Poster rasmi pembentangan kertas kerja dan sesi penyelidikan.</p>
+                    <span class="jenis">Imej</span>
                 </a>
             </div>
-        </div>
-    </section>
+        </section>
+    </div>
 
-    <!-- Kata Aluan Pengerusi -->
-<section class="py-32 bg-white border-y border-slate-100 px-6">
-    <div class="max-w-7xl mx-auto" data-aos="fade-up">
-        <div class="text-center mb-16">
-            <h2 class="text-4xl md:text-5xl font-black text-[#2d5a3d] uppercase tracking-tight">
-                Kata Aluan
-            </h2>
-            <div class="w-24 h-1.5 bg-brand-gold mx-auto mt-6 rounded-full"></div>
-        </div>
-
-        <div class="grid md:grid-cols-3 gap-12 lg:gap-16">
-
-            <!-- 1. Ketua Profesion -->
-            <div class="flex flex-col items-center">
-                <div class="relative mb-8">
-                    <img loading="lazy" src="En.Zulhan.jpg" alt="En. Zulhan bin Ambi" class="w-56 h-56 rounded-full object-cover border-[12px] border-white shadow-2xl hover-zoom">
-                    <div class="absolute -bottom-6 -right-6 bg-brand-blue p-5 rounded-[2rem] text-white shadow-2xl">
-                        <i data-lucide="quote" class="w-8 h-8 fill-current"></i>
+    <footer>
+        <div class="wrap">
+            <div class="foot-grid">
+                <div>
+                    <h4>Anjuran Bersama</h4>
+                    <div class="anjur">
+                        <img src="Jata Negara.png" alt="">
+                        <p>Kementerian Kesihatan Malaysia</p>
                     </div>
-                </div>
-                <h3 class="font-black text-xl text-[#2d5a3d] mb-2 text-center">En. Zulhan bin Ambi</h3>
-                <p class="text-brand-gold font-bold text-xs uppercase tracking-widest mb-4 text-center">Ketua Profesion Pegawai Kerja Sosial Perubatan, Kementerian Kesihatan Malaysia</p>
-                <p class="text-slate-900 leading-relaxed text-center">
-                    Profesion Kerja Sosial Perubatan terus berkembang sebagai tunjang kepada sistem penjagaan kesihatan negara. Melalui persidangan ini, kita bersama-sama memperkasa diri dengan ilmu dan strategi terkini bagi memastikan setiap pesakit mendapat sokongan psikososial yang holistik dan bermakna. Saya berharap semua peserta dapat memanfaatkan sepenuhnya platform ilmu yang berharga ini.
-                </p>
-            </div>
-
-            <!-- 2. Presiden Persatuan -->
-            <div class="flex flex-col items-center">
-                <div class="relative mb-8">
-                    <img loading="lazy" src="Presiden Persatuan.jpg" alt="Presiden" class="w-56 h-56 rounded-full object-cover border-[12px] border-white shadow-2xl hover-zoom">
-                    <div class="absolute -bottom-6 -right-6 bg-brand-blue p-5 rounded-[2rem] text-white shadow-2xl">
-                        <i data-lucide="quote" class="w-8 h-8 fill-current"></i>
+                    <div class="anjur">
+                        <img src="Jata Negara.png" alt="">
+                        <p>Kementerian Pendidikan Tinggi</p>
                     </div>
-                </div>
-                <h3 class="font-black text-xl text-[#2d5a3d] mb-2 text-center">Tn. Hj. Harolhanam bin Mohamed Wahid</h3>
-                <p class="text-brand-gold font-bold text-xs uppercase tracking-widest mb-4 text-center">Presiden Persatuan Pegawai Pembangunan Masyarakat (Perubatan) Malaysia</p>
-                <p class="text-slate-900 leading-relaxed text-center">
-                    Persidangan Pegawai Kerja Sosial Perubatan (PKSP) ke 29 merupakan kolaborasi penganjuran yang sangat baik di antara Persatuan Pegawai Pembangunan Masyarakat (Perubatan) Malaysia dengan kerjasama Profesion Pegawai Kerja Sosial Perubatan, Kementerian Kesihatan Malaysia. Persidangan ini diharapkan akan dapat meningkatkan imej profesion dan persatuan di peringkat KKM dan negara melalui pendekatan Teknologi AI dalam amalan Kerja Sosial Perubatan. Selamat Bersidang.
-                </p>
-            </div>
-
-            <!-- 3. Pengerusi Persidangan -->
-            <div class="flex flex-col items-center">
-                <div class="relative mb-8">
-                    <img loading="lazy" src="P.Zaila.jpg" alt="Pengerusi Persidangan" class="w-56 h-56 rounded-full object-cover border-[12px] border-white shadow-2xl hover-zoom">
-                    <div class="absolute -bottom-6 -right-6 bg-brand-gold p-5 rounded-[2rem] text-white shadow-2xl">
-                        <i data-lucide="quote" class="w-8 h-8 fill-current"></i>
-                    </div>
-                </div>
-                <h3 class="font-black text-xl text-[#2d5a3d] mb-2 text-center">Pn. Hjh Zailawati binti Mamat</h3>
-                <p class="text-brand-gold font-bold text-xs uppercase tracking-widest mb-4 text-center">Pengerusi Persidangan Kali ke-29</p>
-                <p class="text-slate-900 leading-relaxed text-center">
-                    Persidangan ini menjadi platform penting bagi Pegawai Kerja Sosial Perubatan untuk berkongsi pengetahuan, pengalaman serta amalan terbaik dalam memperkukuhkan perkhidmatan kerja sosial perubatan di Malaysia. Dalam dunia perubatan yang semakin berkembang dan mencabar, peranan Pegawai Kerja Sosial Perubatan amat signifikan dalam memastikan aspek psikososial pesakit dan keluarga terus diberi perhatian secara menyeluruh dan berkesan.
-                </p>
-            </div>
-
-        </div>
-    </div>
-</section>
-
-    <!-- Penceramah -->
-<section id="penceramah" class="py-32 bg-white px-6 border-t border-slate-100">
-    <div class="max-w-7xl mx-auto">
-        <div class="text-center mb-20" data-aos="fade-up">
-            <h2 class="text-4xl md:text-5xl font-black text-slate-900 uppercase tracking-tight">Barisan Penceramah Jemputan</h2>
-            <div class="w-24 h-1.5 bg-brand-gold mx-auto mt-6 rounded-full"></div>
-        </div>
-
-        <!-- Row 1: 3 card -->
-        <div class="speaker-row grid md:grid-cols-3 gap-6 mb-6">
-
-            <!-- Speaker 1 -->
-            <div class="speaker-card bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group" data-aos="fade-up" data-aos-delay="0">
-                <div class="h-72 overflow-hidden relative">
-                    <img loading="lazy" src="Dr Mohd Azman.jpeg" alt="Dato' Dr Mohd Azman" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
-                    <div class="speaker-overlay">
-                        <p class="speaker-overlay-text">"Hala Tuju dan Pemerkasaan Profesion Pegawai Kerja Sosial Perubatan di Malaysia"</p>
-                    </div>
-                </div>
-                <div class="p-7 text-center">
-                    <h3 class="font-black text-lg text-slate-900 mb-1.5">YBhg. Dato' Dr Mohd Azman bin Yacob</h3>
-                    <p class="text-brand-gold font-bold text-xs uppercase tracking-wide mb-2">Timbalan Ketua Pengarah Kesihatan (Perubatan)</p>
-                    <p class="text-slate-400 text-xs">Kementerian Kesihatan Malaysia</p>
-                </div>
-            </div>
-
-            <!-- Speaker 2 -->
-            <div class="speaker-card bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group" data-aos="fade-up" data-aos-delay="100">
-                <div class="h-72 overflow-hidden relative">
-                    <img loading="lazy" src="Dr. Wan Zuraini.jpeg" alt="Dr. Wan Zuraini Mahrawi" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
-                    <div class="speaker-overlay">
-                        <p class="speaker-overlay-text">"Seronoknya AI: Pengurusan Kes Pesakit Lebih Pantas, Tepat dan Pintar"</p>
-                    </div>
-                </div>
-                <div class="p-7 text-center">
-                    <h3 class="font-black text-lg text-slate-900 mb-1.5">Dr. Wan Zuraini Mahrawi</h3>
-                    <p class="text-brand-gold font-bold text-xs uppercase tracking-wide mb-2">Ketua Unit Pengurusan Risiko Pesakit & Surveilan Klinikal, Institut Kanser Negara</p>
-                    <p class="text-slate-400 text-xs">Pengurusan Risiko Pesakit • Surveilan Klinikal • AI dalam Penjagaan Kesihatan</p>
-                </div>
-            </div>
-
-            <!-- Speaker 3 -->
-            <div class="speaker-card bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group" data-aos="fade-up" data-aos-delay="200">
-                <div class="h-72 overflow-hidden relative">
-                    <img loading="lazy" src="Prof. Huzili.png" alt="Prof. Dr. Huzili" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
-                    <div class="speaker-overlay">
-                        <p class="speaker-overlay-text">"Resiliensi Minda Digital: Memperkasakan Kesejahteraan Psikologi Pegawai Kerja Sosial di Alaf Kecerdasan Buatan"</p>
-                    </div>
-                </div>
-                <div class="p-7 text-center">
-                    <h3 class="font-black text-lg text-slate-900 mb-1.5">Prof. Dr. Huzili Hussin</h3>
-                    <p class="text-brand-gold font-bold text-xs uppercase tracking-wide mb-2">Universiti Malaysia Kelantan (UMK)</p>
-                    <p class="text-slate-400 text-xs">Kaunseling & Psikologi Organisasi</p>
-                </div>
-            </div>
-
-        </div> <!-- ← PENUTUP Row 1 yang betul -->
-
-        <!-- Row 2: 3 card -->
-        <div class="speaker-row grid md:grid-cols-3 gap-6">
-
-            <!-- Speaker 4 -->
-            <div class="speaker-card bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group" data-aos="fade-up" data-aos-delay="0">
-                <div class="h-72 overflow-hidden relative">
-                    <img loading="lazy" src="Dr. Wan Munira.jpeg" alt="Dr. Wan Munira" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
-                    <div class="speaker-overlay">
-                        <p class="speaker-overlay-text">"Sinergi Digital Komuniti: Mentransformasi Intervensi Kerja Sosial Perubatan Melalui Aplikasi Kecerdasan Buatan (AI)"</p>
-                    </div>
-                </div>
-                <div class="p-7 text-center">
-                    <h3 class="font-black text-lg text-slate-900 mb-1.5">Dr. Wan Munira binti Wan Jaafar</h3>
-                    <p class="text-brand-gold font-bold text-xs uppercase tracking-wide mb-2">Universiti Putra Malaysia (UPM)</p>
-                    <p class="text-slate-400 text-xs">Pembangunan Komuniti • Masyarakat Digital • Kajian Gender</p>
-                </div>
-            </div>
-
-            <!-- Speaker 5 -->
-            <div class="speaker-card bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group" data-aos="fade-up" data-aos-delay="100">
-                <div class="h-72 overflow-hidden relative">
-                    <img loading="lazy" src="Dr. Teoh.png" alt="Dr. Teoh" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
-                    <div class="speaker-overlay">
-                        <p class="speaker-overlay-text">"AI, Etika Dan Kesejahteraan Sosial: Peranan Pegawai Kerja Sosial Perubatan"</p>
-                    </div>
-                </div>
-                <div class="p-7 text-center">
-                    <h3 class="font-black text-lg text-slate-900 mb-1.5">Dr. Teoh Ai Hua</h3>
-                    <p class="text-brand-gold font-bold text-xs uppercase tracking-wide mb-2">Universiti Utara Malaysia (UUM)</p>
-                    <p class="text-slate-400 text-xs">Kerja Sosial • Kebajikan Sosial • Pengurusan Kes • Nilai & Etika Kerja Sosial</p>
-                </div>
-            </div>
-
-            <!-- Speaker 6 -->
-            <div class="speaker-card bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group" data-aos="fade-up" data-aos-delay="200">
-                <div class="h-72 overflow-hidden relative">
-                    <img loading="lazy" src="Dr. Hafiz.png" alt="Dr. Muhamad Hafiz bin Harun" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
-                    <div class="speaker-overlay">
-                        <p class="speaker-overlay-text">"Pengurusan Rumah Generasiku Sayang Jabatan Kesihatan Negeri Kelantan"</p>
-                    </div>
-                </div>
-                <div class="p-7 text-center">
-                    <h3 class="font-black text-lg text-slate-900 mb-1.5">Dr. Muhamad Hafiz bin Harun</h3>
-                    <p class="text-brand-gold font-bold text-xs uppercase tracking-wide mb-2">Pakar Perubatan Kesihatan Awam, PKD Tumpat, Kelantan</p>
-                    <p class="text-slate-400 text-xs">Kesihatan Awam • Pengurusan Kesihatan Komuniti</p>
-                </div>
-            </div>
-
-        </div> <!-- ← PENUTUP Row 2 -->
-
-    </div> <!-- ← PENUTUP max-w-7xl -->
-</section>
-
-    <!-- Aturcara -->
-    <section id="aturcara" class="py-32 bg-brand-soft px-6">
-        <div class="max-w-5xl mx-auto" data-aos="fade-up">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-5xl font-black uppercase tracking-tight">Aturcara Persidangan</h2>
-                <p class="text-slate-600 mt-4 text-lg">2–4 Ogos 2026 • Hotel Perdana, Kota Bharu, Kelantan</p>
-            </div>
-
-            <!-- Tab untuk pilih hari -->
-            <div class="flex justify-center gap-4 mb-12">
-                <button data-day="1" class="tab-btn active px-10 py-4 rounded-full font-black text-xs uppercase transition-all border border-slate-200 bg-brand-blue text-white">
-                    Hari 1
-                </button>
-                <button data-day="2" class="tab-btn px-10 py-4 rounded-full font-black text-xs uppercase transition-all border border-slate-200 text-slate-600 bg-white hover:bg-slate-100">
-                    Hari 2
-                </button>
-                <button data-day="3" class="tab-btn px-10 py-4 rounded-full font-black text-xs uppercase transition-all border border-slate-200 text-slate-600 bg-white hover:bg-slate-100">
-                    Hari 3
-                </button>
-            </div>
-
-            <!-- Hari 1 -->
-<div id="day-1" class="schedule-day active space-y-3">
-    <h3 class="text-2xl font-black text-[#2d5a3d] flex items-center gap-3 mb-6">
-        <span class="bg-brand-blue text-white px-4 py-2 rounded-xl">2 Ogos 2026 (Ahad)</span>
-    </h3>
-
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex gap-4 items-center">
-    <span class="text-xs font-black text-brand-gold w-28 shrink-0">3.00 – 4.00 ptg</span>
-    <span class="font-bold text-brand-dark">Pendaftaran Peserta / Check-in</span>
-</div>
-
-    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
-            <div class="flex gap-4 items-center">
-                <span class="text-xs font-black text-brand-gold w-28 shrink-0">4.00 – 5.00 ptg</span>
-                <span class="font-bold text-brand-dark">Perkongsian Pengalaman</span>
-            </div>
-            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
-        </button>
-        <div class="accordion-content px-5 pb-5">
-            <p class="text-slate-600 italic text-sm">Pengurusan Rumah Generasiku Sayang Jabatan Kesihatan Negeri Kelantan</p>
-            <p class="text-slate-500 text-sm mt-1">Dr. Muhamad Hafiz bin Harun • Pakar Perubatan Kesihatan Awam, Pejabat Kesihatan Daerah Tumpat</p>
-        </div>
-    </div>
-
-   <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex gap-4 items-center">
-    <span class="text-xs font-black text-brand-gold w-28 shrink-0">5.00 – 7.00 ptg</span>
-    <span class="font-bold text-brand-dark">Rehat / Riadah</span>
-</div>
-
-   <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex gap-4 items-center">
-    <span class="text-xs font-black text-brand-gold w-28 shrink-0">7.00 – 8.00 mlm</span>
-    <span class="font-bold text-brand-dark">Makan Malam</span>
-</div>
-
-    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
-            <div class="flex gap-4 items-center">
-                <span class="text-xs font-black text-brand-gold w-28 shrink-0">8.00 – 8.15 mlm</span>
-                <span class="font-bold text-brand-dark">Taklimat Persidangan</span>
-            </div>
-            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
-        </button>
-        <div class="accordion-content px-5 pb-5">
-            <p class="text-slate-500 text-sm">Pn. Hjh Zailawati binti Mamat • Pengerusi Persidangan PKSP Malaysia Ke-29</p>
-        </div>
-    </div>
-
-    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
-            <div class="flex gap-4 items-center">
-                <span class="text-xs font-black text-brand-gold w-28 shrink-0">8.15 – 9.15 mlm</span>
-                <span class="font-bold text-brand-dark">Pembentangan Kertas Saintifik</span>
-            </div>
-            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
-        </button>
-        <div class="accordion-content px-5 pb-5">
-            <p class="text-slate-600 italic text-sm">Cabaran Keluarga Sebagai Penjaga Utama Kepada Pesakit Kecederaan Otak Traumatik dan Adaptasi Strategi Daya Tindak Fokus Emosi</p>
-            <p class="text-slate-500 text-sm mt-1">Dr. Nor Amalina binti Jali • Hospital Sultan Haji Ahmad Shah, Temerloh</p>
-        </div>
-    </div>
-
-    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
-            <div class="flex gap-4 items-center">
-                <span class="text-xs font-black text-brand-gold w-28 shrink-0">9.15 – 10.00 mlm</span>
-                <span class="font-bold text-brand-dark">Pembentangan Kertas Saintifik</span>
-            </div>
-            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
-        </button>
-        <div class="accordion-content px-5 pb-5">
-            <p class="text-slate-600 italic text-sm">Pengaruh Persekitaran Taska Terhadap Kepuasan Ibu Bapa Kajian dari Aspek Keselamatan Kesihatan</p>
-            <p class="text-slate-500 text-sm mt-1">Cik Wan Hamizah binti Wan Hassan • Hospital Sultan Haji Ahmad Shah, Temerloh</p>
-        </div>
-    </div>
-
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex gap-4 items-center">
-    <span class="text-xs font-black text-brand-gold w-28 shrink-0">10.00 mlm</span>
-    <span class="font-bold text-brand-dark">Bersurai</span>
-</div>
-</div>
-
-            <!-- Hari 2 -->
-<div id="day-2" class="schedule-day hidden space-y-3">
-    <h3 class="text-2xl font-black text-[#2d5a3d] flex items-center gap-3 mb-6">
-        <span class="bg-brand-blue text-white px-4 py-2 rounded-xl">3 Ogos 2026 (Isnin)</span>
-    </h3>
-
-   <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex gap-4 items-center">
-    <span class="text-xs font-black text-brand-gold w-28 shrink-0">8.00 – 8.15 pg</span>
-    <span class="font-bold text-brand-dark">Pendaftaran Peserta Hari ke-2</span>
-</div>
-
-    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
-            <div class="flex gap-4 items-center">
-                <span class="text-xs font-black text-brand-gold w-28 shrink-0">8.30 – 9.30 pg</span>
-                <span class="font-bold text-brand-dark">AI, Etika dan Kesejahteraan Sosial</span>
-            </div>
-            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
-        </button>
-        <div class="accordion-content px-5 pb-5">
-            <p class="text-slate-600 italic text-sm">AI, Etika dan Kesejahteraan Sosial: Peranan Pegawai Kerja Sosial Perubatan</p>
-            <p class="text-slate-500 text-sm mt-1">Dr. Teoh Ai Hua • Pensyarah Kanan, Pusat Pengajian Psikologi Gunaan, Dasar dan Kerja Sosial, Universiti Utara Malaysia (UUM)</p>
-        </div>
-    </div>
-
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex gap-4 items-center">
-    <span class="text-xs font-black text-brand-gold w-28 shrink-0">9.30 – 10.00 pg</span>
-    <span class="font-bold text-brand-dark">Minum Pagi</span>
-</div>
-
-    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
-            <div class="flex gap-4 items-center">
-                <span class="text-xs font-black text-brand-gold w-28 shrink-0">10.00 pg – 12.00 tgh</span>
-                <span class="font-bold text-brand-dark">Majlis Perasmian Persidangan PKSP Ke-29</span>
-            </div>
-            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
-        </button>
-        <div class="accordion-content px-5 pb-5">
-            <p class="text-slate-500 text-sm">YBhg. Datuk Seri Hj. Hasnol Zam Zam bin Hj. Ahmad • Ketua Setiausaha • Kementerian Kesihatan Malaysia</p>
-        </div>
-    </div>
-
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex gap-4 items-center">
-    <span class="text-xs font-black text-brand-gold w-28 shrink-0">12.00 tgh – 2.00 ptg</span>
-    <span class="font-bold text-brand-dark">Makan Tengahari / Rehat</span>
-</div>
-
-    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
-            <div class="flex gap-4 items-center">
-                <span class="text-xs font-black text-brand-gold w-28 shrink-0">2.00 – 2.15 ptg</span>
-                <span class="font-bold text-brand-dark">Pembentangan Kertas Saintifik</span>
-            </div>
-            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
-        </button>
-        <div class="accordion-content px-5 pb-5">
-            <p class="text-slate-600 italic text-sm">Psychosocial Health Challenges Among Adolescents: Implication for Medical Social Work Practice</p>
-            <p class="text-slate-500 text-sm mt-1">En. Sutharssan Nadarajan • Hospital Sri Aman, Sarawak</p>
-        </div>
-    </div>
-
-    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
-            <div class="flex gap-4 items-center">
-                <span class="text-xs font-black text-brand-gold w-28 shrink-0">2.15 – 2.30 ptg</span>
-                <span class="font-bold text-brand-dark">Pembentangan Kertas Saintifik</span>
-            </div>
-            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
-        </button>
-        <div class="accordion-content px-5 pb-5">
-            <p class="text-slate-600 italic text-sm">Daya Tindak Golongan Gelandangan Dalam Mengatasi Masalah Kesihatan Mental</p>
-            <p class="text-slate-500 text-sm mt-1">Cik Suhaizah binti Zainudin • Pegawai Kerja Sosial Perubatan, Hospital Canselor Tuanku Mukriz (HCTM), Cheras</p>
-        </div>
-    </div>
-
-    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
-            <div class="flex gap-4 items-center">
-                <span class="text-xs font-black text-brand-gold w-28 shrink-0">2.30 – 4.30 ptg</span>
-                <span class="font-bold text-brand-dark">Ceramah 2</span>
-            </div>
-            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
-        </button>
-        <div class="accordion-content px-5 pb-5">
-            <p class="text-slate-600 italic text-sm">Seronoknya AI: Pengurusan Kes Pesakit Lebih Pantas, Tepat dan Pintar</p>
-            <p class="text-slate-500 text-sm mt-1">Dr. Wan Zuraini Mahrawi • Ketua Unit Pengurusan Risiko dan Surveilan Klinikal, Institut Kanser Negara</p>
-        </div>
-    </div>
-
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex gap-4 items-center">
-    <span class="text-xs font-black text-brand-gold w-28 shrink-0">4.00 – 5.00 ptg</span>
-    <span class="font-bold text-brand-dark">Lawatan & Penilaian Poster</span>
-</div>
-
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex gap-4 items-center">
-    <span class="text-xs font-black text-brand-gold w-28 shrink-0">5.00 – 7.00 mlm</span>
-    <span class="font-bold text-brand-dark">Rehat / Riadah</span>
-</div>
-    
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex gap-4 items-center">
-    <span class="text-xs font-black text-brand-gold w-28 shrink-0">7.00 – 8.00 mlm</span>
-    <span class="font-bold text-brand-dark">Makan Malam</span>
-</div>
-
-    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
-            <div class="flex gap-4 items-center">
-                <span class="text-xs font-black text-brand-gold w-28 shrink-0">8.00 – 10.30 mlm</span>
-                <span class="font-bold text-brand-dark">Dialog Perkhidmatan Kerja Sosial Perubatan, KKM</span>
-            </div>
-            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
-        </button>
-        <div class="accordion-content px-5 pb-5">
-            <p class="text-slate-600 text-sm font-bold mt-1">Ahli Panel:</p>
-            <p class="text-slate-500 text-sm">1. En. Zulhan bin Ambi — Ketua Profesion PKSP KKM</p>
-            <p class="text-slate-500 text-sm">2. Pn. Nor Azura binti Abd Majid — Timbalan Ketua Profesion PKSP KKM</p>
-            <p class="text-slate-500 text-sm">3. Tn. Hj. Harolhanam bin Mohamed Wahid — Presiden PPPM(P)M</p>
-            <p class="text-slate-600 text-sm font-bold mt-2">Moderator:</p>
-            <p class="text-slate-500 text-sm">Pn. Hjh Zailawati binti Mamat — Ketua Bidang Negeri, Profesion PKSP Negeri Kelantan</p>
-        </div>
-    </div>
-
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex gap-4 items-center">
-    <span class="text-xs font-black text-brand-gold w-28 shrink-0">10.30 mlm</span>
-    <span class="font-bold text-brand-dark">Bersurai</span>
-</div>
-</div>
-
-            <!-- Hari 3 -->
-<div id="day-3" class="schedule-day hidden space-y-3">
-    <h3 class="text-2xl font-black text-[#2d5a3d] flex items-center gap-3 mb-6">
-        <span class="bg-brand-blue text-white px-4 py-2 rounded-xl">4 Ogos 2026 (Selasa)</span>
-    </h3>
-
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex gap-4 items-center">
-        <span class="text-xs font-black text-brand-gold w-28 shrink-0">8.00 – 8.15 pg</span>
-        <span class="font-bold text-brand-dark">Kehadiran & Pendaftaran Peserta Hari Ke-3</span>
-    </div>
-
-    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
-            <div class="flex gap-4 items-center">
-                <span class="text-xs font-black text-brand-gold w-28 shrink-0">8.15 – 9.15 pg</span>
-                <span class="font-bold text-brand-dark">Ceramah 3</span>
-            </div>
-            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
-        </button>
-        <div class="accordion-content px-5 pb-5">
-            <p class="text-slate-600 italic text-sm">Transformasi Digital Komuniti: Memperkasakan Pengurusan Kes & Advokasi Pesakit Melalui Data & Kecerdasan Buatan (AI)</p>
-            <p class="text-slate-500 text-sm mt-1">Dr. Wan Munira binti Wan Jaafar • Pensyarah Kanan, Fakulti Ekologi Manusia, Universiti Putra Malaysia (UPM)</p>
-        </div>
-    </div>
-<div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
-            <div class="flex gap-4 items-center">
-                <span class="text-xs font-black text-brand-gold w-28 shrink-0">9.15 – 10.15 pg</span>
-                <span class="font-bold text-brand-dark">Digital Mindset & Kesejahteraan Mental</span>
-            </div>
-            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
-        </button>
-        <div class="accordion-content px-5 pb-5">
-            <p class="text-slate-600 italic text-sm">Digital Mindset & Kesejahteraan Mental: Strategi Resiliensi Pegawai Kerja Sosial Perubatan di Alaf Baru</p>
-            <p class="text-slate-500 text-sm mt-1">Prof. Dr. Huzili bin Hussin • Timbalan Naib Canselor (Akademik & Antarabangsa), Universiti Malaysia Kelantan (UMK)</p>
-        </div>
-    </div>
-
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex gap-4 items-center">
-        <span class="text-xs font-black text-brand-gold w-28 shrink-0">10.15 – 10.45 pg</span>
-        <span class="font-bold text-brand-dark">Minum Pagi</span>
-    </div>
-
-    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
-            <div class="flex gap-4 items-center">
-                <span class="text-xs font-black text-brand-gold w-28 shrink-0">10.45 – 11.15 pg</span>
-                <span class="font-bold text-brand-dark">Bicara Eksekutif</span>
-            </div>
-            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
-        </button>
-        <div class="accordion-content px-5 pb-5">
-            <p class="text-slate-600 italic text-sm">Hala Tuju dan Pemerkasaan Profesion Pegawai Kerja Sosial Perubatan di Malaysia: Kini dan Masa Depan</p>
-            <p class="text-slate-500 text-sm mt-1">YBhg. Dato' Dr. Mohd Azman bin Yacob • Timbalan Ketua Pengarah Kesihatan (Perubatan), Kementerian Kesihatan Malaysia</p>
-        </div>
-    </div>
-
-    <div class="accordion-item bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between p-5 text-left">
-            <div class="flex gap-4 items-center">
-                <span class="text-xs font-black text-brand-gold w-28 shrink-0">11.15 pg – 1.00 ptg</span>
-                <span class="font-bold text-brand-dark">Perasmian Penutup Persidangan PKSP Ke-29</span>
-            </div>
-            <i data-lucide="chevron-down" class="accordion-icon w-5 h-5 shrink-0 text-slate-400"></i>
-        </button>
-        <div class="accordion-content px-5 pb-5">
-            <p class="text-slate-500 text-sm">YBhg. Dato' Dr. Mohd Azman bin Yacob • Timbalan Ketua Pengarah Kesihatan (Perubatan), Kementerian Kesihatan Malaysia</p>
-        </div>
-    </div>
-
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex gap-4 items-center">
-        <span class="text-xs font-black text-brand-gold w-28 shrink-0">1.00 ptg</span>
-        <span class="font-bold text-brand-dark">Makan Tengahari / Check-Out / Tamat</span>
-    </div>
-</div>
-        </div>
-    </section>
-
-    <!-- Lokasi -->
-<section id="lokasi" class="py-32 bg-white px-6">
-    <h2 class="text-4xl font-black mb-10 text-center uppercase">Lokasi</h2>
-    <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
-        <div data-aos="fade-right">
-            <a href="https://www.google.com/maps?q=6.120821186256682,102.24102479754707" target="_blank" rel="noopener noreferrer" class="block h-[450px] rounded-[3rem] overflow-hidden border-[10px] border-white shadow-2xl">
-                <iframe 
-                    class="w-full h-full border-0 pointer-events-none" 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1667.9489058649467!2d102.24102479754707!3d6.120821186256682!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31b6afc4c037b419%3A0x7d0cb70b45409aa7!2sPerdana%20Kota%20Bharu!5e0!3m2!1sen!2smy!4v1776666242258!5m2!1sen!2smy" 
-                    allowfullscreen="" 
-                    loading="lazy" 
-                    referrerpolicy="no-referrer-when-downgrade">
-                </iframe>
-            </a>
-        </div>
-        <div class="p-10 bg-white rounded-[4rem]" data-aos="fade-left">
-            <p class="font-black text-[#2d5a3d] text-3xl mb-4 uppercase">Hotel Perdana, Kota Bharu, Kelantan</p>
-            <p class="text-slate-600 leading-relaxed">"Tempat untuk perkongsian ilmu, meningkatkan ukhwah dan kemajuan profesion pegawai kerja sosial perubatan seluruh Malaysia."</p>
-        </div>
-    </div>
-</section>
-
-    <!-- Pendaftaran -->
-    <section id="daftar" class="py-32 bg-[#2d5a3d] px-6">
-    <div class="max-w-4xl mx-auto bg-white rounded-[5rem] p-10 md:p-16 shadow-2xl" data-aos="flip-up">
-            <div id="reg-form-container">
-                <h2 class="text-4xl font-black mb-10 text-center uppercase">Pendaftaran Peserta</h2>
-
-                <div class="text-center mb-10">
-                    <div class="inline-block bg-brand-gold/10 text-brand-gold px-8 py-4 rounded-2xl font-bold text-lg mb-6">
-                        Yuran Pendaftaran
-                    </div>
-                    <div class="grid md:grid-cols-3 gap-2 max-w-4xl mx-auto">
-                        <div class="bg-white p-6 rounded-2xl shadow-md border border-brand-gold/30">
-                            <p class="text-3xl font-black text-[#2d5a3d]">RM200</p>
-                            <p class="text-sm text-slate-600 mt-2">Ahli Persatuan</p>
-                        </div>
-                        <div class="bg-white p-6 rounded-2xl shadow-md border border-brand-gold/30">
-                            <p class="text-3xl font-black text-[#2d5a3d]">RM400</p>
-                            <p class="text-sm text-slate-600 mt-2">Bukan Ahli</p>
-                        </div>
-                        <div class="bg-white p-6 rounded-2xl shadow-md border border-brand-gold/30">
-                            <p class="text-3xl font-black text-[#2d5a3d]">RM200</p>
-                            <p class="text-sm text-slate-600 mt-2">Pelajar</p>
-                            <p class="text-xs text-slate-600 mt-2 italic">(Terlibat pada 3&4 Ogos 8.00pg-5.00ptg sahaja)</p>
-                        </div>
+                    <div class="anjur">
+                        <img src="Logo TKPM.png" alt="">
+                        <p>Persatuan Pegawai Pembangunan Masyarakat (Perubatan) Malaysia</p>
                     </div>
                 </div>
 
-                <form onsubmit="handleRegistration(event)" class="space-y-6">
-                    <input name="nama" required type="text" aria-label="Nama Penuh" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="Nama Penuh">
-                    <div class="grid md:grid-cols-3 gap-6">
-                    <input name="ic" required type="text" aria-label="No. Kad Pengenalan" inputmode="numeric" pattern="[0-9]{12}" minlength="12" maxlength="12" title="Masukkan 12 digit No. K/P tanpa simbol '-'" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="No. K/P (12 digit, tanpa '-')">
-                    <input name="tel" required type="tel" aria-label="No. Telefon" inputmode="numeric" pattern="[0-9]{9,11}" title="Masukkan No. Telefon tanpa simbol '-' (cth: 0123456789)" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="No. Telefon (tanpa '-')">
-                    <input name="email" required type="email" aria-label="Alamat Email" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="Email">
+                <div>
+                    <h4>Hubungi Kami</h4>
+                    <p class="baris">Sekretariat PKSP Ke-29</p>
+                    <p class="baris">
+                        Email: <a href="mailto:persidanganpksp29@gmail.com">persidanganpksp29@gmail.com</a>
+                    </p>
                 </div>
-                    <input name="tempat_bertugas" required type="text" aria-label="Hospital, Jabatan atau Institusi" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="Hospital / Jabatan / Institusi">
-                    <input name="jawatan_gred" required type="text" aria-label="Jawatan dan Gred" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold" placeholder="Jawatan & Gred (cth: Pegawai Kerja Sosial Perubatan S9)">
-                    
-                    <select name="kategori" required aria-label="Kategori Peserta" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold outline-none">
-                        <option value="" disabled selected>Kategori Peserta</option>
-                        <option value="Ahli TKPM">Ahli Persatuan</option>
-                        <option value="Bukan Ahli">Bukan Ahli</option>
-                        <option value="Pelajar">Pelajar</option>
-                    </select>
 
-                    <select name="cara_bayaran" required aria-label="Cara Pembayaran" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold outline-none">
-                        <option value="" disabled selected>Cara Pembayaran</option>
-                        <option value="Bayaran Sendiri">Bayaran Sendiri</option>
-                        <option value="Ditanggung oleh Persatuan">Ditanggung oleh Persatuan</option>
-                        <option value="Ditanggung oleh Jabatan">Ditanggung oleh Jabatan</option>
-                    </select>
-
-                    <select name="negeri" required aria-label="Pilih Negeri atau Wilayah" class="w-full px-8 py-5 bg-brand-soft rounded-3xl font-bold outline-none">
-                        <option value="" disabled selected>Pilih Negeri / Wilayah</option>
-    
-                     <optgroup label="Zon Utara">
-                            <option value="Perlis">Perlis</option>
-                            <option value="Kedah">Kedah</option>
-                            <option value="Pulau Pinang">Pulau Pinang</option>
-                            <option value="Perak">Perak</option>
-                    </optgroup>
-
-                    <optgroup label="Zon Timur">
-                        <option value="Kelantan">Kelantan</option>
-                        <option value="Terengganu">Terengganu</option>
-                        <option value="Pahang">Pahang</option>
-                    </optgroup>
-
-                    <optgroup label="Zon Tengah">
-                        <option value="Selangor">Selangor</option>
-                        <option value="Negeri Sembilan">Negeri Sembilan</option>
-                        <option value="W.P. Kuala Lumpur">W.P. Kuala Lumpur</option>
-                        <option value="W.P. Putrajaya">W.P. Putrajaya</option>
-                    </optgroup>
-
-                    <optgroup label="Zon Selatan">
-                        <option value="Melaka">Melaka</option>
-                        <option value="Johor">Johor</option>
-                    </optgroup>
-
-                    <optgroup label="Zon Sabah & Sarawak">
-                        <option value="Sabah">Sabah</option>
-                        <option value="Sarawak">Sarawak</option>
-                        <option value="W.P. Labuan">W.P. Labuan</option>
-                    </optgroup>
-                </select>
-
-                   <!-- NOTA PERINGATAN -->
-                    <div class="bg-[#eef4f0] border-l-4 border-[#2d5a3d] rounded-xl p-4 mt-6">
-                        <div class="flex items-start gap-3">
-                            <span class="text-[#2d5a3d] text-xl mt-0.5">⚠️</span>
-                            <div class="text-sm text-slate-700">
-                                <p class="font-black text-[#2d5a3d] uppercase tracking-wide mb-1">Nota Peringatan</p>
-                                <p>Sila lampirkan <strong>bukti pembayaran</strong> dan <strong>kad pelajar</strong> di group WhatsApp selepas pendaftaran.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                <!-- INPUT BUKTI BAYARAN -->
-                    <div class="flex items-start gap-3 mt-6">
-                        <input type="checkbox" id="setuju" required class="mt-1 w-5 h-5 accent-[#2d5a3d]">
-                        <label for="setuju" class="text-sm text-slate-600">
-                            Saya mengaku maklumat di atas adalah benar dan bersetuju dengan 
-                            <a href="#" class="text-[#2d5a3d] hover:underline">terma & syarat</a> serta 
-                            <a href="#" class="text-[#2d5a3d] hover:underline">polisi privasi</a> persidangan.
-                        </label>
-                    </div>
-
-                    <button type="submit" class="w-full py-6 bg-[#2d5a3d] text-white font-black rounded-3xl uppercase shadow-xl hover:bg-[#1a3a2a] transition-all mt-8">Sahkan Pendaftaran</button>
-                </form>
-            </div>
-
-            <div id="success-message" class="hidden text-center py-20">
-                <i data-lucide="check-circle" class="w-20 h-20 text-green-500 mx-auto mb-8"></i>
-                <h2 class="text-3xl font-black text-[#2d5a3d] mb-4 uppercase">Pendaftaran Berjaya!</h2>
-                <p class="text-slate-600 mb-8">Terima kasih. Kami akan semak bukti bayaran dan hubungi anda melalui WhatsApp/email.</p>
-                <button onclick="window.location.reload()" class="bg-[#2d5a3d] text-white px-10 py-4 rounded-full font-black uppercase">Kembali ke Laman Utama</button>
-            </div>
-
-            <div id="closed-message" class="hidden text-center py-20">
-                <i data-lucide="calendar-x" class="w-20 h-20 text-brand-gold mx-auto mb-8"></i>
-                <h2 class="text-3xl font-black text-[#2d5a3d] mb-4 uppercase">Pendaftaran Telah Ditutup</h2>
-                <p class="text-slate-600 mb-8 max-w-xl mx-auto">Mohon maaf, tempoh pendaftaran online untuk persidangan ini telah tamat. Sekiranya anda masih ingin menyertai, sila hubungi terus Secretariat Persidangan:</p>
-                <div class="inline-block bg-brand-soft rounded-3xl p-8 text-left">
-                    <p class="font-bold text-[#2d5a3d] mb-2">Pn. Zuraini binti Ahmad</p>
-                    <p class="text-slate-600 mb-4">019-995 7589</p>
-                    <p class="font-bold text-[#2d5a3d] mb-2">Pn. Isjariffa binti Hj. Ishak @ Abu Bakar</p>
-                    <p class="text-slate-600 mb-4">012-311 1754</p>
-                    <p class="font-bold text-[#2d5a3d] mb-2">Email</p>
-                    <p class="text-slate-600">persidanganpksp29@gmail.com</p>
+                <div>
+                    <h4>Lokasi</h4>
+                    <p class="baris">Hotel Perdana Kota Bharu<br>Kelantan Darul Naim</p>
+                    <p class="baris">2–4 Ogos 2026</p>
                 </div>
             </div>
-    </div>
-    </section>
 
-    <!-- Footer -->
-<footer class="bg-[#1a3a2a] text-white py-16 px-6 border-t-[10px] border-brand-gold">
-    <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-12 text-center md:text-left">
-        
-        <!-- Kolum 1: Anjuran -->
-        <div>
-            <h4 class="font-black uppercase tracking-widest mb-6 text-brand-gold">Anjuran Bersama</h4>
-            <div class="flex flex-col gap-4">
-                <div class="flex items-center gap-3">
-                    <img loading="lazy" src="Jata Negara.png" alt="KKM" class="w-10 h-10 object-contain shrink-0">
-                    <p class="text-xs opacity-80 leading-tight">Kementerian Kesihatan Malaysia</p>
-                </div>
-                <div class="flex items-center gap-3">
-                    <img loading="lazy" src="Jata Negara.png" alt="KPT" class="w-10 h-10 object-contain shrink-0">
-                    <p class="text-xs opacity-80 leading-tight">Kementerian Pendidikan Tinggi</p>
-                </div>
-                <div class="flex items-center gap-3">
-                    <img loading="lazy" src="Logo TKPM.png" alt="PPPM(P)M" class="w-10 h-10 object-contain shrink-0">
-                    <p class="text-xs opacity-80 leading-tight">Persatuan Pegawai Pembangunan Masyarakat (Perubatan) Malaysia</p>
-                </div>
+            <div class="hakcipta">
+                © 2026 Persatuan Pegawai Pembangunan Masyarakat (Perubatan) Malaysia.
             </div>
         </div>
+    </footer>
 
-        <!-- Kolum 2: Hubungi Kami -->
-        <div>
-            <h4 class="font-black uppercase tracking-widest mb-6 text-brand-gold">Hubungi Kami</h4>
-            <p class="text-sm opacity-80 mb-2">Secretariat:</p>
-           <p class="text-sm opacity-80 mb-2">Pn. Zuraini binti Ahmad: 019-995 7589</p>
-            <p class="text-sm opacity-80 mb-2">Pn. Isjariffa binti Hj. Ishak @ Abu Bakar: 012-311 1754</p>
-            <p class="text-sm opacity-80 mb-2">Email: persidanganpksp29@gmail.com</p>
-            </div>
-
-        <!-- Kolum 3: Lokasi -->
-        <div>
-            <h4 class="font-black uppercase tracking-widest mb-6 text-brand-gold">Lokasi</h4>
-            <p class="text-sm opacity-80">Hotel Perdana Kota Bharu<br>2–4 Ogos 2026</p>
-        </div>
-
-    </div>
-    <div class="text-center mt-12 text-sm opacity-60">
-        © 2026 Persatuan Pegawai Pembangunan Masyarakat (Perubatan) Malaysia.
-    </div>
-
-</footer>
-
-<!-- ========== AWANG CHATBOT WIDGET ========== -->
-<div id="awang-avatar-wrap" onclick="toggleChat()">
-    <div id="awang-name-tag">Tanya Awang 👋</div>
-    <div id="awang-figure">
-        <img id="awang-img-base" src="Awang Avatar.png" alt="Awang - Pembantu Maya PKSP 2026">
-        <span id="chat-badge">1</span>
-    </div>
-</div>
-
-<div id="chat-window">
-    <div id="chat-header">
-        <img src="Awang Avatar.png" alt="Awang">
-        <div>
-            <p class="font-black text-sm">Awang</p>
-            <p class="text-[11px] opacity-75">Pembantu Maya PKSP 2026</p>
-        </div>
-    </div>
-    <div id="chat-messages"></div>
-    <div id="chat-quick-replies"></div>
-    <div id="chat-input-row">
-        <input type="text" id="chat-input" placeholder="Taip soalan anda..." onkeydown="if(event.key==='Enter') sendChatMessage()">
-        <div id="chat-send" onclick="sendChatMessage()">
-            <i data-lucide="send" class="w-4 h-4"></i>
-        </div>
-    </div>
-</div>
-
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        // ====== SUIS PENDAFTARAN ======
-        // Tukar kepada false untuk TUTUP pendaftaran (paparkan mesej "Pendaftaran Telah Ditutup" + maklumat secretariat).
-        // Tukar kepada true untuk BUKA semula pendaftaran.
-        const PENDAFTARAN_DIBUKA = false;
-
-        function semakStatusPendaftaran() {
-            if (!PENDAFTARAN_DIBUKA) {
-                const formContainer = document.getElementById('reg-form-container');
-                const closedMsg = document.getElementById('closed-message');
-                if (formContainer) formContainer.classList.add('hidden');
-                if (closedMsg) closedMsg.classList.remove('hidden');
-            }
-        }
-
-        lucide.createIcons();
-        AOS.init({ duration: 800, once: true });
-        semakStatusPendaftaran();
-
-        let prevSecs = -1;
-        function updateTimer() {
-            const target = new Date("August 02, 2026 14:30:00").getTime();
-            const now = new Date().getTime();
-            const diff = target - now;
-
-            const countdownEl = document.getElementById('countdown');
-
-            if (diff <= 0) {
-                countdownEl.innerHTML = `
-                    <div class="text-center animate-pulse">
-                        <div class="text-5xl md:text-7xl font-black text-[#2d5a3d] uppercase tracking-widest mb-6 drop-shadow-lg">
-                            PERSIDANGAN BERMULAAAA!
-                        </div>
-                        <div class="text-2xl md:text-4xl font-bold text-brand-gold mb-8">
-                            2–4 Ogos 2026 • Hotel Perdana, Kota Bharu
-                        </div>
-                        <div class="flex justify-center gap-6">
-                            <div class="bg-white/90 backdrop-blur-md px-10 py-5 rounded-3xl shadow-2xl border border-brand-gold">
-                                <p class="text-[#2d5a3d] font-black text-3xl">SELAMAT DATANG!</p>
-                                <p class="text-slate-700 mt-2 text-lg">Mari kita bina masa depan kerja sosial perubatan bersama</p>
-                            </div>
-                        </div>
-                        <div class="mt-10 text-xl text-slate-600">
-                            <a href="#daftar" class="text-[#2d5a3d] hover:text-brand-gold font-black underline">
-                                Daftar sekarang kalau belum!
-                            </a>
-                        </div>
-                    </div>
-                `;
-                return;
-            }
-
-            const days = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
-            const hours = Math.max(0, Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
-            const mins = Math.max(0, Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)));
-            const secs = Math.max(0, Math.floor((diff % (1000 * 60)) / 1000));
-
-            const timerBox = (val, label, id) => `
-                <div class="flex flex-col items-center transform transition-all duration-300 hover:scale-105">
-                    <div id="timer-${id}" class="timer-box w-20 h-20 md:w-32 md:h-32 rounded-[2.5rem] flex items-center justify-center font-black text-3xl md:text-5xl mb-3" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.2); color: #fff; box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
-                        ${String(val).padStart(2, '0')}
-                    </div>
-                    <span class="text-xs md:text-sm font-black uppercase tracking-widest" style="color: rgba(255,255,255,0.7);">${label}</span>
-                </div>`;
-
-            countdownEl.innerHTML = 
-                timerBox(days, 'Hari', 'days') + 
-                timerBox(hours, 'Jam', 'hours') + 
-                timerBox(mins, 'Minit', 'mins') + 
-                timerBox(secs, 'Saat', 'secs');
-
-            // Pulse animation bila second bertukar
-            if (secs !== prevSecs) {
-                prevSecs = secs;
-                const secsEl = document.getElementById('timer-secs');
-                const minsEl = document.getElementById('timer-mins');
-                if (secsEl) {
-                    secsEl.classList.remove('pop');
-                    void secsEl.offsetWidth;
-                    secsEl.classList.add('pop');
-                }
-                // Pulse minit bila secs = 0
-                if (secs === 0 && minsEl) {
-                    minsEl.classList.remove('pop');
-                    void minsEl.offsetWidth;
-                    minsEl.classList.add('pop');
-                }
-            }
-        }
-        setInterval(updateTimer, 1000);
-        updateTimer();
-
-        let currentDay = 1;
-        function switchTab(day) {
-            const direction = parseInt(day) > currentDay ? 'right' : 'left';
-            currentDay = parseInt(day);
-
-            // 1. Sembunyikan SEMUA hari dulu
-            document.querySelectorAll('.schedule-day').forEach(el => {
-                el.classList.remove('active', 'slide-in-right', 'slide-in-left');
-                el.classList.add('hidden');
-            });
-
-            // 2. Tunjuk hari yang dipilih dengan slide direction
-            const selectedDay = document.getElementById('day-' + day);
-            if (selectedDay) {
-                selectedDay.classList.add('active');
-                selectedDay.classList.remove('hidden');
-                void selectedDay.offsetWidth; // force reflow
-                selectedDay.classList.add(direction === 'right' ? 'slide-in-right' : 'slide-in-left');
-            }
-
-            // 3. Reset SEMUA tab ke keadaan tak aktif
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active', 'bg-brand-blue', 'bg-[#2d5a3d]', 'text-white');
-                btn.classList.add('text-slate-600', 'bg-white', 'hover:bg-slate-100');
-            });
-
-            // 4. Tambah active pada tab yang betul
-            const activeBtn = document.querySelector(`.tab-btn[data-day="${day}"]`);
-            if (activeBtn) {
-                activeBtn.classList.add('active', 'bg-[#2d5a3d]', 'text-white');
-                activeBtn.classList.remove('text-slate-600', 'bg-white', 'hover:bg-slate-100');
-            }
-        }
-
-        // Attach event listener sekali je masa page load
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const day = btn.dataset.day;
-                    switchTab(day);
-                });
-            });
-
-            // Pastikan Hari 1 active masa load pertama
-            switchTab(1);
-        });
-
-        function toggleFaq(el) {
-            el.classList.toggle('active');
-        }
-
-        async function downloadFile(url, filename) {
-    try {
-        const response = await fetch(url);
-        const blob = await response.blob();
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = filename;
-        a.click();
-        URL.revokeObjectURL(a.href);
-    } catch (err) {
-        alert('Gagal muat turun. Cuba semula.');
-        console.error(err);
-    }
-
-    }
-function toggleMenu() {
-    const menu = document.getElementById('mobile-menu');
-    const btn = document.getElementById('hamburger');
-    menu.classList.toggle('hidden');
-    btn.setAttribute('aria-expanded', !menu.classList.contains('hidden'));
-}
-function toggleMobileSubmenu() {
-    const sub = document.getElementById('ks-submenu');
-    const chevron = document.getElementById('ks-chevron');
-    sub.classList.toggle('hidden');
-    chevron.style.transform = sub.classList.contains('hidden') ? '' : 'rotate(180deg)';
-    lucide.createIcons();
-}
-function toggleAccordion(btn) {
-    const item = btn.parentElement;
-    const isActive = item.classList.contains('active');
-    
-    // Tutup semua accordion dalam hari yang sama
-    item.closest('.schedule-day').querySelectorAll('.accordion-item').forEach(el => {
-        el.classList.remove('active');
-    });
-    
-    // Buka yang diklik kalau belum active
-    if (!isActive) item.classList.add('active');
-    
-    lucide.createIcons();
-}
-
-// ========== SCROLL PROGRESS BAR ==========
-window.addEventListener('scroll', () => {
-    const scrollTop = window.scrollY;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-    document.getElementById('scroll-progress').style.width = pct + '%';
-
-    // ========== NAVBAR SHRINK ==========
-    const nav = document.getElementById('main-nav');
-    const navInner = document.getElementById('nav-inner');
-    const navLogo = nav.querySelector('.nav-logo');
-    const navTitle = nav.querySelector('.nav-title');
-    if (scrollTop > 60) {
-        nav.classList.add('scrolled');
-        navInner.style.height = '56px';
-        navLogo.style.width = '36px';
-        navLogo.style.height = '36px';
-        navTitle.style.fontSize = '8px';
-    } else {
-        nav.classList.remove('scrolled');
-        navInner.style.height = '80px';
-        navLogo.style.width = '56px';
-        navLogo.style.height = '56px';
-        navTitle.style.fontSize = '10px';
-    }
-}, { passive: true });
-
-// ========== HERO MULTI-LAYER PARALLAX ==========
-const heroSection = document.getElementById('hero');
-const layer1 = document.getElementById('hero-layer-1');
-const layer2 = document.getElementById('hero-layer-2');
-const layer3 = document.getElementById('hero-layer-3');
-
-if (heroSection && layer1 && layer2 && layer3) {
-    let targetX = 0, targetY = 0;
-    let currentX = 0, currentY = 0;
-    let rafId = null;
-
-    function animateLayers() {
-        // Smooth lerp towards target
-        currentX += (targetX - currentX) * 0.06;
-        currentY += (targetY - currentY) * 0.06;
-
-        // Each layer moves at different speed — depth effect
-        layer1.style.transform = `scale(1.08) translate(${currentX * 6}px, ${currentY * 4}px)`;
-        layer2.style.transform = `scale(1.06) translate(${currentX * 14}px, ${currentY * 10}px)`;
-        layer3.style.transform = `scale(1.10) translate(${currentX * 22}px, ${currentY * 16}px)`;
-
-        rafId = requestAnimationFrame(animateLayers);
-    }
-
-    heroSection.addEventListener('mousemove', (e) => {
-        const rect = heroSection.getBoundingClientRect();
-        targetX = (e.clientX - rect.left) / rect.width - 0.5;
-        targetY = (e.clientY - rect.top)  / rect.height - 0.5;
-        if (!rafId) rafId = requestAnimationFrame(animateLayers);
-    });
-
-    heroSection.addEventListener('mouseleave', () => {
-        targetX = 0;
-        targetY = 0;
-        // Let lerp settle, then cancel
-        setTimeout(() => {
-            if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-            layer1.style.transform = 'scale(1.08) translate(0,0)';
-            layer2.style.transform = 'scale(1.06) translate(0,0)';
-            layer3.style.transform = 'scale(1.10) translate(0,0)';
-        }, 900);
-    });
-}
-
-// ========== AWANG CHATBOT — FAQ LOGIC ==========
-// ========== DATA ATURCARA PER HARI (untuk soalan "hari X ada apa") ==========
-const SCHEDULE_DB = {
-    1: { tarikh: '2 Ogos 2026 (Ahad)', items: [
-        '3.00–4.00 ptg — Pendaftaran Peserta / Check-in',
-        '4.00–5.00 ptg — Perkongsian Pengalaman (Dr. Muhamad Hafiz bin Harun)',
-        '5.00–7.00 ptg — Rehat / Riadah', '7.00–8.00 mlm — Makan Malam',
-        '8.00–8.15 mlm — Taklimat Persidangan', '8.15–9.15 mlm — Pembentangan Kertas Saintifik',
-        '9.15–10.00 mlm — Pembentangan Kertas Saintifik', '10.00 mlm — Bersurai'
-    ]},
-    2: { tarikh: '3 Ogos 2026 (Isnin)', items: [
-        '8.00–8.15 pg — Pendaftaran Peserta Hari ke-2',
-        '8.30–9.30 pg — AI, Etika dan Kesejahteraan Sosial (Dr. Teoh Ai Hua)',
-        '9.30–10.00 pg — Minum Pagi',
-        '10.00 pg–12.00 tgh — Majlis Perasmian Persidangan PKSP Ke-29 (YBhg. Datuk Seri Haji Hasnol Zam Zam bin Hj. Ahmad, Ketua Setiausaha KKM)',
-        '12.00 tgh–2.00 ptg — Makan Tengahari / Rehat',
-        '2.00–2.15 ptg — Pembentangan Kertas Saintifik (En. Sutharssan Nadarajan)',
-        '2.15–2.30 ptg — Pembentangan Kertas Saintifik (Cik Suhaizah binti Zainudin)',
-        '2.30–4.30 ptg — Seronoknya AI (Dr. Wan Zuraini Mahrawi)',
-        '4.00–5.00 ptg — Lawatan & Penilaian Poster', '5.00–7.00 mlm — Rehat / Riadah',
-        '7.00–8.00 mlm — Makan Malam', '8.00–10.30 mlm — Dialog Perkhidmatan Kerja Sosial Perubatan, KKM', '10.30 mlm — Bersurai'
-    ]},
-    3: { tarikh: '4 Ogos 2026 (Selasa)', items: [
-        '8.00–8.15 pg — Kehadiran & Pendaftaran Peserta Hari ke-3',
-        '8.15–9.15 pg — Transformasi Digital Komuniti (Dr. Wan Munira binti Wan Jaafar)',
-        '9.15–10.15 pg — Digital Mindset & Kesejahteraan Mental (Prof. Dr. Huzili bin Hussin)',
-        '10.15–10.45 pg — Minum Pagi',
-        '10.45–11.15 pg — Bicara Eksekutif (YBhg. Dato’ Dr. Mohd Azman bin Yacob)',
-        '11.15 pg–1.00 ptg — Perasmian Penutup Persidangan PKSP Ke-29', '1.00 ptg — Makan Tengahari / Check-Out / Tamat'
-    ]}
-};
-
-function detectDayNumber(text) {
-    const lower = text.toLowerCase();
-    // Direct digit references: "hari 1", "day 2", "hari ke-3"
-    const digitMatch = lower.match(/hari\s*(?:ke-?)?\s*([123])\b|day\s*([123])\b/);
-    if (digitMatch) return parseInt(digitMatch[1] || digitMatch[2]);
-
-    // Word-based: pertama/kedua/ketiga
-    if (/\bpertama\b/.test(lower)) return 1;
-    if (/\bkedua\b/.test(lower)) return 2;
-    if (/\bketiga\b/.test(lower)) return 3;
-
-    // Date-based: "2 ogos", "3 ogos", "4 ogos"
-    if (/\b2\s*ogos\b/.test(lower)) return 1;
-    if (/\b3\s*ogos\b/.test(lower)) return 2;
-    if (/\b4\s*ogos\b/.test(lower)) return 3;
-
-    return null;
-}
-
-function isScheduleQuery(text) {
-    const lower = text.toLowerCase();
-    const scheduleWords = ['aktiviti', 'ada apa', 'apa je', 'apa ada', 'jadual', 'aturcara', 'program', 'sesi', 'ceramah', 'pukul berapa', 'bila', 'masa'];
-    return scheduleWords.some(w => lower.includes(w));
-}
-
-function findDayScheduleAnswer(text) {
-    const day = detectDayNumber(text);
-    if (day === null) return null;
-    if (!isScheduleQuery(text) && !/hari/.test(text.toLowerCase())) return null;
-
-    const sched = SCHEDULE_DB[day];
-    if (!sched) return null;
-
-    const listHtml = sched.items.map(i => `• ${i}`).join('<br>');
-    return `<strong>Aturcara Hari ${day} — ${sched.tarikh}</strong><br><br>${listHtml}<br><br>Boleh lihat versi penuh & interaktif di bahagian "Aturcara" di laman utama.`;
-}
-
-
-const FAQ_DB = [
-    {
-        keys: ['tarikh', 'bila persidangan', 'bila acara', 'bila program', 'tahun bila', 'hari bulan', 'when'],
-        priority: 1,
-        answer: 'Persidangan PKSP 2026 berlangsung pada <strong>2–4 Ogos 2026</strong> (Ahad hingga Selasa).'
-    },
-    {
-        keys: ['lokasi', 'tempat persidangan', 'tempat acara', 'di mana', 'kat mana', 'venue', 'hotel', 'alamat', 'where'],
-        priority: 1,
-        answer: 'Persidangan diadakan di <strong>Hotel Perdana, Kota Bharu, Kelantan</strong>. Boleh tekan bahagian "Lokasi" di laman utama untuk lihat peta.'
-    },
-    {
-        keys: ['yuran', 'bayaran berapa', 'harga', 'fee', 'berapa kos', 'kos', 'caj', 'duit masuk', 'berapa bayar'],
-        priority: 1,
-        answer: 'Yuran pendaftaran:<br>• Ahli Persatuan — <strong>RM200</strong><br>• Bukan Ahli — <strong>RM400</strong><br>• Pelajar — <strong>RM200</strong> (terlibat 3 & 4 Ogos, 8.00pg–5.00ptg sahaja)'
-    },
-    {
-        keys: ['cara daftar', 'macam mana daftar', 'nak daftar', 'cara mendaftar', 'register', 'sign up', 'macam mana nak join', 'nak sertai', 'macam mana join', 'daftar macam mana'],
-        priority: 3,
-        answer: 'Sila ke bahagian <strong>"Daftar"</strong> di laman utama dan isi borang pendaftaran. Selepas hantar, sila lampirkan bukti bayaran di group WhatsApp seperti yang dinyatakan.'
-    },
-    {
-        keys: ['daftar', 'pendaftaran', 'registration'],
-        priority: 1,
-        answer: 'Sila ke bahagian <strong>"Daftar"</strong> di laman utama dan isi borang pendaftaran. Selepas hantar, sila lampirkan bukti bayaran di group WhatsApp seperti yang dinyatakan.'
-    },
-    {
-        keys: ['cara bayar', 'macam mana bayar', 'nak bayar', 'bayar macam mana', 'bank in', 'banking', 'transfer duit', 'online banking', 'akaun bayar', 'no akaun'],
-        priority: 3,
-        answer: 'Maklumat cara pembayaran akan dikongsi selepas pendaftaran. Untuk pertanyaan lanjut tentang bayaran, sila hubungi secretariat: Pn. Zuraini — 019-995 7589.'
-    },
-    {
-        keys: ['penceramah', 'speaker', 'siapa cakap', 'siapa ceramah', 'pembentang jemputan', 'siapa speaker'],
-        priority: 2,
-        answer: 'Antara penceramah jemputan termasuk YBhg. Dato\' Dr Mohd Azman bin Yacob, Dr. Wan Zuraini Mahrawi, Prof. Dr. Huzili Hussin, Dr. Wan Munira binti Wan Jaafar, Dr. Teoh Ai Hua, dan Dr. Muhamad Hafiz bin Harun. Lihat bahagian "Penceramah" untuk maklumat penuh.'
-    },
-    {
-        keys: ['aturcara', 'program penuh', 'jadual', 'schedule', 'susunan acara', 'tentatif'],
-        priority: 1,
-        answer: 'Aturcara penuh untuk Hari 1, 2 dan 3 boleh dilihat di bahagian <strong>"Aturcara"</strong> di laman utama — termasuk waktu ceramah, sesi dialog dan majlis rasmi. Anda juga boleh tanya saya terus, contoh: "Hari 2 ada apa?"'
-    },
-    {
-        keys: ['hubungi', 'contact', 'secretariat', 'talian', 'telefon', 'no phone', 'nombor secretariat', 'siapa nak tanya', 'email'],
-        priority: 2,
-        answer: 'Boleh hubungi Secretariat Persidangan:<br>Pn. Zuraini binti Ahmad — 019-995 7589<br>Pn. Isjariffa — 012-311 1754<br>Email: persidanganpksp29@gmail.com'
-    },
-    {
-        keys: ['kertas saintifik', 'scientific paper', 'hantar kertas', 'pembentangan kertas', 'poster pertandingan', 'penyertaan poster', 'abstrak'],
-        priority: 2,
-        answer: 'Sila rujuk menu <strong>"Kertas Saintifik"</strong> di navigation bar untuk borang penyertaan, syarat pertandingan dan slot pembentang.'
-    },
-    {
-        keys: ['tema', 'topik persidangan', 'theme', 'fokus persidangan'],
-        priority: 2,
-        answer: 'Tema PKSP 2026 ialah <em>"Memperkasakan Perkhidmatan Kerja Sosial Perubatan Melalui Sinergi Digital dan Kecerdasan Buatan (AI)"</em>.'
-    },
-    {
-        keys: ['parking', 'parkir', 'letak kereta', 'tempat letak kereta'],
-        priority: 2,
-        answer: 'Hotel Perdana Kota Bharu menyediakan kemudahan parking untuk tetamu. Untuk maklumat lanjut sila hubungi pihak hotel atau secretariat persidangan.'
-    },
-    {
-        keys: ['dress code', 'pakaian', 'baju apa', 'kena pakai apa', 'attire', 'pakai apa'],
-        priority: 2,
-        answer: 'Untuk maklumat berkaitan kod pakaian (dress code), sila rujuk Buku Program atau hubungi secretariat. Kebiasaannya pakaian formal/smart casual untuk sesi persidangan.'
-    },
-    {
-        keys: ['makan', 'food', 'jamuan', 'minum', 'makanan disediakan', 'ada makan'],
-        priority: 2,
-        answer: 'Ya, jamuan disediakan sepanjang persidangan termasuk minum pagi, makan tengahari dan makan malam mengikut aturcara. Lihat bahagian "Aturcara" untuk waktu jamuan setiap hari.'
-    },
-    {
-        keys: ['penginapan', 'bilik hotel', 'tempat tidur', 'accommodation', 'tempat menginap', 'tidur mana'],
-        priority: 2,
-        answer: 'Untuk tempahan penginapan di Hotel Perdana atau cadangan hotel berdekatan, sila hubungi secretariat persidangan untuk maklumat lanjut: Pn. Zuraini — 019-995 7589.'
-    },
-    {
-        keys: ['sijil', 'certificate', 'cpd', 'mata cpd', 'cme', 'kehadiran sijil'],
-        priority: 2,
-        answer: 'Sijil penyertaan akan diberikan kepada peserta. Untuk maklumat berkaitan mata CPD/CME, sila hubungi secretariat persidangan.'
-    },
-    {
-        keys: ['siapa awak', 'awak siapa', 'awang siapa', 'kamu siapa', 'who are you', 'awak ni apa'],
-        priority: 2,
-        answer: 'Saya <strong>Awang</strong> 🤖, pembantu maya untuk Persidangan PKSP 2026. Saya boleh bantu jawab soalan tentang tarikh, lokasi, yuran, pendaftaran, penceramah dan aturcara persidangan!'
-    },
-    {
-        keys: ['wifi', 'wi-fi', 'internet', 'capaian internet'],
-        priority: 2,
-        answer: 'Untuk maklumat capaian WiFi di Hotel Perdana sepanjang persidangan, sila hubungi secretariat atau tanya kaunter pendaftaran semasa acara.'
-    },
-    {
-        keys: ['surau', 'tempat solat', 'tempat sembahyang', 'musolla', 'qiblat'],
-        priority: 2,
-        answer: 'Kemudahan surau disediakan di Hotel Perdana. Lokasi tepat boleh ditanya di kaunter pendaftaran semasa acara.'
-    },
-    {
-        keys: ['oku', 'kerusi roda', 'wheelchair', 'kurang upaya', 'akses oku', 'disabled'],
-        priority: 2,
-        answer: 'Untuk keperluan khas peserta OKU (akses kerusi roda dan sebagainya), sila maklumkan awal kepada secretariat (Pn. Zuraini — 019-995 7589) supaya kami boleh sediakan kemudahan yang sesuai.'
-    },
-    {
-        keys: ['bawa anak', 'bawak anak', 'kanak-kanak', 'budak', 'baby', 'penjagaan anak'],
-        priority: 2,
-        answer: 'Untuk pertanyaan berkaitan membawa anak ke persidangan, sila hubungi secretariat terlebih dahulu untuk perbincangan: Pn. Zuraini — 019-995 7589.'
-    },
-    {
-        keys: ['check in', 'check-in', 'masa check in', 'bila boleh masuk bilik', 'check out', 'check-out', 'masa keluar'],
-        priority: 2,
-        answer: 'Pendaftaran/check-in peserta bermula 2.30 ptg pada 2 Ogos 2026 (Hari 1). Check-out hotel pula pada 4 Ogos 2026 selepas makan tengahari. Untuk waktu check-in bilik hotel, sila rujuk pihak hotel.'
-    },
-    {
-        keys: ['refund', 'pulangan yuran', 'tarik diri', 'batal pendaftaran', 'cancel', 'tak jadi datang', 'duit balik'],
-        priority: 3,
-        answer: 'Untuk pertanyaan berkaitan pembatalan atau pemulangan yuran (refund), sila hubungi secretariat secepat mungkin: Pn. Zuraini — 019-995 7589 atau email persidanganpksp29@gmail.com.'
-    },
-    {
-        keys: ['resit', 'receipt', 'invois', 'invoice', 'bukti bayaran resmi'],
-        priority: 3,
-        answer: 'Resit rasmi pembayaran yuran boleh diperoleh daripada secretariat. Sila simpan bukti bayaran anda dan hubungi Pn. Zuraini — 019-995 7589 untuk resit.'
-    },
-    {
-        keys: ['claim', 'tuntutan', 'claim jabatan', 'tuntut jabatan', 'bayar jabatan', 'waran'],
-        priority: 3,
-        answer: 'Sekiranya yuran ditanggung jabatan, sila pilih opsyen "Ditanggung oleh Jabatan" semasa pendaftaran. Untuk dokumen sokongan tuntutan (surat/resit rasmi), hubungi secretariat: Pn. Zuraini — 019-995 7589.'
-    },
-    {
-        keys: ['bayar atas nama', 'nama akaun', 'payable to', 'cek atas nama', 'nama persatuan'],
-        priority: 3,
-        answer: 'Untuk maklumat nama akaun/penerima bayaran yuran, sila hubungi secretariat: Pn. Zuraini — 019-995 7589 atau email persidanganpksp29@gmail.com.'
-    },
-    {
-        keys: ['rakam sesi', 'recording', 'rakaman ceramah', 'replay', 'tengok balik', 'ada rakaman'],
-        priority: 2,
-        answer: 'Untuk pertanyaan sama ada sesi persidangan akan dirakam atau boleh ditonton semula, sila hubungi secretariat persidangan untuk pengesahan.'
-    },
-    {
-        keys: ['slide penceramah', 'slide ceramah', 'nota penceramah', 'bahan ceramah', 'download slide', 'muat turun slide'],
-        priority: 3,
-        answer: 'Slide penceramah boleh dimuat turun melalui menu <strong>"Muat Turun"</strong> di navigation bar (jika telah disediakan). Sila semak menu tersebut atau hubungi secretariat.'
-    },
-    {
-        keys: ['sijil', 'certificate', 'e-sijil', 'sijil kehadiran', 'sijil penyertaan'],
-        priority: 2,
-        answer: 'Sijil penyertaan akan diberikan kepada peserta yang menghadiri persidangan. Maklumat lanjut tentang cara mendapatkan e-sijil akan dikongsi semasa acara.'
-    },
-    {
-        keys: ['cpd', 'mata cpd', 'cme', 'markah cpd', 'point cpd', 'mata kredit'],
-        priority: 3,
-        answer: 'Untuk maklumat berkaitan mata CPD/CME bagi persidangan ini, sila hubungi secretariat persidangan untuk pengesahan terkini.'
-    },
-    {
-        keys: ['tarikh tutup', 'deadline', 'tarikh akhir', 'last date', 'bila tutup', 'closing date', 'due date'],
-        priority: 3,
-        answer: 'Untuk tarikh tutup penyertaan (pendaftaran atau kertas saintifik/poster), sila rujuk menu <strong>"Kertas Saintifik"</strong> atau hubungi secretariat: persidanganpksp29@gmail.com.'
-    },
-    {
-        keys: ['format poster', 'saiz poster', 'format kertas', 'cara buat poster', 'template poster', 'syarat poster'],
-        priority: 3,
-        answer: 'Syarat dan format pertandingan poster boleh dilihat melalui menu <strong>"Kertas Saintifik"</strong> → "Syarat Pertandingan" di navigation bar.'
-    },
-    {
-        keys: ['hadiah', 'prize', 'pemenang', 'wang tunai', 'hadiah poster', 'hadiah pertandingan'],
-        priority: 2,
-        answer: 'Untuk maklumat berkaitan hadiah pertandingan poster/kertas saintifik, sila rujuk menu "Kertas Saintifik" atau hubungi secretariat persidangan.'
-    },
-    {
-        keys: ['harga hotel', 'harga bilik', 'kadar bilik', 'sewa bilik', 'berapa bilik', 'room rate', 'tempah bilik', 'booking hotel', 'book hotel', 'reservation'],
-        priority: 3,
-        answer: 'Untuk tempahan bilik di Hotel Perdana Kota Bharu dan kadar harga terkini, sila hubungi terus pihak hotel, atau hubungi secretariat persidangan (Pn. Zuraini — 019-995 7589) untuk cadangan penginapan.'
-    },
-    {
-        keys: ['terima kasih', 'thanks', 'thank you', 'tq', 'syukran'],
-        priority: 2,
-        answer: 'Sama-sama! Kalau ada soalan lain, jangan segan tanya saya ye 😊'
-    },
-    {
-        keys: ['hai', 'hello', 'helo', 'salam', 'assalamualaikum', 'hi awang'],
-        priority: 1,
-        answer: 'Hai! 👋 Apa yang boleh saya bantu tentang Persidangan PKSP 2026? Boleh tanya tentang tarikh, lokasi, yuran, cara daftar, penceramah atau aturcara.'
-    }
-];
-
-const FAQ_STOPWORDS = ['nak', 'macam', 'mana', 'apa', 'ada', 'tak', 'ke', 'ni', 'tu', 'yang', 'di', 'ke', 'untuk', 'dan', 'saya', 'nk', 'boleh', 'kalau', 'je', 'eh', 'lah', 'la'];
-
-const DEFAULT_QUICK_REPLIES = ['Tarikh & Lokasi', 'Yuran Pendaftaran', 'Cara Daftar', 'Penceramah', 'Hubungi Kami'];
-
-const QUICK_REPLY_MAP = {
-    'Tarikh & Lokasi': 'Bila dan di mana persidangan diadakan?',
-    'Yuran Pendaftaran': 'Berapa yuran pendaftaran?',
-    'Cara Daftar': 'Macam mana nak daftar?',
-    'Penceramah': 'Siapa penceramah persidangan ni?',
-    'Hubungi Kami': 'Macam mana nak hubungi secretariat?'
-};
-
-let chatStarted = false;
-let chatHistory = [];
-
-function toggleChat() {
-    const wrap = document.getElementById('awang-avatar-wrap');
-    const win = document.getElementById('chat-window');
-    const isOpen = win.classList.contains('open');
-
-    if (isOpen) {
-        win.classList.remove('open');
-        wrap.classList.remove('open');
-    } else {
-        win.classList.add('open');
-        wrap.classList.add('open');
-        document.getElementById('chat-badge').style.display = 'none';
-        if (!chatStarted) {
-            chatStarted = true;
-            startChatConversation();
-        }
-    }
-}
-
-function startChatConversation() {
-    addBotMessage('Hai! Saya <strong>Awang</strong> 👋, pembantu maya untuk Persidangan PKSP 2026. Apa yang awak nak tahu?');
-    showQuickReplies(DEFAULT_QUICK_REPLIES);
-}
-
-function addBotMessage(html) {
-    const messagesEl = document.getElementById('chat-messages');
-    const div = document.createElement('div');
-    div.className = 'chat-msg bot';
-    div.innerHTML = html;
-    messagesEl.appendChild(div);
-    messagesEl.scrollTop = messagesEl.scrollHeight;
-}
-
-function addUserMessage(text) {
-    const messagesEl = document.getElementById('chat-messages');
-    const div = document.createElement('div');
-    div.className = 'chat-msg user';
-    div.textContent = text;
-    messagesEl.appendChild(div);
-    messagesEl.scrollTop = messagesEl.scrollHeight;
-}
-
-function showTyping() {
-    const messagesEl = document.getElementById('chat-messages');
-    const div = document.createElement('div');
-    div.className = 'chat-typing';
-    div.id = 'typing-indicator';
-    div.innerHTML = '<span></span><span></span><span></span>';
-    messagesEl.appendChild(div);
-    messagesEl.scrollTop = messagesEl.scrollHeight;
-}
-
-function removeTyping() {
-    const el = document.getElementById('typing-indicator');
-    if (el) el.remove();
-}
-
-function showQuickReplies(options) {
-    const qrEl = document.getElementById('chat-quick-replies');
-    qrEl.innerHTML = options.map(opt =>
-        `<button class="chat-quick-btn" onclick="handleQuickReply('${opt.replace(/'/g, "\\'")}')">${opt}</button>`
-    ).join('');
-}
-
-function handleQuickReply(label) {
-    const question = QUICK_REPLY_MAP[label] || label;
-    processUserInput(question);
-}
-
-function findFaqAnswer(text) {
-    // 1. Cuba match soalan aturcara per-hari dulu (lebih spesifik)
-    const dayAnswer = findDayScheduleAnswer(text);
-    if (dayAnswer) return dayAnswer;
-
-    // 2. Sistem scoring: setiap FAQ dapat markah ikut keyword match
-    const lower = ' ' + text.toLowerCase().replace(/[?.,!]/g, ' ') + ' ';
-
-    let bestFaq = null;
-    let bestScore = 0;
-
-    for (const faq of FAQ_DB) {
-        let score = 0;
-        for (const key of faq.keys) {
-            const keyLower = key.toLowerCase();
-            if (lower.includes(' ' + keyLower + ' ') || lower.includes(keyLower)) {
-                // Phrase match (multi-word) lebih bernilai dari single word
-                const wordCount = keyLower.split(' ').length;
-                let keyScore = wordCount * 2; // multi-word phrases score higher
-
-                // Bonus kalau keyword bukan stopword biasa
-                if (!FAQ_STOPWORDS.includes(keyLower)) {
-                    keyScore += 1;
-                }
-
-                // Darab dengan priority FAQ tu
-                keyScore *= (faq.priority || 1);
-                score += keyScore;
-            }
-        }
-        if (score > bestScore) {
-            bestScore = score;
-            bestFaq = faq;
-        }
-    }
-
-    return bestFaq ? bestFaq.answer : null;
-}
-
-function processUserInput(text) {
-    addUserMessage(text);
-    document.getElementById('chat-quick-replies').innerHTML = '';
-    showTyping();
-
-    setTimeout(() => {
-        removeTyping();
-        const answer = findFaqAnswer(text);
-        if (answer) {
-            addBotMessage(answer);
-        } else {
-            addBotMessage('Maaf, saya tak pasti tentang soalan tu 🤔. Sila cuba tanya tentang tarikh, lokasi, yuran, pendaftaran, penceramah, aturcara atau cara hubungi secretariat. Atau pilih topik di bawah:');
-            logUnansweredQuestion(text);
-        }
-        showQuickReplies(DEFAULT_QUICK_REPLIES);
-    }, 700 + Math.random() * 400);
-}
-
-async function logUnansweredQuestion(text) {
-    try {
-        if (!window.firestoreDB) return;
-        const collRef = window.firestoreCollection(window.firestoreDB, 'artifacts', window._appId || 'msw-kuantan-2026', 'public', 'data', 'soalan_chatbot');
-        await window.firestoreAddDoc(collRef, {
-            soalan: text,
-            timestamp: window.firestoreServerTimestamp()
-        });
-    } catch (err) {
-        console.error('Gagal log soalan:', err);
-    }
-}
-
-function sendChatMessage() {
-    const input = document.getElementById('chat-input');
-    const text = input.value.trim();
-    if (!text) return;
-    input.value = '';
-    processUserInput(text);
-}
-    </script>
 </body>
 </html>
